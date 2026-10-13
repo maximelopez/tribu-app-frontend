@@ -145,7 +145,7 @@ export default function Profile() {
         {myLatestActivities.length > 0 && (
           <div className="flex flex-col" style={{ gap: 10, padding: '4px 0' }}>
             <div className="flex items-center justify-between">
-              <span className="font-outfit text-base" style={{ color: '#111' }}>Dernières activités</span>
+              <span className="font-outfit-bold text-base" style={{ color: '#111' }}>Dernières activités</span>
               {/* Historique complet si plus de 3 activités */}
               {myActivities.length > myLatestActivities.length && (
                 <button

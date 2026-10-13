@@ -35,7 +35,7 @@ export default function ThemeSwitcher() {
       className="bg-white w-full flex flex-col"
       style={{ boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.08)', borderRadius: 20, padding: '20px 18px', gap: 20 }}
     >
-      <span className="font-outfit text-base" style={{ color: '#111' }}>Thème de l'appli :</span>
+      <span className="font-outfit-bold text-base" style={{ color: '#111' }}>Thème de l'appli</span>
 
       <div className="flex justify-center items-center" style={{ gap: 20 }}>
         {THEME_COLORS.map((color) => {

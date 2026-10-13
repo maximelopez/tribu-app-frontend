@@ -1,6 +1,6 @@
 import { Navigate, useLocation, useNavigate } from 'react-router';
-import { Image as ImageIcon } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
+import { mascotteActivity } from '../assets';
 import type { LevelInfo } from '../store/familyStore';
 import Button from '../components/Button';
 import ScreenHeader from '../components/ScreenHeader';
@@ -30,7 +30,7 @@ export default function ActivityReward() {
   return (
     <div className="flex-1 min-h-0 flex flex-col">
       {/* Pas de retour vers l'activité terminée : on passe par "Continuer" */}
-      <ScreenHeader title="Récompense" showBack={false} titleFont="regular" />
+      <ScreenHeader title="Récompense" showBack={false} />
 
       <div
         className="flex-1 overflow-y-auto no-scrollbar flex flex-col"
@@ -46,18 +46,21 @@ export default function ActivityReward() {
           </p>
         </div>
 
-        {/* Illustration (TODO : illustration selon la catégorie de l'activité) */}
+        {/* Mascotte (TODO : remplacer par "mascotte-flottante" une fois exportée) */}
         <div
-          className="flex items-center justify-center shrink-0"
-          style={{ height: 112, borderRadius: 20, backgroundColor: theme.transparent, boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.08)' }}
+          className="flex items-center justify-center shrink-0 self-center rounded-full"
+          style={{ width: 135, height: 135, backgroundColor: theme.transparent }}
         >
-          <ImageIcon size={40} color={theme.primary} strokeWidth={1.5} />
+          <img src={mascotteActivity} alt="" style={{ width: 110, height: 110, objectFit: 'contain' }} />
         </div>
 
         {/* Points gagnés */}
-        <div className="flex flex-col items-center justify-center shrink-0" style={{ height: 74, gap: 4 }}>
-          <span className="font-outfit-bold" style={{ fontSize: 32, color: theme.primary }}>+{pointsEarned}</span>
-          <span className="font-outfit text-base" style={{ color: '#677067' }}>points gagnés</span>
+        <div
+          className="flex flex-col items-center justify-center shrink-0 bg-white"
+          style={{ height: 74, gap: 4, borderRadius: 16 }}
+        >
+          <span className="font-outfit-bold" style={{ fontSize: 32, lineHeight: '40px', color: theme.primary }}>+{pointsEarned}</span>
+          <span className="font-outfit" style={{ fontSize: 16, lineHeight: '20px', color: '#161616' }}>points gagnés</span>
         </div>
 
         {/* TODO (gamification) : carte du badge débloqué */}
@@ -70,7 +73,7 @@ export default function ActivityReward() {
           <span className="font-outfit" style={{ fontSize: 14, color: '#FFFFFF', opacity: 0.95 }}>
             {hasLeveledUp ? 'NIVEAU SUPÉRIEUR' : `NIVEAU ${levelInfo.level}`}
           </span>
-          <span className="font-outfit" style={{ fontSize: 20, color: '#FFFFFF' }}>
+          <span className="font-outfit-bold" style={{ fontSize: 20, color: '#FFFFFF' }}>
             {hasLeveledUp
               ? `Vous êtes Niveau ${levelInfo.level} !`
               : levelInfo.isMax

@@ -1,10 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router';
 import { useUserStore } from '../store/userStore';
 import { useFamilyStore } from '../store/familyStore';
 import useFamilyChat from '../hooks/useFamilyChat';
 import { useTheme } from '../context/ThemeContext';
 import MessageBubble from '../components/MessageBubble';
-import { sendIcon } from '../assets';
+import Button from '../components/Button';
+import { mascotteNoResults, sendIcon } from '../assets';
 
 // Couleurs Figma (écran chat)
 const CHAT_BG = '#F3F3F8';
@@ -17,8 +19,18 @@ export default function Chat() {
   const user = useUserStore(state => state.user);
   const family = useFamilyStore(state => state.family);
 
+  const navigate = useNavigate();
   const [text, setText] = useState('');
   const bottomRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
+
+  // Zone de saisie qui s'agrandit avec le texte (jusqu'à environ 4 lignes)
+  useEffect(() => {
+    const input = inputRef.current;
+    if (!input) return;
+    input.style.height = 'auto';
+    input.style.height = `${Math.min(input.scrollHeight, 120)}px`;
+  }, [text]);
 
   // Reste collé en bas à chaque nouveau message
   useEffect(() => {
@@ -31,10 +43,22 @@ export default function Chat() {
     setText('');
   };
 
+  // Pas encore de Tribu (Figma : chat-empty-state)
   if (!user?.familyId) {
     return (
-      <div className="flex-1 flex justify-center items-center">
-        <p className="mx-4 font-outfit text-center">Vous devez rejoindre une famille pour accéder au chat.</p>
+      <div className="flex-1 flex flex-col justify-center items-center" style={{ padding: '0 28px', gap: 20 }}>
+        <div
+          className="flex items-center justify-center rounded-full"
+          style={{ width: 135, height: 135, backgroundColor: 'rgba(234, 74, 31, 0.1)' }}
+        >
+          <img src={mascotteNoResults} alt="" style={{ width: 110, height: 110, objectFit: 'contain' }} />
+        </div>
+        <p className="font-outfit text-base text-center m-0" style={{ color: '#111111' }}>
+          Rejoins ou crée ta Tribu pour échanger avec ta famille !
+        </p>
+        <div className="w-full">
+          <Button title="Trouver ma Tribu" onPress={() => navigate('/tribu/rechercher')} color={theme.primary} />
+        </div>
       </div>
     );
   }
@@ -82,8 +106,9 @@ export default function Chat() {
       </div>
 
       {/* Zone de saisie */}
-      <div className="flex items-end shrink-0" style={{ backgroundColor: CHAT_BG, padding: '7px 16px', gap: 12 }}>
+      <div className="flex items-center shrink-0" style={{ backgroundColor: CHAT_BG, padding: '7px 16px', gap: 12 }}>
         <textarea
+          ref={inputRef}
           value={text}
           onChange={e => setText(e.target.value)}
           onKeyDown={e => {
@@ -103,6 +128,7 @@ export default function Chat() {
             padding: 16,
             minHeight: 56,
             maxHeight: 120,
+            lineHeight: '22px',
             color: INPUT_TEXT,
             border: 'none',
             outline: 'none',
@@ -119,7 +145,6 @@ export default function Chat() {
             borderRadius: 21,
             width: 42,
             height: 42,
-            marginBottom: 7,
             border: 'none',
             boxShadow: '0px 4px 6px rgba(13, 10, 44, 0.06)',
           }}
