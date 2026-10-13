@@ -25,7 +25,7 @@ export interface Family {
   members?: Member[];
 }
 
-export type Category = 'cinema' | 'sport' | 'culture' | 'parcs' | 'autre';
+export type Category = 'nature' | 'culture' | 'sport' | 'maison';
 
 // Activité du catalogue
 export interface Activity {

@@ -13,11 +13,10 @@ import ConfirmModal from '../components/ConfirmModal';
 import { api } from '../api';
 
 const CATEGORY_LABELS: Record<Category, string> = {
-  cinema: 'Cinéma',
-  sport: 'Sport',
+  nature: 'Nature',
   culture: 'Culture',
-  parcs: 'Parcs',
-  autre: 'Autre',
+  sport: 'Sport',
+  maison: 'Maison',
 };
 
 const CARD_SHADOW = '0px 4px 6px rgba(0, 0, 0, 0.08)';
@@ -228,7 +227,7 @@ export default function ActivityDetail() {
               className="font-outfit flex items-center justify-center"
               style={{ height: 21, minWidth: 81, padding: '0 10px', borderRadius: 999, backgroundColor: theme.secondary, color: theme.primary, fontSize: 14 }}
             >
-              {CATEGORY_LABELS[activity.category] ?? 'Autre'}
+              {CATEGORY_LABELS[activity.category] ?? 'Maison'}
             </span>
             {activity.isPartner && (
               <span

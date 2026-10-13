@@ -6,7 +6,12 @@ import avatar4 from './images/avatar4.png';
 import bgGreen from './images/bg-green.png';
 import bgOrange from './images/bg-orange.png';
 import bgRed from './images/bg-red.png';
+import activiteNature from './images/activite-nature.png';
+import activiteCulture from './images/activite-culture.png';
+import activiteSport from './images/activite-sport.png';
+import activiteMaison from './images/activite-maison.png';
 import type { ThemeColor } from '../context/ThemeContext';
+import type { Category } from '../store/familyStore';
 
 export { default as logoTribu } from './images/logo-tribu.png';
 export { default as mascotte1 } from './images/mascotte-1.png';
@@ -24,6 +29,17 @@ const avatarMap: Record<number, string> = { 1: avatar1, 2: avatar2, 3: avatar3, 
 
 // Avatar par numéro (1 par défaut)
 export const getAvatar = (avatar?: number | null) => avatarMap[avatar ?? 1] ?? avatar1;
+
+// Illustration d'une activité selon sa catégorie (null si catégorie inconnue)
+const activityIllustrations: Record<Category, string> = {
+  nature: activiteNature,
+  culture: activiteCulture,
+  sport: activiteSport,
+  maison: activiteMaison,
+};
+
+export const getActivityIllustration = (category?: string | null) =>
+  (category && activityIllustrations[category as Category]) || null;
 
 // Fond à motifs de l'onboarding selon la couleur du thème
 export const backgroundMap: Record<ThemeColor, string> = {

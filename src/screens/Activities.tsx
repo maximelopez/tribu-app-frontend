@@ -1,9 +1,11 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router';
-import { Search } from 'lucide-react';
+import { Check, Search } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 import type { Activity, Category } from '../store/familyStore';
 import ActivityCard from '../components/ActivityCard';
+import Spinner from '../components/Spinner';
+import { mascotteActivity } from '../assets';
 import { api } from '../api';
 
 // Couleurs Figma
@@ -17,11 +19,10 @@ const CHIP_TEXT = '#0F1A14';
 // Filtres de la maquette : identifiant en base -> libellé affiché
 const CATEGORY_FILTERS: { value: Category | 'all'; label: string }[] = [
   { value: 'all', label: 'Tout' },
-  { value: 'cinema', label: 'Cinéma' },
-  { value: 'sport', label: 'Sport' },
+  { value: 'nature', label: 'Nature' },
   { value: 'culture', label: 'Culture' },
-  { value: 'parcs', label: 'Parcs' },
-  { value: 'autre', label: 'Autre' },
+  { value: 'sport', label: 'Sport' },
+  { value: 'maison', label: 'Maison' },
 ];
 
 export default function Activities() {
@@ -31,6 +32,7 @@ export default function Activities() {
   const [search, setSearch] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<Category | 'all'>('all');
   const [includePartners, setIncludePartners] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchActivities = async () => {
@@ -40,6 +42,8 @@ export default function Activities() {
         if (response.ok) setActivities(data);
       } catch (error) {
         console.error('Erreur fetch activities:', error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -90,7 +94,7 @@ export default function Activities() {
         </div>
 
         {/* Filtres par catégorie */}
-        <span className="font-outfit text-base" style={{ color: TEXT_DARK }}>Filtres par :</span>
+        <span className="font-outfit-bold text-base" style={{ color: TEXT_DARK }}>Filtrer par</span>
         <div className="flex overflow-x-auto no-scrollbar" style={{ margin: '0 -16px', padding: '0 16px', gap: 8 }}>
           {CATEGORY_FILTERS.map(({ value, label }) => {
             const isActive = value === selectedCategory;
@@ -98,15 +102,18 @@ export default function Activities() {
               <button
                 key={value}
                 onClick={() => setSelectedCategory(value)}
-                className="rounded-full flex items-center justify-center shrink-0 font-outfit text-sm"
+                className={`rounded-full flex items-center justify-center shrink-0 text-sm ${isActive ? 'font-outfit-bold' : 'font-outfit'}`}
                 style={{
                   height: 34,
-                  padding: '0 14px',
+                  padding: isActive ? '0 16px 0 12px' : '0 16px',
+                  gap: 6,
                   backgroundColor: isActive ? theme.primary : '#FFFFFF',
-                  border: isActive ? 'none' : `1px solid ${CHIP_BORDER}`,
+                  border: `1px solid ${isActive ? theme.primary : CHIP_BORDER}`,
                   color: isActive ? '#FFFFFF' : CHIP_TEXT,
                 }}
               >
+                {/* Coche sur le filtre sélectionné (Figma : chip-filtre) */}
+                {isActive && <Check size={16} color="#FFFFFF" strokeWidth={3} />}
                 {label}
               </button>
             );
@@ -148,16 +155,28 @@ export default function Activities() {
           </button>
         </label>
 
-        <span className="font-outfit text-base" style={{ color: TEXT_DARK }}>
-          {count} activité{count > 1 ? 's' : ''} trouvée{count > 1 ? 's' : ''}
-        </span>
-
         {/* Liste */}
-        {filteredActivities.length === 0 ? (
-          <p className="font-outfit text-base text-center" style={{ color: TEXT_GREY, marginTop: 24 }}>
-            Aucune activité ne correspond à ta recherche
-          </p>
+        {isLoading ? (
+          <div className="flex justify-center" style={{ marginTop: 32 }}>
+            <Spinner size={36} color={theme.primary} />
+          </div>
+        ) : count === 0 ? (
+          // Aucun résultat (Figma : activities-empy-state)
+          <div className="flex flex-col items-center" style={{ gap: 20, marginTop: 48 }}>
+            <div
+              className="flex items-center justify-center rounded-full"
+              style={{ width: 135, height: 135, backgroundColor: theme.transparent }}
+            >
+              <img src={mascotteActivity} alt="" style={{ width: 100, height: 100, objectFit: 'contain' }} />
+            </div>
+            <span className="font-outfit text-base" style={{ color: TEXT_DARK }}>Aucune activité trouvée :(</span>
+          </div>
         ) : (
+          <>
+          <span className="font-outfit-bold text-base" style={{ color: TEXT_DARK }}>
+            {count} activité{count > 1 ? 's' : ''} trouvée{count > 1 ? 's' : ''}
+          </span>
+
           <div className="flex flex-col" style={{ gap: 10 }}>
             {filteredActivities.map(item => (
               <ActivityCard
@@ -165,10 +184,12 @@ export default function Activities() {
                 name={item.name}
                 description={item.description}
                 isPartner={item.isPartner}
+                category={item.category}
                 onPress={() => navigate(`/activites/${item._id}`, { state: { activity: item } })}
               />
             ))}
           </div>
+          </>
         )}
       </div>
     </div>

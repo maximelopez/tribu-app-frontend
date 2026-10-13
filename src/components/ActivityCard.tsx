@@ -1,5 +1,6 @@
 import { Image as ImageIcon } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
+import { getActivityIllustration } from '../assets';
 
 const CARD_SHADOW = '0px 4px 6px rgba(0, 0, 0, 0.08)';
 
@@ -7,12 +8,15 @@ interface ActivityCardProps {
   name: string;
   description: string;
   isPartner: boolean;
+  // Catégorie : affiche l'illustration correspondante (sinon une icône provisoire)
+  category?: string;
   onPress: () => void;
 }
 
-// Carte d'activité (Figma : Activities) — catalogue, Home, Profil et historique
-export default function ActivityCard({ name, description, isPartner, onPress }: ActivityCardProps) {
+// Carte d'activité (Figma : Activities) - catalogue, Home, Profil et historique
+export default function ActivityCard({ name, description, isPartner, category, onPress }: ActivityCardProps) {
   const { theme } = useTheme();
+  const illustration = getActivityIllustration(category);
 
   return (
     <button
@@ -20,13 +24,22 @@ export default function ActivityCard({ name, description, isPartner, onPress }: 
       className="w-full flex items-center bg-white text-left active:opacity-85"
       style={{ boxShadow: CARD_SHADOW, borderRadius: 20, minHeight: 101, padding: 20, gap: 16, border: 'none' }}
     >
-      {/* TODO : illustration selon la catégorie */}
-      <div
-        className="flex items-center justify-center shrink-0"
-        style={{ width: 72, height: 72, borderRadius: 16, backgroundColor: theme.transparent }}
-      >
-        <ImageIcon size={28} color={theme.primary} strokeWidth={2} />
-      </div>
+      {/* Illustration selon la catégorie (Figma : illustration-activite) */}
+      {illustration ? (
+        <img
+          src={illustration}
+          alt=""
+          className="shrink-0"
+          style={{ width: 72, height: 72, borderRadius: 16, objectFit: 'cover' }}
+        />
+      ) : (
+        <div
+          className="flex items-center justify-center shrink-0"
+          style={{ width: 72, height: 72, borderRadius: 16, backgroundColor: theme.transparent }}
+        >
+          <ImageIcon size={28} color={theme.primary} strokeWidth={2} />
+        </div>
+      )}
 
       <div className="flex-1 min-w-0 flex flex-col items-start" style={{ gap: 2 }}>
         <span className="font-outfit-bold text-base w-full truncate" style={{ color: '#111111' }}>
