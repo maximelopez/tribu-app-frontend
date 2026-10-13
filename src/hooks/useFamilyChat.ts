@@ -27,29 +27,25 @@ export default function useFamilyChat() {
     const handleNewMessage = (message: Message) =>
       setMessages(prev => [...prev, message]);
 
-    // Rejoindre la room
-    socket.emit('joinFamilyRoom', familyId);
-
-    // Charger historique
-    socket.emit('getHistory', familyId);
+    // Charger l'historique (la room de la Tribu est rejointe par useRealtime)
+    const loadHistory = () => socket.emit('getHistory');
+    loadHistory();
 
     socket.on('chatHistory', handleHistory);
     socket.on('newMessage', handleNewMessage);
+    socket.on('connect', loadHistory); // après une reconnexion : messages manqués
 
     return () => {
       socket.off('chatHistory', handleHistory);
       socket.off('newMessage', handleNewMessage);
+      socket.off('connect', loadHistory);
     };
   }, [familyId]);
 
   const sendMessage = (content: string) => {
     if (!content.trim() || !user || !familyId) return;
 
-    socket.emit('sendMessage', {
-      familyId,
-      sender: user.id,
-      content: content.trim(),
-    });
+    socket.emit('sendMessage', { content: content.trim() });
   };
 
   return {

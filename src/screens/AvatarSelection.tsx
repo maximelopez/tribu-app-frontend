@@ -5,7 +5,7 @@ import { useUserStore } from '../store/userStore';
 import { AVATARS, backgroundMap, getAvatar } from '../assets';
 import Button from '../components/Button';
 import OnboardingLayout from '../components/OnboardingLayout';
-import { API_URL } from '../config';
+import { api } from '../api';
 
 // Ronds d'avatar (Figma : mascotte1..4)
 const AVATAR_SIZE = 64;
@@ -23,10 +23,9 @@ export default function AvatarSelection() {
     if (!user?.id) return;
 
     try {
-      await fetch(`${API_URL}users/${user.id}/avatar`, {
+      await api(`users/${user.id}/avatar`, {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ avatar }),
+        body: { avatar },
       });
 
       useUserStore.getState().setUser(prev => prev ? { ...prev, avatar } : prev);

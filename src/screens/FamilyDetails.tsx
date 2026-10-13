@@ -4,7 +4,7 @@ import { useUserStore } from '../store/userStore';
 import { useTheme } from '../context/ThemeContext';
 import ScreenHeader from '../components/ScreenHeader';
 import Button from '../components/Button';
-import { API_URL } from '../config';
+import { api } from '../api';
 
 interface FamilyInfo {
   id: string;
@@ -26,7 +26,7 @@ export default function FamilyDetails() {
   useEffect(() => {
     const fetchFamily = async () => {
       try {
-        const response = await fetch(`${API_URL}families/${familyId}`);
+        const response = await api(`families/${familyId}`);
         const data = await response.json();
         if (response.ok) setFamilyDetails(data.family);
       } catch (error) {
@@ -41,10 +41,8 @@ export default function FamilyDetails() {
 
     setLoading(true);
     try {
-      const response = await fetch(`${API_URL}families/${familyDetails.id}/join-requests`, {
+      const response = await api(`families/${familyDetails.id}/join-requests`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId: user.id }),
       });
 
       if (!response.ok) {

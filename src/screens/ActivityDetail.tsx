@@ -10,7 +10,7 @@ import Button from '../components/Button';
 import ScreenHeader from '../components/ScreenHeader';
 import Spinner from '../components/Spinner';
 import ConfirmModal from '../components/ConfirmModal';
-import { API_URL } from '../config';
+import { api } from '../api';
 
 const CATEGORY_LABELS: Record<Category, string> = {
   cinema: 'Cinéma',
@@ -42,7 +42,7 @@ export default function ActivityDetail() {
     if (activity || !activityId) return;
     const fetchActivity = async () => {
       try {
-        const response = await fetch(`${API_URL}activities/${activityId}`);
+        const response = await api(`activities/${activityId}`);
         if (response.ok) setActivity(await response.json());
         else navigate('/activites', { replace: true });
       } catch (error) {
@@ -108,10 +108,9 @@ export default function ActivityDetail() {
     setErrorMessage('');
 
     try {
-      const response = await fetch(`${API_URL}families/${user.familyId}/activities`, {
+      const response = await api(`families/${user.familyId}/activities`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ activityId: activity._id, userId: user.id, participants }),
+        body: { activityId: activity._id, participants },
       });
       const data = await response.json();
 
@@ -142,10 +141,8 @@ export default function ActivityDetail() {
     setLeavingActivity(ongoing);
 
     try {
-      const response = await fetch(`${API_URL}families/${user.familyId}/activities/${ongoing.id}/complete`, {
+      const response = await api(`families/${user.familyId}/activities/${ongoing.id}/complete`, {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId: user.id }),
       });
       const data = await response.json();
 
@@ -191,10 +188,8 @@ export default function ActivityDetail() {
     setLeavingActivity(ongoing); // même raison que pour "Terminer"
 
     try {
-      const response = await fetch(`${API_URL}families/${user.familyId}/activities/${ongoing.id}/cancel`, {
+      const response = await api(`families/${user.familyId}/activities/${ongoing.id}/cancel`, {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId: user.id }),
       });
       const data = await response.json();
 

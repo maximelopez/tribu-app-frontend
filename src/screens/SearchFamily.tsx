@@ -4,7 +4,7 @@ import { Search, ChevronRight } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 import { getAvatar, mascotteNoResults } from '../assets';
 import ScreenHeader from '../components/ScreenHeader';
-import { API_URL } from '../config';
+import { api } from '../api';
 
 const CARD_SHADOW = '0px 4px 6px rgba(22, 22, 22, 0.08)';
 const AVATAR_SIZE = 42;
@@ -42,7 +42,7 @@ export default function SearchFamily() {
     // Petit délai : on attend que l'utilisateur ait fini de taper
     const timer = setTimeout(async () => {
       try {
-        const response = await fetch(`${API_URL}families?search=${encodeURIComponent(query)}`);
+        const response = await api(`families?search=${encodeURIComponent(query)}`);
         const data = await response.json();
         if (!response.ok) return;
         setFamilies(data.families);

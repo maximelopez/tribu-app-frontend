@@ -4,7 +4,7 @@ import { useUserStore } from '../store/userStore';
 import { themeMap } from '../context/ThemeContext';
 import Input from '../components/Input';
 import Button from '../components/Button';
-import { API_URL } from '../config';
+import { api } from '../api';
 
 // Avant l'onboarding, l'app est toujours en vert (couleurs de la maquette)
 const BRAND = themeMap.green;
@@ -60,10 +60,9 @@ export default function Signup() {
     setErrorMessage('');
 
     try {
-      const response = await fetch(API_URL + 'auth/register', {
+      const response = await api('auth/register', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: name.trim(), email: email.trim(), password }),
+        body: { name: name.trim(), email: email.trim(), password },
       });
 
       const data = await response.json();
@@ -73,6 +72,7 @@ export default function Signup() {
         return;
       }
 
+      useUserStore.getState().setToken(data.token);
       setUser({
         id: data.user.id,
         name: data.user.name,

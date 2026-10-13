@@ -10,7 +10,7 @@ import ThemeSwitcher from '../components/ThemeSwitcher';
 import Button from '../components/Button';
 import ActivityCard from '../components/ActivityCard';
 import Spinner from '../components/Spinner';
-import { API_URL } from '../config';
+import { api } from '../api';
 
 // Âge en années à partir de la date de naissance (ISO)
 const getAge = (birthdate?: string | null) => {
@@ -79,10 +79,9 @@ export default function Profile() {
 
     setSaving(true);
     try {
-      const response = await fetch(`${API_URL}users/${user.id}/avatar`, {
+      const response = await api(`users/${user.id}/avatar`, {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ avatar: pendingAvatar }),
+        body: { avatar: pendingAvatar },
       });
 
       if (response.ok) {

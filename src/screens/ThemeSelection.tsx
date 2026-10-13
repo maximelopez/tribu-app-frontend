@@ -5,7 +5,7 @@ import { useUserStore } from '../store/userStore';
 import { backgroundMap } from '../assets';
 import Button from '../components/Button';
 import OnboardingLayout from '../components/OnboardingLayout';
-import { API_URL } from '../config';
+import { api } from '../api';
 
 // Ronds de couleur (Figma : color-green / color-orange / color-red)
 const CIRCLE_SIZE = 64;
@@ -23,10 +23,9 @@ export default function ThemeSelection() {
 
     try {
       // 2 - sauvegarde dans le backend
-      await fetch(`${API_URL}users/${user.id}/theme`, {
+      await api(`users/${user.id}/theme`, {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ theme: color }),
+        body: { theme: color },
       });
 
       // 3 - mise à jour dans le store

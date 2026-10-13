@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useUserStore } from '../store/userStore';
 import { useFamilyStore } from '../store/familyStore';
-import { API_URL } from '../config';
+import { api } from '../api';
 
 // Charge la Tribu, ses membres, l'activité en cours et l'historique.
 // Dans mobile c'est fait par le Home (toujours monté) ; ici c'est fait une seule fois
@@ -25,8 +25,8 @@ export default function useFamilyData() {
       setIsLoadingFamily(true);
       try {
         const [responseFamily, responseMembers] = await Promise.all([
-          fetch(`${API_URL}families/${familyId}`),
-          fetch(`${API_URL}users?familyId=${familyId}`),
+          api(`families/${familyId}`),
+          api(`users?familyId=${familyId}`),
         ]);
         const [dataFamily, dataMembers] = await Promise.all([
           responseFamily.json(),
@@ -64,8 +64,8 @@ export default function useFamilyData() {
     const fetchActivities = async () => {
       try {
         const [resCurrent, resHistory] = await Promise.all([
-          fetch(`${API_URL}families/${familyId}/activities/current`),
-          fetch(`${API_URL}families/${familyId}/activities`),
+          api(`families/${familyId}/activities/current`),
+          api(`families/${familyId}/activities`),
         ]);
         const [dataCurrent, dataHistory] = await Promise.all([resCurrent.json(), resHistory.json()]);
 

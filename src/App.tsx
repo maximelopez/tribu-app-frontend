@@ -1,7 +1,7 @@
 import { Navigate, Outlet, Route, Routes } from 'react-router';
 import { useUserStore } from './store/userStore';
 import useFamilyData from './hooks/useFamilyData';
-import useFamilyRealtime from './hooks/useFamilyRealtime';
+import useRealtime from './hooks/useRealtime';
 import TabBar from './components/TabBar';
 
 import Signup from './screens/Signup';
@@ -39,7 +39,7 @@ function PhoneFrame() {
 // Utilisateur connecté : données de la Tribu + temps réel, actifs sur tous les écrans
 function AuthenticatedLayout() {
   useFamilyData();
-  useFamilyRealtime();
+  useRealtime();
   return <Outlet />;
 }
 
@@ -59,12 +59,13 @@ function TabsLayout() {
 // pas connecté -> inscription / connexion, onboarding pas fini -> onboarding, sinon l'app
 export default function App() {
   const user = useUserStore(state => state.user);
+  const token = useUserStore(state => state.token);
   const onboardingCompleted = useUserStore(state => state.onboardingCompleted);
 
   return (
     <Routes>
       <Route element={<PhoneFrame />}>
-        {!user ? (
+        {!user || !token ? (
           <>
             <Route path="/inscription" element={<Signup />} />
             <Route path="/connexion" element={<Login />} />

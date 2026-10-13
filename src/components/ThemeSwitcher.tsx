@@ -1,7 +1,7 @@
 import { useTheme, THEME_COLORS, themeMap } from '../context/ThemeContext';
 import type { ThemeColor } from '../context/ThemeContext';
 import { useUserStore } from '../store/userStore';
-import { API_URL } from '../config';
+import { api } from '../api';
 
 const CIRCLE_SIZE = 34;
 
@@ -18,10 +18,9 @@ export default function ThemeSwitcher() {
       if (!user?.id) return;
 
       // 2 - sauvegarde dans le backend
-      await fetch(`${API_URL}users/${user.id}/theme`, {
+      await api(`users/${user.id}/theme`, {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ theme: color }),
+        body: { theme: color },
       });
 
       // 3 - mise à jour dans le store (localStorage)

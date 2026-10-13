@@ -3,54 +3,97 @@ import { socket } from '../socket';
 import { useUserStore } from '../store/userStore';
 import { useFamilyStore } from '../store/familyStore';
 import type { Family, FamilyActivity } from '../store/familyStore';
-import { API_URL } from '../config';
+import { api, expireSession } from '../api';
 
-
-export default function useFamilyRealtime() {
+// Temps réel de l'app connectée :
+// - connexion du socket avec le token
+// - événements de la Tribu (demandes, membres, activités…)
+// - resynchronisation au retour sur l'app (événements manqués pendant que le socket était coupé)
+export default function useRealtime() {
   const userId = useUserStore(state => state.user?.id);
+  const token = useUserStore(state => state.token);
   const familyId = useUserStore(state => state.user?.familyId);
   const setUser = useUserStore((state) => state.setUser);
   const setFamily = useFamilyStore((state) => state.setFamily);
   const setCurrentActivity = useFamilyStore((state) => state.setCurrentActivity);
   const setCompletedActivities = useFamilyStore((state) => state.setCompletedActivities);
 
+  // Connexion du socket avec le token (le serveur refuse sans token valide)
+  useEffect(() => {
+    if (!token) return;
+
+    // Token refusé par le serveur : session invalide, on déconnecte
+    const handleConnectError = (error: Error) => {
+      if (error.message === 'Non autorisé') expireSession();
+    };
+
+    socket.on('connect_error', handleConnectError);
+    socket.connect();
+
+    return () => {
+      socket.off('connect_error', handleConnectError);
+      socket.disconnect();
+    };
+  }, [token]);
+
   useEffect(() => {
     if (!userId) return;
 
-    // Rejoindre les rooms
-    socket.emit('registerUser', userId);
-    if (familyId) socket.emit('joinFamilyRoom', familyId);
+    // Rejoindre la room de la Tribu (la room perso est rejointe automatiquement par le serveur),
+    // et de nouveau après chaque reconnexion
+    const joinRooms = () => {
+      if (familyId) socket.emit('joinFamilyRoom', familyId);
+    };
+    joinRooms();
+
+    // Rattrape les événements manqués (app en arrière-plan, coupure réseau) :
+    // on relit son profil et on met à jour sa Tribu si elle a changé
+    // (ex : demande acceptée pendant que l'app était fermée).
+    // Le changement de familyId suffit : useFamilyData charge alors la Tribu.
+    const resync = async () => {
+      try {
+        const res = await api(`users/${userId}`);
+        if (!res.ok) return;
+        const me = await res.json();
+        const newFamilyId: string | null = me.familyId ?? null;
+
+        if (newFamilyId !== (familyId ?? null)) {
+          setUser((prev) => (prev ? { ...prev, familyId: newFamilyId } : prev));
+        }
+      } catch (error) {
+        console.error('Erreur resynchronisation :', error);
+      }
+    };
+
+    // Reconnexion du socket : on rejoint la room de la Tribu et on resynchronise
+    const handleConnect = () => {
+      joinRooms();
+      resync();
+    };
+
+    // Retour sur l'app (onglet ou PWA de nouveau au premier plan)
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') resync();
+    };
 
     // Handlers stables
+    // Nouvelle demande : on recharge la Tribu, qui contient les demandes avec les noms
     const handleNewJoinRequest = async (data: { familyId: string; userId: string }) => {
       try {
-        // fetch les infos de l'utilisateur qui a demandé
-        const res = await fetch(`${API_URL}users/${data.userId}`);
-        const userData = await res.json();
-        const userName = userData.name || 'Utilisateur inconnu';
+        const res = await api(`families/${data.familyId}`);
+        const result = await res.json();
+        if (!res.ok || !result.family) return;
 
         setFamily((prev) => {
-          if (!prev) return prev;
+          if (!prev || prev.id !== data.familyId) return prev;
 
           // On vérifie qu'on est bien le créateur
           if (prev.creatorId !== userId) return prev;
 
-          const alreadyExists = prev.joinRequests.some(
-            (req) => req.id === data.userId
-          );
-
-          if (alreadyExists) return prev;
-
-          return {
-            ...prev,
-            joinRequests: [
-              ...prev.joinRequests,
-              { id: data.userId, name: userName },
-            ],
-          };
+          return { ...prev, joinRequests: result.family.joinRequests };
         });
       } catch (error) {
-        console.error('Erreur fetch user pour joinRequest', error);
+        console.error('Erreur chargement demande pour rejoindre :', error);
       }
     };
 
@@ -59,18 +102,12 @@ export default function useFamilyRealtime() {
       setFamily((prev) => (prev ? { ...prev, ...data } : prev));
     };
 
-    const handleFamilyAccepted = async (data: { familyId: string }) => {
+    // Demande acceptée : le changement de familyId suffit,
+    // useFamilyData charge alors la Tribu complète (avec ses membres)
+    const handleFamilyAccepted = (data: { familyId: string }) => {
       setUser((prevUser) =>
         prevUser ? { ...prevUser, familyId: data.familyId } : prevUser
       );
-
-      try {
-        const response = await fetch(`${API_URL}families/${data.familyId}`);
-        const result = await response.json();
-        if (result.family) setFamily(result.family);
-      } catch (err) {
-        console.error('Erreur fetch famille après acceptation :', err);
-      }
     };
 
     // La personne a été acceptée ailleurs : on retire sa demande de notre liste
@@ -88,7 +125,7 @@ export default function useFamilyRealtime() {
     const handleMemberJoined = async () => {
       if (!familyId) return;
       try {
-        const res = await fetch(`${API_URL}users?familyId=${familyId}`);
+        const res = await api(`users?familyId=${familyId}`);
         const data = await res.json();
         setFamily((prev) => (prev ? { ...prev, members: data.users } : prev));
       } catch (error) {
@@ -116,8 +153,8 @@ export default function useFamilyRealtime() {
       if (data.status === 'completed' && familyId) {
         try {
           const [resFamily, resMembers] = await Promise.all([
-            fetch(`${API_URL}families/${familyId}`),
-            fetch(`${API_URL}users?familyId=${familyId}`),
+            api(`families/${familyId}`),
+            api(`users?familyId=${familyId}`),
           ]);
           const dataFamily = await resFamily.json();
           const dataMembers = await resMembers.json();
@@ -138,6 +175,8 @@ export default function useFamilyRealtime() {
     };
 
     // Écoute des events
+    socket.on('connect', handleConnect);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
     socket.on('newJoinRequest', handleNewJoinRequest);
     socket.on('familyUpdated', handleFamilyUpdated);
     socket.on('familyAccepted', handleFamilyAccepted);
@@ -147,6 +186,8 @@ export default function useFamilyRealtime() {
 
     // Nettoyage
     return () => {
+      socket.off('connect', handleConnect);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
       socket.off('newJoinRequest', handleNewJoinRequest);
       socket.off('familyUpdated', handleFamilyUpdated);
       socket.off('familyAccepted', handleFamilyAccepted);

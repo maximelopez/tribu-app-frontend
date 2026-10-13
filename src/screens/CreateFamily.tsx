@@ -7,7 +7,7 @@ import { mascotteTribu } from '../assets';
 import Input from '../components/Input';
 import Button from '../components/Button';
 import ScreenHeader from '../components/ScreenHeader';
-import { API_URL } from '../config';
+import { api } from '../api';
 
 // Couleurs Figma (creer-tribu)
 const TEXT_TITLE = '#1C1F1C';
@@ -45,10 +45,9 @@ export default function CreateFamily() {
 
     try {
       // 1 - Créer la famille
-      const response = await fetch(API_URL + 'families', {
+      const response = await api('families', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: name.trim(), city: city.trim(), creatorId: user.id }),
+        body: { name: name.trim(), city: city.trim() },
       });
       const data = await response.json();
 
@@ -57,25 +56,12 @@ export default function CreateFamily() {
         return;
       }
 
+      // 2 - Le backend rattache déjà le créateur à sa Tribu :
+      //     on met à jour le store utilisateur (déclenche le chargement de la Tribu)
       const familyId = data.family.id;
-
-      // 2 - Associer la famille à l'utilisateur
-      const userResponse = await fetch(`${API_URL}users/${user.id}/family`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ familyId }),
-      });
-      const userData = await userResponse.json();
-
-      if (!userResponse.ok) {
-        setErrorMessage(userData.message || "Impossible d'associer la famille.");
-        return;
-      }
-
-      // 3 - Mettre à jour le store utilisateur (déclenche le chargement de la Tribu)
       setUser(prev => (prev ? { ...prev, familyId } : prev));
 
-      // 4 - Retour à l'accueil
+      // 3 - Retour à l'accueil
       navigate('/', { replace: true });
     } catch (error) {
       console.error('Erreur :', error);

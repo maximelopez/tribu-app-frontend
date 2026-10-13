@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useFamilyStore } from '../store/familyStore';
 import { useTheme } from '../context/ThemeContext';
-import { API_URL } from '../config';
+import { api } from '../api';
 
 const TEXT_STRONG = '#161616';
 const REFUSE_RED = '#EA4A1F';
@@ -22,10 +22,9 @@ export default function JoinRequestItem({ requestUser, familyId }: JoinRequestIt
     setIsSubmitting(true);
 
     try {
-      const response = await fetch(`${API_URL}families/${familyId}/join-requests/${requestUser.id}`, {
+      const response = await api(`families/${familyId}/join-requests/${requestUser.id}`, {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ accept }),
+        body: { accept },
       });
 
       // Succès, ou demande devenue invalide (ex : personne déjà acceptée ailleurs) :

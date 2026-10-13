@@ -5,7 +5,7 @@ import { themeMap } from '../context/ThemeContext';
 import { backgroundMap } from '../assets';
 import Button from '../components/Button';
 import OnboardingLayout from '../components/OnboardingLayout';
-import { API_URL } from '../config';
+import { api } from '../api';
 
 // Avant le choix du thème, l'onboarding est en vert (maquette)
 const BRAND = themeMap.green;
@@ -68,10 +68,9 @@ export default function Birthdate() {
     setLoading(true);
 
     try {
-      const response = await fetch(`${API_URL}users/${user.id}/birthdate`, {
+      const response = await api(`users/${user.id}/birthdate`, {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ birthdate }),
+        body: { birthdate },
       });
 
       if (!response.ok) {

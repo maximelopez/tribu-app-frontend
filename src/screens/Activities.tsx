@@ -4,7 +4,7 @@ import { Search } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 import type { Activity, Category } from '../store/familyStore';
 import ActivityCard from '../components/ActivityCard';
-import { API_URL } from '../config';
+import { api } from '../api';
 
 // Couleurs Figma
 const TEXT_STRONG = '#161616';
@@ -35,7 +35,7 @@ export default function Activities() {
   useEffect(() => {
     const fetchActivities = async () => {
       try {
-        const response = await fetch(API_URL + 'activities');
+        const response = await api('activities');
         const data = await response.json();
         if (response.ok) setActivities(data);
       } catch (error) {

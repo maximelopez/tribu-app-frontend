@@ -15,8 +15,10 @@ export interface User {
 
 interface UserStore {
   user: User | null;
+  token: string | null; // token de connexion (envoyé au backend à chaque requête)
   onboardingCompleted: boolean;
   setUser: (user: User | ((prev: User | null) => User | null)) => void;
+  setToken: (token: string | null) => void;
   setOnboardingCompleted: (val: boolean) => void;
   logout: () => void;
 }
@@ -26,6 +28,7 @@ export const useUserStore = create<UserStore>()(
   persist(
     (set) => ({
       user: null,
+      token: null,
       onboardingCompleted: false,
       setUser: (userOrUpdater) =>
         set((state) => ({
@@ -34,8 +37,9 @@ export const useUserStore = create<UserStore>()(
               ? (userOrUpdater as (prev: User | null) => User | null)(state.user)
               : userOrUpdater,
         })),
+      setToken: (token) => set({ token }),
       setOnboardingCompleted: (val) => set({ onboardingCompleted: val }),
-      logout: () => set({ user: null, onboardingCompleted: false }),
+      logout: () => set({ user: null, token: null, onboardingCompleted: false }),
     }),
     {
       name: 'tribu:auth:user',

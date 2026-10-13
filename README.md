@@ -1,4 +1,4 @@
-# Tribu — version PWA (React + Vite)
+# Tribu - PWA (React + Vite)
 
 Même application que `mobile` (React Native), en Progressive Web App.
 Elle utilise le même backend, sans aucune modification.
