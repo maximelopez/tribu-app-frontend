@@ -1,0 +1,9 @@
+// Adresse du backend : obligatoire, définie dans le fichier .env (VITE_API_URL)
+const envUrl = import.meta.env.VITE_API_URL as string | undefined;
+
+if (!envUrl) {
+  console.error('VITE_API_URL manquante : ajoute-la dans le fichier .env (voir README.md).');
+}
+
+export const SERVER_URL = (envUrl ?? '').replace(/\/+$/, '');
+export const API_URL = `${SERVER_URL}/api/`;
