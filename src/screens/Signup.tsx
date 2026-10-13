@@ -68,7 +68,11 @@ export default function Signup() {
       const data = await response.json();
 
       if (!response.ok) {
-        setErrorMessage(response.status === 409 ? 'Cet email est déjà utilisé.' : data.error || 'Une erreur est survenue.');
+        setErrorMessage(
+          response.status === 409 ? 'Cet email est déjà utilisé.'
+            : response.status === 429 ? data.message || 'Trop de tentatives. Réessaie dans quelques minutes.'
+            : data.error || 'Une erreur est survenue.'
+        );
         return;
       }
 

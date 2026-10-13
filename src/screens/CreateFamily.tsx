@@ -75,7 +75,7 @@ export default function CreateFamily() {
     <div className="flex-1 min-h-0 flex flex-col">
       <ScreenHeader title="Créer ma Tribu" />
 
-      <div className="flex-1 overflow-y-auto no-scrollbar flex flex-col" style={{ padding: '8px 17px 24px', gap: 12 }}>
+      <div className="flex-1 overflow-y-auto no-scrollbar flex flex-col" style={{ padding: '8px 17px 28px', paddingBottom: 'calc(28px + env(safe-area-inset-bottom))', gap: 12 }}>
         {/* En-tête : carte mascotte + titre */}
         <div className="flex items-center bg-white" style={{ boxShadow: CARD_SHADOW, gap: 12, padding: 12, borderRadius: 16 }}>
           <div
@@ -132,14 +132,14 @@ export default function CreateFamily() {
             </div>
           ))}
         </div>
-      </div>
 
-      {/* Bouton en bas */}
-      <div className="shrink-0" style={{ padding: '8px 14px 28px', paddingBottom: 'calc(28px + env(safe-area-inset-bottom))' }}>
-        {errorMessage ? (
-          <p className="font-outfit text-center m-0 mb-2" style={{ color: '#EA4A1F' }}>{errorMessage}</p>
-        ) : null}
-        <Button title="Créer ma Tribu" onPress={handleCreateFamily} loading={loading} color={theme.primary} />
+        {/* Bouton juste sous le contenu (comme la maquette) */}
+        <div style={{ marginTop: 22 }}>
+          {errorMessage ? (
+            <p className="font-outfit text-center m-0 mb-2" style={{ color: '#EA4A1F' }}>{errorMessage}</p>
+          ) : null}
+          <Button title="Créer ma Tribu" onPress={handleCreateFamily} loading={loading} color={theme.primary} />
+        </div>
       </div>
     </div>
   );

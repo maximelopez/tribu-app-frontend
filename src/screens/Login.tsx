@@ -39,7 +39,11 @@ export default function Login() {
       const data = await response.json();
 
       if (!response.ok) {
-        setErrorMessage(response.status === 401 ? 'Email ou mot de passe incorrect.' : 'Une erreur est survenue.');
+        setErrorMessage(
+          response.status === 401 ? 'Email ou mot de passe incorrect.'
+            : response.status === 429 ? data.message || 'Trop de tentatives. Réessaie dans quelques minutes.'
+            : 'Une erreur est survenue.'
+        );
         return;
       }
 
