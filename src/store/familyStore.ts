@@ -76,6 +76,9 @@ interface FamilyStore {
   // Historique des activités terminées (les plus récentes d'abord)
   completedActivities: FamilyActivity[];
   setCompletedActivities: (list: FamilyActivity[] | ((prev: FamilyActivity[]) => FamilyActivity[])) => void;
+  // Messages non lus du chat (point rouge sur l'onglet Chat)
+  unreadCount: number;
+  setUnreadCount: (count: number | ((prev: number) => number)) => void;
 }
 
 export const useFamilyStore = create<FamilyStore>((set) => ({
@@ -86,7 +89,7 @@ export const useFamilyStore = create<FamilyStore>((set) => ({
         ? familyOrUpdater(state.family)
         : familyOrUpdater,
     })),
-  clearFamily: () => set({ family: null, currentActivity: null, completedActivities: [] }),
+  clearFamily: () => set({ family: null, currentActivity: null, completedActivities: [], unreadCount: 0 }),
   isLoadingFamily: false,
   setIsLoadingFamily: (val) => set({ isLoadingFamily: val }),
   currentActivity: null,
@@ -97,5 +100,10 @@ export const useFamilyStore = create<FamilyStore>((set) => ({
       completedActivities: typeof listOrUpdater === 'function'
         ? listOrUpdater(state.completedActivities)
         : listOrUpdater,
+    })),
+  unreadCount: 0,
+  setUnreadCount: (countOrUpdater) =>
+    set((state) => ({
+      unreadCount: typeof countOrUpdater === 'function' ? countOrUpdater(state.unreadCount) : countOrUpdater,
     })),
 }));

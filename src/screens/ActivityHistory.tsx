@@ -50,6 +50,7 @@ export default function ActivityHistory() {
                   name={item.activity.name}
                   description={item.activity.description}
                   isPartner={item.activity.isPartner}
+                  category={item.activity.category}
                   onPress={() => openActivityDetail(item)}
                 />
               </div>

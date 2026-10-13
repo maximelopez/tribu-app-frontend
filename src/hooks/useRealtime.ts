@@ -1,4 +1,5 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
+import { useLocation } from 'react-router';
 import { socket } from '../socket';
 import { useUserStore } from '../store/userStore';
 import { useFamilyStore } from '../store/familyStore';
@@ -17,6 +18,14 @@ export default function useRealtime() {
   const setFamily = useFamilyStore((state) => state.setFamily);
   const setCurrentActivity = useFamilyStore((state) => state.setCurrentActivity);
   const setCompletedActivities = useFamilyStore((state) => state.setCompletedActivities);
+  const setUnreadCount = useFamilyStore((state) => state.setUnreadCount);
+
+  // Écran Chat affiché ? (les messages y sont lus directement, voir useFamilyChat)
+  const location = useLocation();
+  const isOnChatRef = useRef(false);
+  useEffect(() => {
+    isOnChatRef.current = location.pathname === '/chat';
+  }, [location.pathname]);
 
   // Connexion du socket avec le token (le serveur refuse sans token valide)
   useEffect(() => {
@@ -65,15 +74,40 @@ export default function useRealtime() {
       }
     };
 
+    // Nombre de messages non lus du chat (sauf si le chat est affiché : il se marque lu lui-même)
+    const fetchUnreadCount = async () => {
+      if (!familyId || isOnChatRef.current) return;
+      try {
+        const res = await api(`families/${familyId}/chat/unread`);
+        if (!res.ok) return;
+        const data = await res.json();
+        setUnreadCount(data.count ?? 0);
+      } catch (error) {
+        console.error('Erreur messages non lus :', error);
+      }
+    };
+    if (familyId) fetchUnreadCount();
+    else setUnreadCount(0);
+
+    // Nouveau message d'un autre membre, chat non affiché : un non lu de plus
+    const handleNewMessage = (message: { sender?: { _id?: string } }) => {
+      if (isOnChatRef.current || message.sender?._id === userId) return;
+      setUnreadCount((count) => count + 1);
+    };
+
     // Reconnexion du socket : on rejoint la room de la Tribu et on resynchronise
     const handleConnect = () => {
       joinRooms();
       resync();
+      fetchUnreadCount();
     };
 
     // Retour sur l'app (onglet ou PWA de nouveau au premier plan)
     const handleVisibilityChange = () => {
-      if (document.visibilityState === 'visible') resync();
+      if (document.visibilityState === 'visible') {
+        resync();
+        fetchUnreadCount();
+      }
     };
 
     // Handlers stables
@@ -176,6 +210,7 @@ export default function useRealtime() {
 
     // Écoute des events
     socket.on('connect', handleConnect);
+    socket.on('newMessage', handleNewMessage);
     document.addEventListener('visibilitychange', handleVisibilityChange);
     socket.on('newJoinRequest', handleNewJoinRequest);
     socket.on('familyUpdated', handleFamilyUpdated);
@@ -187,6 +222,7 @@ export default function useRealtime() {
     // Nettoyage
     return () => {
       socket.off('connect', handleConnect);
+      socket.off('newMessage', handleNewMessage);
       document.removeEventListener('visibilitychange', handleVisibilityChange);
       socket.off('newJoinRequest', handleNewJoinRequest);
       socket.off('familyUpdated', handleFamilyUpdated);

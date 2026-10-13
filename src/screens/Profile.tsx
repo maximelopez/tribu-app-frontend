@@ -164,6 +164,7 @@ export default function Profile() {
                   name={fa.activity.name}
                   description={fa.activity.description}
                   isPartner={fa.activity.isPartner}
+                  category={fa.activity.category}
                   onPress={() => openActivityDetail(fa)}
                 />
               ))}

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { socket } from '../socket';
 import { useUserStore } from '../store/userStore';
+import { useFamilyStore } from '../store/familyStore';
 
 export interface Message {
   _id: string;
@@ -19,13 +20,25 @@ export default function useFamilyChat() {
   const familyId = user?.familyId;
 
   const [messages, setMessages] = useState<Message[]>([]);
+  const setUnreadCount = useFamilyStore(state => state.setUnreadCount);
 
   useEffect(() => {
     if (!familyId) return;
 
-    const handleHistory = (history: Message[]) => setMessages(history);
-    const handleNewMessage = (message: Message) =>
+    // Chat affiché : tout est lu (point rouge de l'onglet retiré)
+    const markAsRead = () => {
+      socket.emit('markChatRead');
+      setUnreadCount(0);
+    };
+
+    const handleHistory = (history: Message[]) => {
+      setMessages(history);
+      markAsRead();
+    };
+    const handleNewMessage = (message: Message) => {
       setMessages(prev => [...prev, message]);
+      markAsRead();
+    };
 
     // Charger l'historique (la room de la Tribu est rejointe par useRealtime)
     const loadHistory = () => socket.emit('getHistory');
@@ -40,7 +53,7 @@ export default function useFamilyChat() {
       socket.off('newMessage', handleNewMessage);
       socket.off('connect', loadHistory);
     };
-  }, [familyId]);
+  }, [familyId, setUnreadCount]);
 
   const sendMessage = (content: string) => {
     if (!content.trim() || !user || !familyId) return;

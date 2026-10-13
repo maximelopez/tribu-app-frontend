@@ -93,3 +93,9 @@ src/
 - **Écran de démarrage iPhone** (splash screen).
 - **Mot de passe oublié** (nécessite l'envoi d'emails côté backend).
 - **Notifications push** (Android ; iPhone seulement si l'app est installée).
+- **Accueil** :
+  - cloche de notifications en haut à droite (avec compteur) ;
+  - lien « Comment ça fonctionne ? » (contenu à définir) ;
+  - carte « activité à valider » : illustration de l'activité à la place de la mascotte ;
+  - chargement : carré blanc avec roue par-dessus l'écran grisé (comme la maquette).
+- **Recherche de Tribu** : état affiché avant de taper (en attente du designer).

@@ -35,8 +35,8 @@ export default function FamilyLeaderboard({
     <div className="rounded-2xl bg-white overflow-hidden" style={{ boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.08)' }}>
       {/* Header coloré : nom, membres, niveau */}
       <div style={{ backgroundColor: theme.primary }}>
-        <div className="flex flex-col" style={{ padding: '16px 18px 14px', gap: 1 }}>
-          <span className="text-white font-outfit-bold text-base">{familyName}</span>
+        <div className="flex flex-col" style={{ padding: '20px 18px 8px', gap: 1 }}>
+          <span className="text-white font-outfit-bold" style={{ fontSize: 32, lineHeight: 'normal' }}>{familyName}</span>
           <span className="text-white font-outfit text-sm">
             {members.length} membre{members.length > 1 ? 's' : ''}
           </span>

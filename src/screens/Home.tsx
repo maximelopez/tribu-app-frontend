@@ -83,7 +83,10 @@ export default function Home() {
             />
 
             {/* Activité en cours, ou rien de prévu */}
-            <div className="flex items-center bg-white rounded-2xl p-5" style={{ boxShadow: CARD_SHADOW, gap: 10 }}>
+            <div
+              className="flex items-center bg-white rounded-2xl p-5"
+              style={{ border: `1px solid ${theme.primary}`, boxShadow: `0px 4px 10px ${theme.transparent}`, gap: 10 }}
+            >
               <div
                 className="flex items-center justify-center rounded-full shrink-0"
                 style={{ width: 65, height: 65, backgroundColor: theme.transparent }}
@@ -118,7 +121,7 @@ export default function Home() {
             {latestActivities.length > 0 && (
               <div className="flex flex-col" style={{ gap: 12, marginTop: 6 }}>
                 <div className="flex items-center justify-between">
-                  <span className="font-outfit text-base" style={{ color: '#161616' }}>Dernières activités :</span>
+                  <span className="font-outfit-bold text-base" style={{ color: '#000000' }}>Dernières activités</span>
                   {/* Historique complet si plus de 3 activités */}
                   {completedActivities.length > latestActivities.length && (
                     <button
@@ -136,6 +139,7 @@ export default function Home() {
                     name={fa.activity.name}
                     description={fa.activity.description}
                     isPartner={fa.activity.isPartner}
+                    category={fa.activity.category}
                     onPress={() => openActivityDetail(fa)}
                   />
                 ))}
