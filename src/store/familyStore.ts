@@ -36,6 +36,7 @@ export interface Activity {
   imageUrl?: string | null; // photo de l'activité (sinon : illustration de la catégorie)
   isPartner: boolean; // true = offre partenaire, false = activité libre
   offer?: string | null; // offre partenaire (ex : "1 partie offerte"), seulement si isPartner
+  isActive?: boolean; // false = retirée du catalogue (consultable, mais plus possible de la choisir)
   points?: number;    // points gagnés par chaque membre inscrit
 }
 

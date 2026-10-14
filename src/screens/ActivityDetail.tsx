@@ -315,6 +315,11 @@ export default function ActivityDetail() {
                 {completedDate ? `Le ${completedDate}, ` : ''}avec {completed.participants.map(p => p.name).join(', ')}
               </span>
             </div>
+          ) : activity.isActive === false ? (
+            /* Retirée du catalogue : on peut la consulter (historique), plus la choisir */
+            <p className="font-outfit text-center m-0" style={{ fontSize: 14, color: '#969696' }}>
+              Cette activité n'est plus proposée.
+            </p>
           ) : hasFamily ? (
             <>
               {/* Qui participe ? */}
