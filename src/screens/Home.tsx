@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { useUserStore } from '../store/userStore';
 import { useFamilyStore, toCatalogActivity } from '../store/familyStore';
@@ -7,6 +8,8 @@ import JoinRequestItem from '../components/JoinRequestItem';
 import FamilyLeaderboard from '../components/FamilyLeaderboard';
 import ActivityCard from '../components/ActivityCard';
 import Spinner from '../components/Spinner';
+import ConfirmModal from '../components/ConfirmModal';
+import { api } from '../api';
 import { chevronRightGrey, chevronRightWhite, getActivityIllustration, mascotte1, mascotteActivity, usersGroupIcon } from '../assets';
 
 const CARD_SHADOW = '0px 4px 6px rgba(22, 22, 22, 0.08)';
@@ -17,10 +20,58 @@ export default function Home() {
   const isLoadingFamily = useFamilyStore(state => state.isLoadingFamily);
   const currentActivity = useFamilyStore(state => state.currentActivity);
   const completedActivities = useFamilyStore(state => state.completedActivities);
+  const pendingRequest = useFamilyStore(state => state.pendingRequest);
+  const setPendingRequest = useFamilyStore(state => state.setPendingRequest);
   const navigate = useNavigate();
   const { theme } = useTheme();
 
+  // Annulation de la demande en attente (avec confirmation)
+  const [showCancelModal, setShowCancelModal] = useState(false);
+  const [cancelling, setCancelling] = useState(false);
+  const [cancelError, setCancelError] = useState('');
+
   if (!user) return null;
+
+  const cancelRequest = async () => {
+    if (!pendingRequest || cancelling) return;
+    setCancelling(true);
+    setCancelError('');
+    try {
+      const response = await api(`families/${pendingRequest.familyId}/join-requests`, { method: 'DELETE' });
+      // 404 : la demande n'existe déjà plus (acceptée ou refusée entre-temps)
+      if (response.ok || response.status === 404) {
+        setPendingRequest(null);
+        setShowCancelModal(false);
+      } else {
+        setCancelError("Impossible d'annuler la demande. Réessaie plus tard.");
+        setShowCancelModal(false);
+      }
+    } catch (error) {
+      console.error('Erreur annulation demande :', error);
+      setCancelError('Impossible de se connecter au serveur.');
+      setShowCancelModal(false);
+    } finally {
+      setCancelling(false);
+    }
+  };
+
+  // Carte du haut quand on n'a pas de Tribu : mascotte + texte
+  const introCard = (text: string) => (
+    <div
+      className="w-full bg-white flex flex-col items-center p-4 gap-3 mb-4"
+      style={{ borderRadius: 24, boxShadow: '0px 4px 6px rgba(22, 22, 22, 0.04)' }}
+    >
+      <div className="w-full flex items-center justify-center" style={{ height: 160 }}>
+        <div
+          className="flex items-center justify-center rounded-full"
+          style={{ width: 135, height: 135, backgroundColor: 'rgba(32, 193, 177, 0.1)' }}
+        >
+          <img src={mascotte1} alt="" style={{ width: 115, height: 115, objectFit: 'contain' }} />
+        </div>
+      </div>
+      <p className="font-outfit text-base text-center m-0" style={{ color: '#161616' }}>{text}</p>
+    </div>
+  );
 
   // Ouvre le détail d'une activité de la Tribu (en cours ou terminée)
   const openActivityDetail = (familyActivity: FamilyActivity) => {
@@ -157,25 +208,54 @@ export default function Home() {
               </div>
             )}
           </div>
+        ) : pendingRequest ? (
+          <>
+            {/* Demande en attente (Figma : homepage-demande-en-attente) */}
+            {introCard('Ta demande est en cours de validation.')}
+
+            <div
+              className="w-full bg-white flex flex-col items-center"
+              style={{ border: '1px solid #E0E7E4', borderRadius: 18, padding: 22, gap: 14 }}
+            >
+              <span
+                className="font-outfit-bold rounded-full"
+                style={{ fontSize: 12, color: '#B87000', backgroundColor: 'rgba(255, 157, 0, 0.14)', padding: '8px 14px' }}
+              >
+                En attente d’approbation
+              </span>
+              <span className="font-outfit-bold text-center" style={{ fontSize: 19, lineHeight: 'normal', color: '#1C1F1C' }}>
+                Demande envoyée
+              </span>
+              <p className="font-outfit m-0 w-full" style={{ fontSize: 14, lineHeight: 1.5, color: '#6B7570' }}>
+                Ta demande pour rejoindre « {pendingRequest.name} » a bien été envoyée. En attente de l’approbation de
+                l’administrateur - une fois accepté, tu gagneras tes premiers points et badges.
+              </p>
+              {cancelError && (
+                <p className="font-outfit text-center m-0" style={{ fontSize: 14, color: '#EA4A1F' }}>{cancelError}</p>
+              )}
+              <button
+                onClick={() => setShowCancelModal(true)}
+                className="w-full flex items-center justify-center font-outfit-bold"
+                style={{ fontSize: 15, color: '#161616', backgroundColor: '#F3F3F8', borderRadius: 12, padding: '14px 0', border: 'none' }}
+              >
+                Annuler la demande
+              </button>
+            </div>
+
+            <ConfirmModal
+              visible={showCancelModal}
+              title="Annuler ta demande ?"
+              message={`Ta demande pour rejoindre « ${pendingRequest.name} » sera supprimée.`}
+              confirmLabel="Annuler la demande"
+              loading={cancelling}
+              onConfirm={cancelRequest}
+              onCancel={() => setShowCancelModal(false)}
+            />
+          </>
         ) : (
           <>
             {/* Carte illustration */}
-            <div
-              className="w-full bg-white flex flex-col items-center p-4 gap-3 mb-4"
-              style={{ borderRadius: 24, boxShadow: '0px 4px 6px rgba(22, 22, 22, 0.04)' }}
-            >
-              <div className="w-full flex items-center justify-center" style={{ height: 160 }}>
-                <div
-                  className="flex items-center justify-center rounded-full"
-                  style={{ width: 135, height: 135, backgroundColor: 'rgba(32, 193, 177, 0.1)' }}
-                >
-                  <img src={mascotte1} alt="" style={{ width: 115, height: 115, objectFit: 'contain' }} />
-                </div>
-              </div>
-              <p className="font-outfit text-base text-center m-0" style={{ color: '#161616' }}>
-                Commencez par rejoindre ou créer votre Tribu pour vivre des activités en famille
-              </p>
-            </div>
+            {introCard('Commencez par rejoindre ou créer votre Tribu pour vivre des activités en famille')}
 
             {/* Boutons Rejoindre / Créer */}
             <div className="w-full flex flex-col gap-3">

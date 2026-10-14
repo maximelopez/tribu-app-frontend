@@ -19,6 +19,7 @@ export default function useRealtime() {
   const setCurrentActivity = useFamilyStore((state) => state.setCurrentActivity);
   const setCompletedActivities = useFamilyStore((state) => state.setCompletedActivities);
   const setUnreadCount = useFamilyStore((state) => state.setUnreadCount);
+  const setPendingRequest = useFamilyStore((state) => state.setPendingRequest);
 
   // Écran Chat affiché ? (les messages y sont lus directement, voir useFamilyChat)
   const location = useLocation();
@@ -89,6 +90,21 @@ export default function useRealtime() {
     if (familyId) fetchUnreadCount();
     else setUnreadCount(0);
 
+    // Demande en attente pour rejoindre une Tribu (seulement sans Tribu)
+    const fetchPendingRequest = async () => {
+      if (familyId) return;
+      try {
+        const res = await api('families/join-requests/me');
+        if (!res.ok) return;
+        const data = await res.json();
+        setPendingRequest(data.joinRequest ?? null);
+      } catch (error) {
+        console.error('Erreur demande en attente :', error);
+      }
+    };
+    if (familyId) setPendingRequest(null);
+    else fetchPendingRequest();
+
     // Nouveau message d'un autre membre, chat non affiché : un non lu de plus
     const handleNewMessage = (message: { sender?: { _id?: string } }) => {
       if (isOnChatRef.current || message.sender?._id === userId) return;
@@ -100,6 +116,7 @@ export default function useRealtime() {
       joinRooms();
       resync();
       fetchUnreadCount();
+      fetchPendingRequest();
     };
 
     // Retour sur l'app (onglet ou PWA de nouveau au premier plan)
@@ -107,6 +124,7 @@ export default function useRealtime() {
       if (document.visibilityState === 'visible') {
         resync();
         fetchUnreadCount();
+        fetchPendingRequest();
       }
     };
 
@@ -139,9 +157,15 @@ export default function useRealtime() {
     // Demande acceptée : le changement de familyId suffit,
     // useFamilyData charge alors la Tribu complète (avec ses membres)
     const handleFamilyAccepted = (data: { familyId: string }) => {
+      setPendingRequest(null);
       setUser((prevUser) =>
         prevUser ? { ...prevUser, familyId: data.familyId } : prevUser
       );
+    };
+
+    // Demande refusée : l'Accueil revient à "Rejoindre ou créer une Tribu"
+    const handleFamilyRejected = () => {
+      setPendingRequest(null);
     };
 
     // La personne a été acceptée ailleurs : on retire sa demande de notre liste
@@ -215,6 +239,7 @@ export default function useRealtime() {
     socket.on('newJoinRequest', handleNewJoinRequest);
     socket.on('familyUpdated', handleFamilyUpdated);
     socket.on('familyAccepted', handleFamilyAccepted);
+    socket.on('familyRejected', handleFamilyRejected);
     socket.on('joinRequestRemoved', handleJoinRequestRemoved);
     socket.on('memberJoined', handleMemberJoined);
     socket.on('familyActivityUpdated', handleFamilyActivityUpdated);
@@ -227,6 +252,7 @@ export default function useRealtime() {
       socket.off('newJoinRequest', handleNewJoinRequest);
       socket.off('familyUpdated', handleFamilyUpdated);
       socket.off('familyAccepted', handleFamilyAccepted);
+      socket.off('familyRejected', handleFamilyRejected);
       socket.off('joinRequestRemoved', handleJoinRequestRemoved);
       socket.off('memberJoined', handleMemberJoined);
       socket.off('familyActivityUpdated', handleFamilyActivityUpdated);

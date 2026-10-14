@@ -63,6 +63,13 @@ export const toCatalogActivity = (familyActivity: FamilyActivity): Activity => {
   return { _id: id, ...activity };
 };
 
+// Demande en attente pour rejoindre une Tribu (une seule à la fois)
+export interface PendingRequest {
+  familyId: string;
+  name: string;
+  city: string;
+}
+
 interface FamilyStore {
   family: Family | null;
   setFamily: (family: Family | null | ((prev: Family | null) => Family | null)) => void;
@@ -79,6 +86,9 @@ interface FamilyStore {
   // Messages non lus du chat (point rouge sur l'onglet Chat)
   unreadCount: number;
   setUnreadCount: (count: number | ((prev: number) => number)) => void;
+  // Demande envoyée pour rejoindre une Tribu, en attente de réponse (Accueil sans Tribu)
+  pendingRequest: PendingRequest | null;
+  setPendingRequest: (request: PendingRequest | null) => void;
 }
 
 export const useFamilyStore = create<FamilyStore>((set) => ({
@@ -89,7 +99,7 @@ export const useFamilyStore = create<FamilyStore>((set) => ({
         ? familyOrUpdater(state.family)
         : familyOrUpdater,
     })),
-  clearFamily: () => set({ family: null, currentActivity: null, completedActivities: [], unreadCount: 0 }),
+  clearFamily: () => set({ family: null, currentActivity: null, completedActivities: [], unreadCount: 0, pendingRequest: null }),
   isLoadingFamily: false,
   setIsLoadingFamily: (val) => set({ isLoadingFamily: val }),
   currentActivity: null,
@@ -106,4 +116,6 @@ export const useFamilyStore = create<FamilyStore>((set) => ({
     set((state) => ({
       unreadCount: typeof countOrUpdater === 'function' ? countOrUpdater(state.unreadCount) : countOrUpdater,
     })),
+  pendingRequest: null,
+  setPendingRequest: (request) => set({ pendingRequest: request }),
 }));

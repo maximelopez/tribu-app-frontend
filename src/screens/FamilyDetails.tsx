@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import { useUserStore } from '../store/userStore';
+import { useFamilyStore } from '../store/familyStore';
 import type { LevelInfo } from '../store/familyStore';
 import { useTheme } from '../context/ThemeContext';
 import { getAvatar } from '../assets';
@@ -33,6 +34,7 @@ export default function FamilyDetails() {
   const navigate = useNavigate();
   const { theme } = useTheme();
   const user = useUserStore(state => state.user);
+  const setPendingRequest = useFamilyStore(state => state.setPendingRequest);
   const badgesData = useFamilyBadges(familyId).data;
 
   const [family, setFamily] = useState<FamilyInfo | null>(null);
@@ -70,6 +72,8 @@ export default function FamilyDetails() {
         return;
       }
 
+      // L'Accueil affiche alors "Demande envoyée"
+      setPendingRequest({ familyId: family.id, name: family.name, city: family.city });
       navigate('/', { replace: true });
     } catch (error) {
       console.error('Erreur rejoindre famille :', error);

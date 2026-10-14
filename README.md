@@ -88,7 +88,7 @@ src/
 | Store | Contenu |
 |---|---|
 | `userStore` | Utilisateur connecté, token, onboarding terminé. Sauvegardé dans le `localStorage` |
-| `familyStore` | Tribu, activité en cours, activités terminées, messages non lus. En mémoire seulement |
+| `familyStore` | Tribu, activité en cours, activités terminées, messages non lus, demande en attente. En mémoire seulement |
 
 ## Navigation
 
@@ -131,12 +131,21 @@ src/
 | `newMessage` | Message ajouté au chat, ou un non lu de plus si le chat n'est pas affiché |
 | `newJoinRequest`, `joinRequestRemoved` | Demandes pour rejoindre mises à jour (créateur) |
 | `familyAccepted` | Demande acceptée : la Tribu est chargée |
+| `familyRejected` | Demande refusée : l'Accueil revient à « Rejoindre ou créer une Tribu » |
 | `memberJoined` | Liste des membres rechargée |
 | `familyUpdated` | Nom ou ville de la Tribu mis à jour |
 | `familyActivityUpdated` | Activité en cours, historique et points mis à jour |
 
 Au retour sur l'app (PWA de nouveau au premier plan) ou après une reconnexion, l'app relit le profil
 et le nombre de messages non lus, pour rattraper ce qui s'est passé pendant la coupure.
+
+## Rejoindre une Tribu
+
+- Une seule demande en attente à la fois : pour en envoyer une autre, il faut annuler la première.
+- Après l'envoi, l'Accueil affiche « Demande envoyée » avec le bouton « Annuler la demande »
+  (confirmation avec `ConfirmModal`).
+- La demande en attente est relue au démarrage et au retour sur l'app (`GET /families/join-requests/me`).
+- Acceptée : la Tribu est chargée. Refusée ou annulée : retour à « Rejoindre ou créer une Tribu ».
 
 ## Badges
 
@@ -188,7 +197,6 @@ vers `index.html` (`public/_redirects`), pour qu'un lien direct vers un écran f
   - carte « Ma visibilité dans la Tribu » (masquer ses points dans le classement).
 - **Badges** : textes longs de Sport, Culture et Maison à valider avec le designer ; date d'obtention
   (en attente de la maquette finale) ; nouveaux badges quand le système sera validé.
-- **Demandes pour rejoindre une Tribu** : système à revoir (demande en attente sur l'accueil, annulation).
 - **Popup de confirmation** (`ConfirmModal`) : à adapter quand la maquette sera prête.
 - **Écran de démarrage iPhone** (splash screen).
 - **Mot de passe oublié** (nécessite l'envoi d'emails côté backend).
