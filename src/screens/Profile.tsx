@@ -9,6 +9,8 @@ import { AVATARS, getAvatar } from '../assets';
 import ThemeSwitcher from '../components/ThemeSwitcher';
 import Button from '../components/Button';
 import ActivityCard from '../components/ActivityCard';
+import BadgeCard from '../components/BadgeCard';
+import useFamilyBadges from '../hooks/useFamilyBadges';
 import Spinner from '../components/Spinner';
 import { api } from '../api';
 
@@ -35,6 +37,7 @@ export default function Profile() {
   const completedActivities = useFamilyStore(state => state.completedActivities);
   const navigate = useNavigate();
   const { theme } = useTheme();
+  const lastBadge = useFamilyBadges().data?.lastUnlocked ?? null;
 
   const [showModal, setShowModal] = useState(false);
   const [pendingAvatar, setPendingAvatar] = useState<number | null>(null);
@@ -141,7 +144,24 @@ export default function Profile() {
         {/* Thème */}
         <ThemeSwitcher />
 
-        {/* Dernières activités (TODO gamification : "Dernier badge obtenu" au-dessus) */}
+        {/* Dernier badge obtenu par la Tribu */}
+        {lastBadge && (
+          <div className="flex flex-col" style={{ gap: 10, padding: '4px 0' }}>
+            <div className="flex items-center justify-between">
+              <span className="font-outfit-bold text-base" style={{ color: '#111' }}>Dernier badge obtenu</span>
+              <button
+                onClick={() => navigate('/recompenses/badges')}
+                className="font-outfit"
+                style={{ fontSize: 14, color: theme.primary, background: 'none', border: 'none', borderBottom: `1px solid ${theme.primary}`, padding: 0 }}
+              >
+                Voir plus →
+              </button>
+            </div>
+            <BadgeCard badge={lastBadge} onPress={() => navigate(`/recompenses/badges/${lastBadge.id}`)} />
+          </div>
+        )}
+
+        {/* Dernières activités */}
         {myLatestActivities.length > 0 && (
           <div className="flex flex-col" style={{ gap: 10, padding: '4px 0' }}>
             <div className="flex items-center justify-between">

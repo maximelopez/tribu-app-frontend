@@ -10,11 +10,13 @@ interface ActivityCardProps {
   isPartner: boolean;
   // Catégorie : affiche l'illustration correspondante (sinon une icône provisoire)
   category?: string;
+  // Points gagnés, affichés à côté du nom (ex : détail d'un badge)
+  points?: number;
   onPress: () => void;
 }
 
 // Carte d'activité (Figma : Activities) - catalogue, Home, Profil et historique
-export default function ActivityCard({ name, description, isPartner, category, onPress }: ActivityCardProps) {
+export default function ActivityCard({ name, description, isPartner, category, points, onPress }: ActivityCardProps) {
   const { theme } = useTheme();
   const illustration = getActivityIllustration(category);
 
@@ -42,9 +44,14 @@ export default function ActivityCard({ name, description, isPartner, category, o
       )}
 
       <div className="flex-1 min-w-0 flex flex-col items-start" style={{ gap: 2 }}>
-        <span className="font-outfit-bold text-base w-full truncate" style={{ color: '#111111' }}>
-          {name}
-        </span>
+        <div className="flex items-baseline w-full min-w-0" style={{ gap: 6 }}>
+          <span className="font-outfit-bold text-base truncate" style={{ color: '#111111' }}>
+            {name}
+          </span>
+          {points !== undefined && (
+            <span className="font-outfit text-base shrink-0" style={{ color: theme.primary }}>+{points} pts</span>
+          )}
+        </div>
         {isPartner && (
           <span
             className="font-outfit text-sm rounded-full flex items-center"

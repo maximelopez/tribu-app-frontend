@@ -21,6 +21,8 @@ import FamilyDetails from './screens/FamilyDetails';
 import ActivityDetail from './screens/ActivityDetail';
 import ActivityReward from './screens/ActivityReward';
 import ActivityHistory from './screens/ActivityHistory';
+import AllBadges from './screens/AllBadges';
+import BadgeDetail from './screens/BadgeDetail';
 
 // Cadre "téléphone" : largeur mobile, centré sur grand écran
 function PhoneFrame() {
@@ -96,6 +98,8 @@ export default function App() {
             <Route path="/activites/:activityId" element={<ActivityDetail />} />
             <Route path="/recompense" element={<ActivityReward />} />
             <Route path="/historique" element={<ActivityHistory />} />
+            <Route path="/recompenses/badges" element={<AllBadges />} />
+            <Route path="/recompenses/badges/:badgeId" element={<BadgeDetail />} />
 
             <Route path="*" element={<Navigate to="/" replace />} />
           </Route>

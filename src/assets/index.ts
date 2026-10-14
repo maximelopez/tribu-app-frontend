@@ -16,6 +16,7 @@ import type { Category } from '../store/familyStore';
 export { default as logoTribu } from './images/logo-tribu.png';
 export { default as mascotte1 } from './images/mascotte-1.png';
 export { default as mascotteActivity } from './images/mascotte-activity.png';
+export { default as mascotteLunettes } from './images/mascotte-lunettes.png';
 export { default as mascotteNoResults } from './images/mascotte-no-results.png';
 export { default as mascotteTribu } from './images/mascotte-tribu.png';
 export { default as usersGroupIcon } from './icons/users-group.svg';

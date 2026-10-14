@@ -1,12 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router';
 import { useUserStore } from '../store/userStore';
 import { useFamilyStore } from '../store/familyStore';
 import useFamilyChat from '../hooks/useFamilyChat';
 import { useTheme } from '../context/ThemeContext';
 import MessageBubble from '../components/MessageBubble';
-import Button from '../components/Button';
-import { mascotteNoResults, sendIcon } from '../assets';
+import NoFamilyState from '../components/NoFamilyState';
+import { sendIcon } from '../assets';
 
 // Couleurs Figma (écran chat)
 const CHAT_BG = '#F3F3F8';
@@ -19,7 +18,6 @@ export default function Chat() {
   const user = useUserStore(state => state.user);
   const family = useFamilyStore(state => state.family);
 
-  const navigate = useNavigate();
   const [text, setText] = useState('');
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -45,22 +43,7 @@ export default function Chat() {
 
   // Pas encore de Tribu (Figma : chat-empty-state)
   if (!user?.familyId) {
-    return (
-      <div className="flex-1 flex flex-col justify-center items-center" style={{ padding: '0 28px', gap: 20 }}>
-        <div
-          className="flex items-center justify-center rounded-full"
-          style={{ width: 135, height: 135, backgroundColor: 'rgba(234, 74, 31, 0.1)' }}
-        >
-          <img src={mascotteNoResults} alt="" style={{ width: 110, height: 110, objectFit: 'contain' }} />
-        </div>
-        <p className="font-outfit text-base text-center m-0" style={{ color: '#111111' }}>
-          Rejoins ou crée ta Tribu pour échanger avec ta famille !
-        </p>
-        <div className="w-full">
-          <Button title="Trouver ma Tribu" onPress={() => navigate('/tribu/rechercher')} color={theme.primary} />
-        </div>
-      </div>
-    );
+    return <NoFamilyState message="Rejoins ou crée ta Tribu pour échanger avec ta famille !" />;
   }
 
   const membersCount = family?.members?.length ?? 0;

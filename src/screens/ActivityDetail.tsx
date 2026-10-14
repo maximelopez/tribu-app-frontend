@@ -160,6 +160,7 @@ export default function ActivityDetail() {
           familyPoints: data.familyPoints,
           previousLevel: family?.levelInfo?.level ?? data.levelInfo.level,
           levelInfo: data.levelInfo,
+          newBadge: data.newBadge ?? null, // badge débloqué par cette activité
         },
       });
 

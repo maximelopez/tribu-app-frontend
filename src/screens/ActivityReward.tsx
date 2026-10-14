@@ -2,6 +2,8 @@ import { Navigate, useLocation, useNavigate } from 'react-router';
 import { useTheme } from '../context/ThemeContext';
 import { mascotteActivity } from '../assets';
 import type { LevelInfo } from '../store/familyStore';
+import type { Badge } from '../hooks/useFamilyBadges';
+import BadgeCard from '../components/BadgeCard';
 import Button from '../components/Button';
 import ScreenHeader from '../components/ScreenHeader';
 
@@ -11,6 +13,7 @@ interface ActivityRewardState {
   familyPoints: number;   // total de la Tribu après l'activité
   previousLevel: number;  // niveau avant l'activité (pour détecter un passage de niveau)
   levelInfo: LevelInfo;
+  newBadge?: Badge | null; // badge débloqué par l'activité (sinon null)
 }
 
 // Écran affiché après "Terminer cette activité" (Figma : recompense (plein écran))
@@ -23,7 +26,7 @@ export default function ActivityReward() {
   // Ouvert sans données (ex : page rechargée) : retour à l'accueil
   if (!state) return <Navigate to="/" replace />;
 
-  const { familyName, pointsEarned, familyPoints, previousLevel, levelInfo } = state;
+  const { familyName, pointsEarned, familyPoints, previousLevel, levelInfo, newBadge } = state;
   const hasLeveledUp = levelInfo.level > previousLevel;
   const progressPercent = Math.round(Math.min(1, Math.max(0, levelInfo.isMax ? 1 : levelInfo.progress)) * 100);
 
@@ -63,7 +66,8 @@ export default function ActivityReward() {
           <span className="font-outfit" style={{ fontSize: 16, lineHeight: '20px', color: '#161616' }}>points gagnés</span>
         </div>
 
-        {/* TODO (gamification) : carte du badge débloqué */}
+        {/* Badge débloqué par cette activité */}
+        {newBadge && <BadgeCard badge={newBadge} />}
 
         {/* Niveau */}
         <div
