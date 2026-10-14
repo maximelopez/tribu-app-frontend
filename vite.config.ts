@@ -19,7 +19,8 @@ export default defineConfig({
         start_url: '/',
         display: 'standalone',
         orientation: 'portrait',
-        background_color: '#F3F3F8',
+        // Fond de l'écran de démarrage Android (icône + nom au centre), vert comme sur iPhone
+        background_color: '#00A16D',
         theme_color: '#00a16d',
         icons: [
           { src: 'pwa-192x192.png', sizes: '192x192', type: 'image/png' },
