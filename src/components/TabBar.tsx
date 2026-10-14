@@ -1,6 +1,7 @@
 import { NavLink } from 'react-router';
 import { House, Trophy, TicketCheck, MessagesCircle, User } from 'lucide-react';
 import { useFamilyStore } from '../store/familyStore';
+import useKeyboardOpen from '../hooks/useKeyboardOpen';
 
 // Couleurs Figma (composant navigation-bar-classic)
 const ACTIVE = '#161616';
@@ -14,9 +15,13 @@ const TABS = [
   { to: '/profil', label: 'Profil', Icon: User, end: false },
 ];
 
-// Barre de navigation flottante (pilule blanche) - maquette Figma V2
+// Barre de navigation flottante (pilule blanche) - maquette Figma V2.
+// Masquée quand le clavier est ouvert : elle reste en bas, sous le clavier, au lieu de remonter avec lui.
 export default function TabBar() {
   const unreadCount = useFamilyStore(state => state.unreadCount);
+  const keyboardOpen = useKeyboardOpen();
+
+  if (keyboardOpen) return null;
 
   return (
     <nav
