@@ -86,6 +86,7 @@ src/
 | `ActivityCard` | Carte d'activité avec sa photo (ou l'illustration de sa catégorie), option `points` |
 | `BadgeCard` | Carte d'un badge (grisée avec la progression s'il n'est pas obtenu) |
 | `NoFamilyState` | État vide « pas encore de Tribu » (Chat, Récompenses) |
+| `FloatingMascot` | Mascotte qui flotte dans son rond avec son ombre, en boucle (états vides, écran Récompense). Taille `grande` ou `petite` |
 | `FamilyLeaderboard`, `LeaderboardRow` | Classement des membres de la Tribu |
 | `NotificationBell`, `NotificationPanel` | Cloche de l'Accueil (compteur de non lues) et panneau des notifications |
 | `MessageBubble` | Message du chat |
@@ -266,8 +267,6 @@ vers `index.html` (`public/_redirects`), pour qu'un lien direct vers un écran f
 - **Badges** : textes longs de Sport, Culture et Maison à valider ; date d'obtention ; nouveaux badges
   quand le système sera validé.
 - **Accueil** : lien « Comment ça fonctionne ? » (contenu à définir).
-- **Recherche de Tribu** : état affiché avant de taper.
-- **Écran Récompense** : mascotte « flottante » de la maquette (avec son ombre) à exporter.
 
 **Mis de côté**
 

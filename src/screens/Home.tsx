@@ -12,6 +12,7 @@ import Spinner from '../components/Spinner';
 import ConfirmModal from '../components/ConfirmModal';
 import { api } from '../api';
 import { chevronRightGrey, chevronRightWhite, getActivityImage, mascotte1, mascotteActivity, usersGroupIcon } from '../assets';
+import FloatingMascot from '../components/FloatingMascot';
 
 const CARD_SHADOW = '0px 4px 6px rgba(22, 22, 22, 0.08)';
 
@@ -64,12 +65,7 @@ export default function Home() {
       style={{ borderRadius: 24, boxShadow: '0px 4px 6px rgba(22, 22, 22, 0.04)' }}
     >
       <div className="w-full flex items-center justify-center" style={{ height: 160 }}>
-        <div
-          className="flex items-center justify-center rounded-full"
-          style={{ width: 135, height: 135, backgroundColor: 'rgba(32, 193, 177, 0.1)' }}
-        >
-          <img src={mascotte1} alt="" style={{ width: 115, height: 115, objectFit: 'contain' }} />
-        </div>
+        <FloatingMascot image={mascotte1} circleColor="rgba(32, 193, 177, 0.1)" />
       </div>
       <p className="font-outfit text-base text-center m-0" style={{ color: '#161616' }}>{text}</p>
     </div>

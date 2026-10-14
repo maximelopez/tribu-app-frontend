@@ -6,6 +6,7 @@ import type { Activity, Category } from '../store/familyStore';
 import ActivityCard from '../components/ActivityCard';
 import Spinner from '../components/Spinner';
 import { mascotteActivity } from '../assets';
+import FloatingMascot from '../components/FloatingMascot';
 import { api } from '../api';
 
 // Couleurs Figma
@@ -163,12 +164,7 @@ export default function Activities() {
         ) : count === 0 ? (
           // Aucun résultat (Figma : activities-empy-state)
           <div className="flex flex-col items-center" style={{ gap: 20, marginTop: 48 }}>
-            <div
-              className="flex items-center justify-center rounded-full"
-              style={{ width: 135, height: 135, backgroundColor: theme.transparent }}
-            >
-              <img src={mascotteActivity} alt="" style={{ width: 100, height: 100, objectFit: 'contain' }} />
-            </div>
+            <FloatingMascot image={mascotteActivity} circleColor={theme.transparent} />
             <span className="font-outfit text-base" style={{ color: TEXT_DARK }}>Aucune activité trouvée :(</span>
           </div>
         ) : (

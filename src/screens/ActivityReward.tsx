@@ -1,6 +1,7 @@
 import { Navigate, useLocation, useNavigate } from 'react-router';
 import { useTheme } from '../context/ThemeContext';
 import { mascotteActivity } from '../assets';
+import FloatingMascot from '../components/FloatingMascot';
 import type { LevelInfo } from '../store/familyStore';
 import type { Badge } from '../hooks/useFamilyBadges';
 import BadgeCard from '../components/BadgeCard';
@@ -49,13 +50,8 @@ export default function ActivityReward() {
           </p>
         </div>
 
-        {/* Mascotte (TODO : remplacer par "mascotte-flottante" une fois exportée) */}
-        <div
-          className="flex items-center justify-center shrink-0 self-center rounded-full"
-          style={{ width: 135, height: 135, backgroundColor: theme.transparent }}
-        >
-          <img src={mascotteActivity} alt="" style={{ width: 110, height: 110, objectFit: 'contain' }} />
-        </div>
+        {/* Mascotte */}
+        <FloatingMascot image={mascotteActivity} circleColor={theme.transparent} style={{ alignSelf: 'center' }} />
 
         {/* Points gagnés */}
         <div

@@ -2,8 +2,9 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { Search, ChevronRight } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
-import { getAvatar, mascotteNoResults } from '../assets';
+import { getAvatar, mascotteLunettes, mascotteNoResults } from '../assets';
 import ScreenHeader from '../components/ScreenHeader';
+import FloatingMascot from '../components/FloatingMascot';
 import { api } from '../api';
 
 const CARD_SHADOW = '0px 4px 6px rgba(22, 22, 22, 0.08)';
@@ -69,7 +70,7 @@ export default function SearchFamily() {
           <input
             value={search}
             onChange={e => setSearch(e.target.value)}
-            placeholder="Rechercher une Tribu"
+            placeholder="Ex : Les Champions"
             type="search"
             enterKeyHint="search"
             autoCorrect="off"
@@ -83,15 +84,19 @@ export default function SearchFamily() {
         )}
       </div>
 
-      {hasSearched && families.length === 0 ? (
+      {search.trim() === '' ? (
+        // Rien de tapé (Figma : state-avant-chercher)
+        <div className="flex-1 flex flex-col items-center justify-center" style={{ gap: 20, padding: '0 50px 120px' }}>
+          <FloatingMascot image={mascotteLunettes} circleColor="rgba(255, 157, 0, 0.1)" />
+          <span className="font-outfit text-base" style={{ color: '#111' }}>Trouve ta Tribu</span>
+          <p className="font-outfit text-center m-0" style={{ fontSize: 14, lineHeight: 1.4, color: '#777777' }}>
+            Tape le nom de la Tribu que tu veux rejoindre, puis envoie ta demande. Un membre de ta famille peut te le donner.
+          </p>
+        </div>
+      ) : hasSearched && families.length === 0 ? (
         // Aucun résultat
         <div className="flex-1 flex flex-col items-center justify-center" style={{ gap: 20, paddingBottom: 80 }}>
-          <div
-            className="flex items-center justify-center rounded-full"
-            style={{ width: 135, height: 135, backgroundColor: 'rgba(234, 74, 31, 0.1)' }}
-          >
-            <img src={mascotteNoResults} alt="" style={{ width: 110, height: 110, objectFit: 'contain' }} />
-          </div>
+          <FloatingMascot image={mascotteNoResults} circleColor="rgba(234, 74, 31, 0.1)" />
           <span className="font-outfit text-base" style={{ color: '#111' }}>Aucune Tribu trouvée :(</span>
         </div>
       ) : (

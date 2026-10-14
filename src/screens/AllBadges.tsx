@@ -5,6 +5,7 @@ import ScreenHeader from '../components/ScreenHeader';
 import BadgeCard from '../components/BadgeCard';
 import Spinner from '../components/Spinner';
 import { mascotte1 } from '../assets';
+import FloatingMascot from '../components/FloatingMascot';
 
 // Tous les badges de la Tribu (Figma : tous-les-badges)
 export default function AllBadges() {
@@ -30,12 +31,7 @@ export default function AllBadges() {
             className="bg-white flex flex-col items-center shrink-0"
             style={{ padding: 16, gap: 12, borderRadius: 24, filter: 'drop-shadow(0px 4px 6px rgba(22, 22, 22, 0.04))' }}
           >
-            <div
-              className="flex items-center justify-center rounded-full"
-              style={{ width: 135, height: 135, marginTop: 12, backgroundColor: 'rgba(34, 195, 176, 0.12)' }}
-            >
-              <img src={mascotte1} alt="" style={{ width: 115, height: 115, objectFit: 'contain' }} />
-            </div>
+            <FloatingMascot image={mascotte1} circleColor="rgba(34, 195, 176, 0.12)" style={{ marginTop: 12 }} />
             <p className="font-outfit text-base text-center m-0" style={{ lineHeight: 'normal', color: '#161616' }}>
               Continuez à faire des activités en famille pour débloquer la collection des badges !
             </p>

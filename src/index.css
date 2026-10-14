@@ -82,3 +82,27 @@ textarea {
 .tribu-spin {
   animation: tribu-spin 0.9s linear infinite;
 }
+
+/* Mascotte flottante (Figma : mascotte-flottante, Smart animate, Ease in and out, 1400ms) */
+@keyframes floating-mascot {
+  to {
+    transform: translateY(var(--mascot-drop));
+  }
+}
+@keyframes floating-mascot-shadow {
+  to {
+    transform: scaleX(var(--shadow-scale));
+  }
+}
+.floating-mascot {
+  animation: floating-mascot 1.4s ease-in-out infinite alternate;
+}
+.floating-mascot-shadow {
+  animation: floating-mascot-shadow 1.4s ease-in-out infinite alternate;
+}
+@media (prefers-reduced-motion: reduce) {
+  .floating-mascot,
+  .floating-mascot-shadow {
+    animation: none;
+  }
+}
