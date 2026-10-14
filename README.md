@@ -195,7 +195,7 @@ l'app les lit avec `GET /families/:id/badges`.
   (déclarées dans `index.html`). Pour un nouvel iPhone, ajouter son image et sa ligne `apple-touch-startup-image`.
   Il ne s'affiche que sur l'app installée sur l'écran d'accueil.
 - **Écran de démarrage Android** : généré par Chrome à partir du manifest (`vite.config.ts`) : fond
-  `background_color` (vert), icône `pwa-512x512.png` et nom de l'app.
+  `background_color` (gris clair, comme le fond de l'app), icône `pwa-512x512.png` et nom de l'app.
 - **Installation** : Android depuis Chrome (« Installer l'application »), iPhone depuis Safari
   (Partager > « Sur l'écran d'accueil »). Il faut un site en HTTPS.
 - **Mise à jour** : l'app vérifie s'il existe une nouvelle version à chaque lancement. Pour récupérer
