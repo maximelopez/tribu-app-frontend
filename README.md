@@ -212,8 +212,9 @@ progression (`progress / goal`) et, une fois obtenu, sa date (`unlockedAt`).
 - **Onglet Récompenses** : collection (x / 24), dernier badge gagné, les 3 prochains badges (les plus
   avancés) et le bouton « Voir tous les badges ».
 - **Tous les badges** : rangés par niveau (Bronze, Argent, Or, Platine).
-- **Détail d'un badge** : texte long, progression et, pour un badge de catégorie, les activités de la
-  catégorie déjà faites.
+- **Détail d'un badge** (une seule carte) :
+  - obtenu : texte long, palier suivant (`nextBadge`) et date d'obtention (« Obtenu le 12 oct. ») ;
+  - pas encore obtenu : texte long, progression et ce qu'il reste à faire (`remainingText`).
 - **Écran Récompense** : les badges que l'activité vient de débloquer (`newBadges`).
 - **Profil** : dernier badge obtenu par la Tribu.
 - **Détails d'une Tribu** : ses 3 derniers badges gagnés (visible avant de la rejoindre).
@@ -264,20 +265,7 @@ vers `index.html` (`public/_redirects`), pour qu'un lien direct vers un écran f
 
 ## À faire
 
-**Prochaines fonctionnalités**
-
 - **Mot de passe oublié** (nécessite l'envoi d'emails côté backend).
 - **Notifications push** (Android ; iPhone seulement si l'app est installée).
-
-**En attente du designer**
-
-- **Badges** : images finales du designer (à déposer dans `src/assets/badges/`) ; date d'obtention.
-- **Accueil** : lien « Comment ça fonctionne ? » (contenu à définir).
-
-**Mis de côté**
-
-- **Profil** :
-  - bouton « Supprimer mon compte » (règles à définir côté backend : créateur de la Tribu, Tribu vide,
-    demandes en attente) ;
-  - carte « Ma visibilité dans la Tribu » (masquer ses points dans le classement).
-- **Accueil** : chargement avec carré blanc et roue par-dessus l'écran grisé (comme la maquette).
+- **Supprimer mon compte** (Profil) : règles à définir côté backend (créateur de la Tribu, Tribu vide,
+  demandes en attente).

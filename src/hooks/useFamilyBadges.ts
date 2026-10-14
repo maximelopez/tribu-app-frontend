@@ -20,6 +20,8 @@ export interface Badge {
   progress: number;    // progression actuelle (max : goal)
   unlocked: boolean;
   unlockedAt: string | null;
+  remainingText: string | null; // ex : "Encore 5 activités Nature pour l'obtenir !" (null si obtenu)
+  nextBadge: { id: string; name: string; goalText: string } | null; // palier suivant
 }
 
 export interface FamilyBadges {
