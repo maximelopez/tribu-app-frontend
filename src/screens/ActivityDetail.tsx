@@ -66,7 +66,7 @@ export default function ActivityDetail() {
   if (!activity) {
     return (
       <div className="flex-1 flex flex-col">
-        <ScreenHeader />
+        <ScreenHeader title="Détail de l'activité" />
         <div className="flex-1 flex items-center justify-center">
           <Spinner size={36} color={theme.primary} />
         </div>
@@ -218,10 +218,10 @@ export default function ActivityDetail() {
 
   return (
     <div className="flex-1 min-h-0 flex flex-col">
-      <ScreenHeader />
+      <ScreenHeader title="Détail de l'activité" />
 
-      <div className="flex-1 overflow-y-auto no-scrollbar" style={{ padding: '8px 14px 24px', paddingBottom: 'calc(24px + env(safe-area-inset-bottom))' }}>
-        <div className="bg-white flex flex-col" style={{ borderRadius: 16, padding: 12, gap: 12 }}>
+      <div className="flex-1 overflow-y-auto no-scrollbar" style={{ padding: '4px 16px 20px', paddingBottom: 'calc(20px + env(safe-area-inset-bottom))' }}>
+        <div className="flex flex-col" style={{ gap: 12 }}>
           {/* Pastilles : catégorie (+ partenariat) */}
           <div className="flex" style={{ gap: 6 }}>
             <span
@@ -235,7 +235,7 @@ export default function ActivityDetail() {
                 className="font-outfit flex items-center justify-center"
                 style={{ height: 21, padding: '0 10px', borderRadius: 999, backgroundColor: theme.transparent, color: theme.primary, fontSize: 14 }}
               >
-                Partenariat
+                {activity.offer || 'Partenariat'}
               </span>
             )}
           </div>
@@ -246,12 +246,12 @@ export default function ActivityDetail() {
               src={activity.imageUrl}
               alt=""
               className="w-full block shrink-0"
-              style={{ height: 260, borderRadius: 16, objectFit: 'cover', backgroundColor: theme.transparent }}
+              style={{ height: 270, borderRadius: 16, objectFit: 'cover', backgroundColor: theme.transparent }}
             />
           ) : (
             <div
               className="flex items-center justify-center overflow-hidden shrink-0"
-              style={{ height: 260, borderRadius: 16, backgroundColor: theme.transparent }}
+              style={{ height: 270, borderRadius: 16, backgroundColor: theme.transparent }}
             >
               {getActivityImage(activity) ? (
                 <img src={getActivityImage(activity)!} alt="" style={{ width: 200, height: 200, borderRadius: 24, objectFit: 'cover' }} />
@@ -262,21 +262,16 @@ export default function ActivityDetail() {
           )}
 
           {/* Titre + description */}
-          <h1 className="font-outfit-bold font-normal m-0" style={{ fontSize: 32, color: '#15201A' }}>{activity.name}</h1>
-          <p className="font-outfit m-0" style={{ fontSize: 14, color: '#969696' }}>{activity.description}</p>
+          <h1 className="font-outfit-bold font-normal m-0" style={{ fontSize: 32, lineHeight: 'normal', color: '#15201A' }}>{activity.name}</h1>
+          <p className="font-outfit m-0" style={{ fontSize: 14, lineHeight: 'normal', color: '#777777' }}>{activity.description}</p>
 
           {/* Récompense */}
           <div className="flex items-center bg-white" style={{ boxShadow: CARD_SHADOW, borderRadius: 20, padding: 20, gap: 16 }}>
-            <div
-              className="flex items-center justify-center shrink-0"
-              style={{ width: 50, height: 50, borderRadius: 25, border: `2px solid ${theme.primary}` }}
-            >
-              <Award size={24} color={theme.primary} strokeWidth={2} />
-            </div>
+            <Award size={30} color={theme.primary} strokeWidth={1.75} className="shrink-0" />
             <div className="flex flex-col" style={{ gap: 2 }}>
               <span className="font-outfit-bold text-base" style={{ color: '#111' }}>Récompense</span>
               <span className="font-outfit-bold" style={{ fontSize: 20, color: theme.primary }}>
-                + {points} points{ongoing ? ' par membre' : ''}
+                + {points} points par membre
               </span>
             </div>
           </div>
@@ -288,15 +283,15 @@ export default function ActivityDetail() {
               {isStarter ? (
                 <>
                   <Button title="Terminer cette activité" onPress={handleCompleteActivity} loading={loading} color={theme.primary} />
-                  {/* Annuler (pas dans la maquette : volontairement discret) */}
-                  <button
-                    onClick={() => setShowCancelConfirm(true)}
+                  {/* Abandonner : aucun point, avec confirmation (Figma : confirmation-pour-cloturer) */}
+                  <Button
+                    title="Abandonner"
+                    onPress={() => setShowCancelConfirm(true)}
                     disabled={loading}
-                    className="font-outfit self-center"
-                    style={{ fontSize: 14, color: '#969696', background: 'none', border: 'none', padding: 4 }}
-                  >
-                    Annuler l'activité
-                  </button>
+                    color="#F3F3F8"
+                    textColor="#161616"
+                    borderColor="#CBD5E0"
+                  />
                 </>
               ) : (
                 <p className="font-outfit text-center m-0" style={{ fontSize: 14, color: '#969696' }}>
@@ -323,7 +318,7 @@ export default function ActivityDetail() {
           ) : hasFamily ? (
             <>
               {/* Qui participe ? */}
-              <span className="font-outfit" style={{ fontSize: 14, color: '#161616' }}>Qui participe ?</span>
+              <span className="font-outfit-bold text-base" style={{ color: '#161616' }}>Qui participe ?</span>
 
               {members.map(member => {
                 const isChecked = participants.includes(member.id);
@@ -378,10 +373,10 @@ export default function ActivityDetail() {
 
       <ConfirmModal
         visible={showCancelConfirm}
-        title="Annuler l'activité ?"
-        message="Aucun point ne sera gagné. Vous pourrez la relancer plus tard."
-        confirmLabel="Oui, annuler"
-        cancelLabel="Non, continuer"
+        title="Abandonner cette activité ?"
+        message={`Votre Tribu ne gagnera pas les points de « ${activity.name} ». Vous pourrez toujours choisir une autre activité ensemble.`}
+        confirmLabel="Oui, abandonner"
+        cancelLabel="Continuer l’activité"
         loading={loading}
         onConfirm={handleCancelActivity}
         onCancel={() => setShowCancelConfirm(false)}

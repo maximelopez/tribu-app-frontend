@@ -8,6 +8,8 @@ interface ActivityCardProps {
   name: string;
   description: string;
   isPartner: boolean;
+  // Offre partenaire (ex : "1 partie offerte"), affichée à la place de "Partenariat"
+  offer?: string | null;
   // Photo de l'activité, sinon l'illustration de sa catégorie (sinon une icône provisoire)
   imageUrl?: string | null;
   category?: string;
@@ -17,7 +19,7 @@ interface ActivityCardProps {
 }
 
 // Carte d'activité (Figma : Activities) - catalogue, Home, Profil et historique
-export default function ActivityCard({ name, description, isPartner, imageUrl, category, points, onPress }: ActivityCardProps) {
+export default function ActivityCard({ name, description, isPartner, offer, imageUrl, category, points, onPress }: ActivityCardProps) {
   const { theme } = useTheme();
   const illustration = getActivityImage({ imageUrl, category });
 
@@ -58,7 +60,7 @@ export default function ActivityCard({ name, description, isPartner, imageUrl, c
             className="font-outfit text-sm rounded-full flex items-center"
             style={{ backgroundColor: theme.transparent, color: theme.primary, height: 21, padding: '0 6px' }}
           >
-            Partenariat
+            {offer || 'Partenariat'}
           </span>
         )}
         <span className="font-outfit text-sm line-clamp-2" style={{ color: '#969696' }}>

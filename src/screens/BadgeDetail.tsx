@@ -103,6 +103,7 @@ export default function BadgeDetail() {
                 name={fa.activity.name}
                 description={fa.activity.description}
                 isPartner={fa.activity.isPartner}
+                offer={fa.activity.offer}
                 imageUrl={fa.activity.imageUrl}
                 category={fa.activity.category}
                 points={fa.pointsPerMember ?? fa.activity.points}

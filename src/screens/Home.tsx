@@ -201,6 +201,7 @@ export default function Home() {
                     name={fa.activity.name}
                     description={fa.activity.description}
                     isPartner={fa.activity.isPartner}
+                    offer={fa.activity.offer}
                     imageUrl={fa.activity.imageUrl}
                     category={fa.activity.category}
                     onPress={() => openActivityDetail(fa)}
@@ -247,7 +248,8 @@ export default function Home() {
               visible={showCancelModal}
               title="Annuler ta demande ?"
               message={`Ta demande pour rejoindre « ${pendingRequest.name} » sera supprimée.`}
-              confirmLabel="Annuler la demande"
+              confirmLabel="Oui, annuler"
+              cancelLabel="Garder ma demande"
               loading={cancelling}
               onConfirm={cancelRequest}
               onCancel={() => setShowCancelModal(false)}

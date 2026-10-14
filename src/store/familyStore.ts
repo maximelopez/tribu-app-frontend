@@ -35,6 +35,7 @@ export interface Activity {
   category: Category;
   imageUrl?: string | null; // photo de l'activité (sinon : illustration de la catégorie)
   isPartner: boolean; // true = offre partenaire, false = activité libre
+  offer?: string | null; // offre partenaire (ex : "1 partie offerte"), seulement si isPartner
   points?: number;    // points gagnés par chaque membre inscrit
 }
 
@@ -49,6 +50,7 @@ export interface FamilyActivity {
     category: Category;
     imageUrl?: string | null;
     isPartner: boolean;
+    offer?: string | null;
     points: number;
   };
   startedBy: string;

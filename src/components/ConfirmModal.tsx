@@ -1,24 +1,30 @@
 import { useEffect } from 'react';
 import Button from './Button';
 
+// Rouge des actions qui suppriment ou abandonnent quelque chose (Figma : btn-danger)
+const DANGER_COLOR = '#E5392A';
+
 interface ConfirmModalProps {
   visible: boolean;
   title: string;
   message?: string;
   confirmLabel: string;
   cancelLabel?: string;
+  // Couleur du bouton de confirmation (par défaut : rouge, action destructive)
+  confirmColor?: string;
   loading?: boolean;
   onConfirm: () => void;
   onCancel: () => void;
 }
 
-// Popup de confirmation (remplace l'alerte du navigateur — à adapter quand la maquette sera prête)
+// Popup de confirmation, à la place de l'alerte du navigateur (Figma : modal-confirmation)
 export default function ConfirmModal({
   visible,
   title,
   message,
   confirmLabel,
   cancelLabel = 'Retour',
+  confirmColor = DANGER_COLOR,
   loading = false,
   onConfirm,
   onCancel,
@@ -38,30 +44,29 @@ export default function ConfirmModal({
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center"
-      style={{ backgroundColor: 'rgba(0, 0, 0, 0.4)', padding: 24 }}
+      style={{ backgroundColor: 'rgba(0, 0, 0, 0.4)', padding: 28 }}
       onClick={() => !loading && onCancel()}
     >
       <div
         role="dialog"
         aria-modal="true"
-        className="bg-white w-full flex flex-col"
-        style={{ maxWidth: 360, borderRadius: 20, padding: 20, gap: 12, boxShadow: '0px 8px 24px rgba(0, 0, 0, 0.15)' }}
+        aria-label={title}
+        className="bg-white w-full flex flex-col items-center"
+        style={{ maxWidth: 337, borderRadius: 24, padding: '28px 24px 24px', gap: 16, boxShadow: '0px 12px 32px rgba(0, 0, 0, 0.18)' }}
         onClick={e => e.stopPropagation()}
       >
-        <h2 className="font-outfit-bold font-normal text-center m-0" style={{ fontSize: 20, color: '#15201A' }}>{title}</h2>
-        {message && (
-          <p className="font-outfit text-center m-0" style={{ fontSize: 14, color: '#969696' }}>{message}</p>
-        )}
-        <div className="flex flex-col" style={{ gap: 4, marginTop: 4 }}>
-          <Button title={confirmLabel} onPress={onConfirm} loading={loading} />
-          <button
-            onClick={onCancel}
-            disabled={loading}
-            className="font-outfit self-center"
-            style={{ fontSize: 14, color: '#969696', background: 'none', border: 'none', padding: 8 }}
-          >
-            {cancelLabel}
-          </button>
+        <div className="flex flex-col w-full" style={{ gap: 8 }}>
+          <h2 className="font-outfit-bold font-normal text-center m-0" style={{ fontSize: 20, lineHeight: 'normal', color: '#161616' }}>
+            {title}
+          </h2>
+          {message && (
+            <p className="font-outfit m-0" style={{ fontSize: 16, lineHeight: 'normal', color: '#777777' }}>{message}</p>
+          )}
+        </div>
+
+        <div className="flex flex-col w-full" style={{ gap: 10, paddingTop: 8 }}>
+          <Button title={confirmLabel} onPress={onConfirm} loading={loading} color={confirmColor} />
+          <Button title={cancelLabel} onPress={onCancel} disabled={loading} color="#F3F3F8" textColor="#161616" />
         </div>
       </div>
     </div>

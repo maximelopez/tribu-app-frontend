@@ -45,10 +45,10 @@ export default function FamilyLeaderboard({
         <div className="flex flex-col" style={{ padding: '12px 18px 14px', gap: 6 }}>
           <div className="flex items-center justify-between">
             <span className="text-white font-outfit-bold text-base">Niveau {levelInfo.level}</span>
-            <span className="text-white font-outfit text-base">
+            <span className="text-white font-outfit" style={{ fontSize: 14 }}>
               {levelInfo.isMax
                 ? 'Niveau maximum'
-                : `${levelInfo.remaining} pts → Niveau ${levelInfo.level + 1}`}
+                : `Encore ${levelInfo.remaining} pts avant le niveau ${levelInfo.level + 1}`}
             </span>
           </div>
           <div className="rounded-full overflow-hidden" style={{ height: 6, backgroundColor: 'rgba(255,255,255,0.08)' }}>

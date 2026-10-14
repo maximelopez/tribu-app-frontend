@@ -72,7 +72,7 @@ src/
 | `JoinRequestItem` | Demande pour rejoindre la Tribu (accepter / refuser) |
 | `MessageBubble` | Message du chat |
 | `ThemeSwitcher` | Choix du thème dans le Profil |
-| `ConfirmModal` | Popup de confirmation (à adapter à la maquette) |
+| `ConfirmModal` | Popup de confirmation (bouton rouge pour une action destructive + bouton gris pour revenir) |
 
 **Hooks**
 
@@ -168,6 +168,8 @@ l'app les lit avec `GET /families/:id/badges`.
 - **Images des activités** : la photo de l'activité (`imageUrl`, hébergée sur Cloudinary et ajoutée
   depuis l'app admin). Sans photo, l'illustration de sa catégorie. Fonction `getActivityImage` dans
   `assets/index.ts`.
+- **Offres partenaires** : l'étiquette affiche l'offre de l'activité (`offer`, ex : « 1 partie offerte »),
+  ou « Partenariat » si elle n'en a pas.
 - **Illustrations des catégories** (`getActivityIllustration`) : utilisées pour les badges, et pour les
   activités qui n'ont pas encore de photo.
 
@@ -200,7 +202,6 @@ vers `index.html` (`public/_redirects`), pour qu'un lien direct vers un écran f
   - carte « Ma visibilité dans la Tribu » (masquer ses points dans le classement).
 - **Badges** : textes longs de Sport, Culture et Maison à valider avec le designer ; date d'obtention
   (en attente de la maquette finale) ; nouveaux badges quand le système sera validé.
-- **Popup de confirmation** (`ConfirmModal`) : à adapter quand la maquette sera prête.
 - **Écran de démarrage iPhone** (splash screen).
 - **Mot de passe oublié** (nécessite l'envoi d'emails côté backend).
 - **Notifications push** (Android ; iPhone seulement si l'app est installée).
