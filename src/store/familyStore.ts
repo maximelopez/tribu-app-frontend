@@ -149,13 +149,15 @@ export const useFamilyStore = create<FamilyStore>((set) => ({
   isLoadingFamily: false,
   setIsLoadingFamily: (val) => set({ isLoadingFamily: val }),
   currentActivity: null,
-  setCurrentActivity: (activity) => set({ currentActivity: activity }),
+  // Activité supprimée du catalogue entre-temps (activity = null) : ignorée, sinon les écrans plantent
+  setCurrentActivity: (activity) => set({ currentActivity: activity?.activity ? activity : null }),
   completedActivities: [],
   setCompletedActivities: (listOrUpdater) =>
     set((state) => ({
-      completedActivities: typeof listOrUpdater === 'function'
+      completedActivities: (typeof listOrUpdater === 'function'
         ? listOrUpdater(state.completedActivities)
-        : listOrUpdater,
+        : listOrUpdater
+      ).filter((fa) => fa.activity), // sans les activités supprimées du catalogue
     })),
   unreadCount: 0,
   setUnreadCount: (countOrUpdater) =>
