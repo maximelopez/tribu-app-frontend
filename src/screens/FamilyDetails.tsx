@@ -7,6 +7,8 @@ import { getAvatar } from '../assets';
 import ScreenHeader from '../components/ScreenHeader';
 import Button from '../components/Button';
 import Spinner from '../components/Spinner';
+import BadgeCard from '../components/BadgeCard';
+import useFamilyBadges from '../hooks/useFamilyBadges';
 import { api } from '../api';
 
 // Tribu vue par quelqu'un qui veut la rejoindre (GET /families/:id)
@@ -31,6 +33,7 @@ export default function FamilyDetails() {
   const navigate = useNavigate();
   const { theme } = useTheme();
   const user = useUserStore(state => state.user);
+  const badgesData = useFamilyBadges(familyId).data;
 
   const [family, setFamily] = useState<FamilyInfo | null>(null);
   const [loadError, setLoadError] = useState(false);
@@ -75,6 +78,12 @@ export default function FamilyDetails() {
       setLoading(false);
     }
   };
+
+  // Derniers badges gagnés : les 3 plus récents
+  const recentBadges = (badgesData?.badges ?? [])
+    .filter(b => b.unlocked)
+    .sort((a, b) => new Date(b.unlockedAt!).getTime() - new Date(a.unlockedAt!).getTime())
+    .slice(0, 3);
 
   const level = family?.levelInfo;
   // Points nécessaires pour le niveau suivant (ex : 620 / 1000 pts)
@@ -156,7 +165,15 @@ export default function FamilyDetails() {
             </div>
           </div>
 
-          {/* "Derniers badges gagnés" : à ajouter avec les badges (gamification) */}
+          {/* Derniers badges gagnés (seulement si la Tribu en a) */}
+          {recentBadges.length > 0 && (
+            <div className="flex flex-col" style={{ gap: 12 }}>
+              <span className="font-outfit-bold" style={{ fontSize: 16, color: TEXT_DARK }}>Derniers badges gagnés</span>
+              {recentBadges.map(badge => (
+                <BadgeCard key={badge.id} badge={badge} />
+              ))}
+            </div>
+          )}
 
           {/* Envoyer une demande */}
           <div className="flex flex-col" style={{ gap: 8 }}>

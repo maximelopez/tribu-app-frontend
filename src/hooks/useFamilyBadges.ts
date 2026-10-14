@@ -24,9 +24,11 @@ export interface FamilyBadges {
   lastUnlocked: Badge | null;
 }
 
-// Badges de la Tribu de l'utilisateur, rechargés quand une activité est terminée
-export default function useFamilyBadges() {
-  const familyId = useUserStore(state => state.user?.familyId);
+// Badges d'une Tribu : par défaut celle de l'utilisateur (rechargés quand une activité est terminée),
+// ou une autre Tribu (ex : détails d'une Tribu avant de la rejoindre)
+export default function useFamilyBadges(otherFamilyId?: string) {
+  const myFamilyId = useUserStore(state => state.user?.familyId);
+  const familyId = otherFamilyId ?? myFamilyId;
   const completedCount = useFamilyStore(state => state.completedActivities.length);
 
   const [data, setData] = useState<FamilyBadges | null>(null);

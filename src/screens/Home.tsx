@@ -7,7 +7,7 @@ import JoinRequestItem from '../components/JoinRequestItem';
 import FamilyLeaderboard from '../components/FamilyLeaderboard';
 import ActivityCard from '../components/ActivityCard';
 import Spinner from '../components/Spinner';
-import { chevronRightGrey, chevronRightWhite, mascotte1, mascotteActivity, usersGroupIcon } from '../assets';
+import { chevronRightGrey, chevronRightWhite, getActivityIllustration, mascotte1, mascotteActivity, usersGroupIcon } from '../assets';
 
 const CARD_SHADOW = '0px 4px 6px rgba(22, 22, 22, 0.08)';
 
@@ -37,6 +37,7 @@ export default function Home() {
   );
   const latestActivities = completedActivities.slice(0, 3);
   const isActivityStarter = currentActivity?.startedBy === user.id;
+  const currentIllustration = currentActivity ? getActivityIllustration(currentActivity.activity?.category) : null;
 
   const smallButton = (label: string, onClick: () => void) => (
     <button
@@ -87,12 +88,22 @@ export default function Home() {
               className="flex items-center bg-white rounded-2xl p-5"
               style={{ border: `1px solid ${theme.primary}`, boxShadow: `0px 4px 10px ${theme.transparent}`, gap: 10 }}
             >
-              <div
-                className="flex items-center justify-center rounded-full shrink-0"
-                style={{ width: 65, height: 65, backgroundColor: theme.transparent }}
-              >
-                <img src={mascotteActivity} alt="" style={{ width: 40, height: 40, objectFit: 'contain' }} />
-              </div>
+              {/* Activité en cours : son illustration (Figma : activy-validate). Sinon : la mascotte */}
+              {currentIllustration ? (
+                <img
+                  src={currentIllustration}
+                  alt=""
+                  className="shrink-0"
+                  style={{ width: 65, height: 65, borderRadius: 16, objectFit: 'cover' }}
+                />
+              ) : (
+                <div
+                  className="flex items-center justify-center rounded-full shrink-0"
+                  style={{ width: 65, height: 65, backgroundColor: theme.transparent }}
+                >
+                  <img src={mascotteActivity} alt="" style={{ width: 40, height: 40, objectFit: 'contain' }} />
+                </div>
+              )}
               <div className="flex-1 flex flex-col items-start" style={{ gap: 10 }}>
                 {currentActivity ? (
                   <>
