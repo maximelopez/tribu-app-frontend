@@ -10,7 +10,7 @@ import ActivityCard from '../components/ActivityCard';
 import Spinner from '../components/Spinner';
 import ConfirmModal from '../components/ConfirmModal';
 import { api } from '../api';
-import { chevronRightGrey, chevronRightWhite, getActivityIllustration, mascotte1, mascotteActivity, usersGroupIcon } from '../assets';
+import { chevronRightGrey, chevronRightWhite, getActivityImage, mascotte1, mascotteActivity, usersGroupIcon } from '../assets';
 
 const CARD_SHADOW = '0px 4px 6px rgba(22, 22, 22, 0.08)';
 
@@ -88,7 +88,7 @@ export default function Home() {
   );
   const latestActivities = completedActivities.slice(0, 3);
   const isActivityStarter = currentActivity?.startedBy === user.id;
-  const currentIllustration = currentActivity ? getActivityIllustration(currentActivity.activity?.category) : null;
+  const currentIllustration = currentActivity ? getActivityImage(currentActivity.activity) : null;
 
   const smallButton = (label: string, onClick: () => void) => (
     <button
@@ -139,7 +139,7 @@ export default function Home() {
               className="flex items-center bg-white rounded-2xl p-5"
               style={{ border: `1px solid ${theme.primary}`, boxShadow: `0px 4px 10px ${theme.transparent}`, gap: 10 }}
             >
-              {/* Activité en cours : son illustration (Figma : activy-validate). Sinon : la mascotte */}
+              {/* Activité en cours : sa photo ou son illustration (Figma : activy-validate). Sinon : la mascotte */}
               {currentIllustration ? (
                 <img
                   src={currentIllustration}
@@ -201,6 +201,7 @@ export default function Home() {
                     name={fa.activity.name}
                     description={fa.activity.description}
                     isPartner={fa.activity.isPartner}
+                    imageUrl={fa.activity.imageUrl}
                     category={fa.activity.category}
                     onPress={() => openActivityDetail(fa)}
                   />

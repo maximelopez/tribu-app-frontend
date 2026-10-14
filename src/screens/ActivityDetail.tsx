@@ -5,7 +5,7 @@ import { useTheme } from '../context/ThemeContext';
 import { useUserStore } from '../store/userStore';
 import { useFamilyStore } from '../store/familyStore';
 import type { Activity, Category, FamilyActivity } from '../store/familyStore';
-import { getAvatar } from '../assets';
+import { getActivityImage, getAvatar } from '../assets';
 import Button from '../components/Button';
 import ScreenHeader from '../components/ScreenHeader';
 import Spinner from '../components/Spinner';
@@ -240,13 +240,26 @@ export default function ActivityDetail() {
             )}
           </div>
 
-          {/* Illustration (TODO : illustration selon la catégorie) */}
-          <div
-            className="flex items-center justify-center"
-            style={{ height: 260, borderRadius: 16, backgroundColor: theme.transparent }}
-          >
-            <ImageIcon size={48} color={theme.primary} strokeWidth={1.5} />
-          </div>
+          {/* Photo de l'activité (sinon l'illustration de sa catégorie) */}
+          {activity.imageUrl ? (
+            <img
+              src={activity.imageUrl}
+              alt=""
+              className="w-full block shrink-0"
+              style={{ height: 260, borderRadius: 16, objectFit: 'cover', backgroundColor: theme.transparent }}
+            />
+          ) : (
+            <div
+              className="flex items-center justify-center overflow-hidden shrink-0"
+              style={{ height: 260, borderRadius: 16, backgroundColor: theme.transparent }}
+            >
+              {getActivityImage(activity) ? (
+                <img src={getActivityImage(activity)!} alt="" style={{ width: 200, height: 200, borderRadius: 24, objectFit: 'cover' }} />
+              ) : (
+                <ImageIcon size={48} color={theme.primary} strokeWidth={1.5} />
+              )}
+            </div>
+          )}
 
           {/* Titre + description */}
           <h1 className="font-outfit-bold font-normal m-0" style={{ fontSize: 32, color: '#15201A' }}>{activity.name}</h1>

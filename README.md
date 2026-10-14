@@ -65,7 +65,7 @@ src/
 | `Button`, `Input` | Bouton principal (48px) et champ de formulaire |
 | `ScreenHeader` | En-tête des écrans enfants (titre + bouton retour rond) |
 | `TabBar` | Barre du bas (point rouge sur Chat s'il y a des messages non lus) |
-| `ActivityCard` | Carte d'activité avec l'illustration de sa catégorie (option `points`) |
+| `ActivityCard` | Carte d'activité avec sa photo (ou l'illustration de sa catégorie), option `points` |
 | `BadgeCard` | Carte d'un badge (grisée avec la progression s'il n'est pas obtenu) |
 | `NoFamilyState` | État vide « pas encore de Tribu » (Chat, Récompenses) |
 | `FamilyLeaderboard`, `LeaderboardRow` | Classement des membres de la Tribu |
@@ -165,8 +165,11 @@ l'app les lit avec `GET /families/:id/badges`.
   Utiliser `theme.primary`, `theme.gradient` et `theme.transparent` plutôt que des couleurs fixes.
 - **Polices** : Outfit (`font-outfit`, `font-outfit-bold`) et Montserrat pour la barre du bas.
 - **Fond** des écrans : `#F3F3F8`. Cartes blanches arrondies avec une ombre légère.
-- **Illustrations** : une par catégorie (`getActivityIllustration` dans `assets/index.ts`), utilisées
-  pour les activités et les badges.
+- **Images des activités** : la photo de l'activité (`imageUrl`, hébergée sur Cloudinary et ajoutée
+  depuis l'app admin). Sans photo, l'illustration de sa catégorie. Fonction `getActivityImage` dans
+  `assets/index.ts`.
+- **Illustrations des catégories** (`getActivityIllustration`) : utilisées pour les badges, et pour les
+  activités qui n'ont pas encore de photo.
 
 ## PWA
 

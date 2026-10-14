@@ -1,6 +1,6 @@
 import { Image as ImageIcon } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
-import { getActivityIllustration } from '../assets';
+import { getActivityImage } from '../assets';
 
 const CARD_SHADOW = '0px 4px 6px rgba(0, 0, 0, 0.08)';
 
@@ -8,7 +8,8 @@ interface ActivityCardProps {
   name: string;
   description: string;
   isPartner: boolean;
-  // Catégorie : affiche l'illustration correspondante (sinon une icône provisoire)
+  // Photo de l'activité, sinon l'illustration de sa catégorie (sinon une icône provisoire)
+  imageUrl?: string | null;
   category?: string;
   // Points gagnés, affichés à côté du nom (ex : détail d'un badge)
   points?: number;
@@ -16,9 +17,9 @@ interface ActivityCardProps {
 }
 
 // Carte d'activité (Figma : Activities) - catalogue, Home, Profil et historique
-export default function ActivityCard({ name, description, isPartner, category, points, onPress }: ActivityCardProps) {
+export default function ActivityCard({ name, description, isPartner, imageUrl, category, points, onPress }: ActivityCardProps) {
   const { theme } = useTheme();
-  const illustration = getActivityIllustration(category);
+  const illustration = getActivityImage({ imageUrl, category });
 
   return (
     <button
@@ -26,7 +27,7 @@ export default function ActivityCard({ name, description, isPartner, category, p
       className="w-full flex items-center bg-white text-left active:opacity-85"
       style={{ boxShadow: CARD_SHADOW, borderRadius: 20, minHeight: 101, padding: 20, gap: 16, border: 'none' }}
     >
-      {/* Illustration selon la catégorie (Figma : illustration-activite) */}
+      {/* Photo de l'activité ou illustration de sa catégorie (Figma : photo) */}
       {illustration ? (
         <img
           src={illustration}

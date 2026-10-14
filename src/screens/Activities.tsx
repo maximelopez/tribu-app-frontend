@@ -184,6 +184,7 @@ export default function Activities() {
                 name={item.name}
                 description={item.description}
                 isPartner={item.isPartner}
+                imageUrl={item.imageUrl}
                 category={item.category}
                 onPress={() => navigate(`/activites/${item._id}`, { state: { activity: item } })}
               />

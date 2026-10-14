@@ -42,6 +42,10 @@ const activityIllustrations: Record<Category, string> = {
 export const getActivityIllustration = (category?: string | null) =>
   (category && activityIllustrations[category as Category]) || null;
 
+// Image d'une activité : sa photo si elle en a une, sinon l'illustration de sa catégorie
+export const getActivityImage = (activity?: { imageUrl?: string | null; category?: string | null } | null) =>
+  activity?.imageUrl || getActivityIllustration(activity?.category);
+
 // Fond à motifs de l'onboarding selon la couleur du thème
 export const backgroundMap: Record<ThemeColor, string> = {
   green: bgGreen,
