@@ -191,6 +191,9 @@ l'app les lit avec `GET /families/:id/badges`.
 
 - Configuration dans `vite.config.ts` (`vite-plugin-pwa`) : nom, icônes (`public/`), couleurs.
 - **Hors ligne** : l'app (écrans, polices, images) est en cache. Les appels au backend restent en ligne.
+- **Écran de démarrage iPhone** : fond vert avec le logo, une image par taille d'écran dans `public/splash/`
+  (déclarées dans `index.html`). Pour un nouvel iPhone, ajouter son image et sa ligne `apple-touch-startup-image`.
+  Il ne s'affiche que sur l'app installée sur l'écran d'accueil.
 - **Installation** : Android depuis Chrome (« Installer l'application »), iPhone depuis Safari
   (Partager > « Sur l'écran d'accueil »). Il faut un site en HTTPS.
 - **Mise à jour** : l'app vérifie s'il existe une nouvelle version à chaque lancement. Pour récupérer
@@ -216,7 +219,6 @@ vers `index.html` (`public/_redirects`), pour qu'un lien direct vers un écran f
   - carte « Ma visibilité dans la Tribu » (masquer ses points dans le classement).
 - **Badges** : textes longs de Sport, Culture et Maison à valider avec le designer ; date d'obtention
   (en attente de la maquette finale) ; nouveaux badges quand le système sera validé.
-- **Écran de démarrage iPhone** (splash screen).
 - **Mot de passe oublié** (nécessite l'envoi d'emails côté backend).
 - **Notifications push** (Android ; iPhone seulement si l'app est installée).
 - **Accueil** :
