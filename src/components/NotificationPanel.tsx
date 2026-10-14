@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router';
 import { Award, CalendarCheck, Trophy, UserCheck, UserPlus, Users, UserX } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { useFamilyStore } from '../store/familyStore';
@@ -54,7 +53,6 @@ interface NotificationPanelProps {
 // Panneau des notifications, ouvert depuis la cloche (Figma : panneau-notifications)
 export default function NotificationPanel({ onClose }: NotificationPanelProps) {
   const { theme } = useTheme();
-  const navigate = useNavigate();
   const notifications = useFamilyStore(state => state.notifications);
   const setNotifications = useFamilyStore(state => state.setNotifications);
   const setUnreadNotifications = useFamilyStore(state => state.setUnreadNotifications);
@@ -110,26 +108,6 @@ export default function NotificationPanel({ onClose }: NotificationPanelProps) {
     }
   };
 
-  // Toucher une notification ouvre l'écran concerné
-  const open = (notification: AppNotification) => {
-    const { activityId, badgeId } = notification.data;
-    switch (notification.type) {
-      case 'activity_started':
-      case 'activity_completed':
-        if (activityId) navigate(`/activites/${activityId}`);
-        break;
-      case 'badge_unlocked':
-        if (badgeId) navigate(`/recompenses/badges/${badgeId}`);
-        break;
-      case 'request_rejected':
-        navigate('/tribu/rechercher');
-        break;
-      default:
-        break;
-    }
-    if (notification.type !== 'join_request') onClose();
-  };
-
   return (
     <div
       className="fixed inset-0 z-50 flex justify-center"
@@ -169,14 +147,10 @@ export default function NotificationPanel({ onClose }: NotificationPanelProps) {
             const isUnread = unreadIds.has(notification.id);
             const status = notification.data.status;
             const isPendingRequest = notification.type === 'join_request' && status === 'pending';
-            const isClickable = notification.type !== 'join_request';
 
             return (
               <div
                 key={notification.id}
-                role={isClickable ? 'button' : undefined}
-                tabIndex={isClickable ? 0 : undefined}
-                onClick={isClickable ? () => open(notification) : undefined}
                 className="flex items-start shrink-0"
                 style={{
                   border: '1px solid #CBD5E0',
@@ -185,7 +159,6 @@ export default function NotificationPanel({ onClose }: NotificationPanelProps) {
                   gap: 12,
                   // Déjà lue avant l'ouverture du panneau : plus discrète (fond grisé)
                   backgroundColor: isUnread ? '#FFFFFF' : '#F6F7F9',
-                  cursor: isClickable ? 'pointer' : 'default',
                 }}
               >
                 <span

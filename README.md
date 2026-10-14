@@ -150,7 +150,7 @@ et le nombre de messages non lus, pour rattraper ce qui s'est passé pendant la 
 - **Demande pour rejoindre** : le créateur l'accepte ou la refuse directement depuis la notification
   (il n'y a plus de bloc de demandes sur l'Accueil). Une fois traitée, la notification affiche
   « Demande acceptée », « Demande refusée » ou « Demande annulée ».
-- Toucher une notification ouvre l'écran concerné (activité, badge, recherche de Tribu après un refus).
+- Les notifications sont informatives : les toucher n'ouvre pas d'écran (seuls Accepter / Refuser agissent).
 - Liste relue au démarrage, au retour sur l'app et après une reconnexion.
 
 ## Rejoindre une Tribu
