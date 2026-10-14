@@ -8,7 +8,24 @@ avec un mode hors ligne basique. Elle parle au backend Tribu (API REST + Socket.
 - **Backend** : https://tribu-app-backend.onrender.com (dépôt `tribu-app-backend`, voir son README)
 - **Maquette** : Figma (section `main-part`), référence pour tous les écrans
 
+## Sommaire
+
+- [Lancer en local](#lancer-en-local)
+- [Configuration](#configuration-obligatoire)
+- [Structure](#structure)
+- [Navigation](#navigation)
+- [Ajouter un écran](#ajouter-un-écran)
+- [Connexion et session](#connexion-et-session)
+- [Temps réel](#temps-réel)
+- [Fonctionnalités](#fonctionnalités)
+- [Thème et design](#thème-et-design)
+- [PWA](#pwa)
+- [Déploiement (Netlify)](#déploiement-netlify)
+- [À faire](#à-faire)
+
 ## Lancer en local
+
+Prérequis : Node.js 22.
 
 ```bash
 npm install
@@ -64,6 +81,7 @@ src/
 |---|---|
 | `Button`, `Input` | Bouton principal (48px) et champ de formulaire |
 | `ScreenHeader` | En-tête des écrans enfants (titre + bouton retour rond) |
+| `OnboardingLayout` | Fond à motifs et logo des écrans d'onboarding (date, couleur, avatar) |
 | `TabBar` | Barre du bas (point rouge sur Chat s'il y a des messages non lus) |
 | `ActivityCard` | Carte d'activité avec sa photo (ou l'illustration de sa catégorie), option `points` |
 | `BadgeCard` | Carte d'un badge (grisée avec la progression s'il n'est pas obtenu) |
@@ -73,6 +91,8 @@ src/
 | `MessageBubble` | Message du chat |
 | `ThemeSwitcher` | Choix du thème dans le Profil |
 | `ConfirmModal` | Popup de confirmation (bouton rouge pour une action destructive + bouton gris pour revenir) |
+| `Spinner` | Roue de chargement (boutons, listes) |
+| `ErrorBoundary` | Entoure toute l'app : si un écran plante, affiche un message avec « Recharger » |
 
 **Hooks**
 
@@ -114,6 +134,17 @@ src/
 | `/tribu/:id` | Détails d'une Tribu avant de la rejoindre |
 | `/tribu/creer` | Créer une Tribu |
 
+## Ajouter un écran
+
+1. Créer le fichier dans `src/screens/` (un composant par écran).
+2. Déclarer sa route dans `App.tsx` :
+   - écran principal : dans `TabsLayout` (barre du bas, pas de bouton retour) ;
+   - écran enfant : dans `AuthenticatedLayout`, avec `ScreenHeader` en haut (bouton retour, pas de barre du bas).
+3. Utiliser les couleurs du thème (`useTheme()`) et les composants existants (`Button`, `Input`,
+   `ConfirmModal`…).
+4. Appeler le backend avec `api()` et lire les données partagées dans les stores.
+5. Ajouter l'adresse dans le tableau [Navigation](#navigation) de ce README.
+
 ## Connexion et session
 
 - Le token (valable 30 jours) est renvoyé par le backend à la connexion ou à l'inscription, puis
@@ -140,7 +171,17 @@ src/
 Au retour sur l'app (PWA de nouveau au premier plan) ou après une reconnexion, l'app relit le profil
 et le nombre de messages non lus, pour rattraper ce qui s'est passé pendant la coupure.
 
-## Notifications
+## Fonctionnalités
+
+### Points et niveaux
+
+- Chaque participant d'une activité terminée gagne ses points, et la Tribu gagne les points de tous
+  les participants.
+- Le niveau de la Tribu (1 à 10) et sa progression sont calculés par le backend (`levelInfo`).
+- `FamilyLeaderboard` affiche le niveau, la barre de progression, « Encore X pts avant le niveau N »
+  et le classement des membres par points.
+
+### Notifications
 
 - Cloche en haut de l'Accueil (avec ou sans Tribu), avec le nombre de notifications non lues.
 - Le panneau affiche les 30 dernières (`GET /notifications`). L'ouvrir marque tout comme lu
@@ -153,7 +194,7 @@ et le nombre de messages non lus, pour rattraper ce qui s'est passé pendant la 
 - Les notifications sont informatives : les toucher n'ouvre pas d'écran (seuls Accepter / Refuser agissent).
 - Liste relue au démarrage, au retour sur l'app et après une reconnexion.
 
-## Rejoindre une Tribu
+### Rejoindre une Tribu
 
 - Une seule demande en attente à la fois : pour en envoyer une autre, il faut annuler la première.
 - Après l'envoi, l'Accueil affiche « Demande envoyée » avec le bouton « Annuler la demande »
@@ -161,7 +202,7 @@ et le nombre de messages non lus, pour rattraper ce qui s'est passé pendant la 
 - La demande en attente est relue au démarrage et au retour sur l'app (`GET /families/join-requests/me`).
 - Acceptée : la Tribu est chargée. Refusée ou annulée : retour à « Rejoindre ou créer une Tribu ».
 
-## Badges
+### Badges
 
 Un badge par catégorie d'activité (Nature, Culture, Sport, Maison), obtenu quand la Tribu a terminé
 3 activités de la catégorie. Les règles et les textes sont dans le backend (`config/badges.ts`) :
@@ -215,16 +256,23 @@ vers `index.html` (`public/_redirects`), pour qu'un lien direct vers un écran f
 
 ## À faire
 
+**Prochaines fonctionnalités**
+
+- **Mot de passe oublié** (nécessite l'envoi d'emails côté backend).
+- **Notifications push** (Android ; iPhone seulement si l'app est installée).
+
+**En attente du designer**
+
+- **Badges** : textes longs de Sport, Culture et Maison à valider ; date d'obtention ; nouveaux badges
+  quand le système sera validé.
+- **Accueil** : lien « Comment ça fonctionne ? » (contenu à définir).
+- **Recherche de Tribu** : état affiché avant de taper.
+- **Écran Récompense** : mascotte « flottante » de la maquette (avec son ombre) à exporter.
+
+**Mis de côté**
+
 - **Profil** :
   - bouton « Supprimer mon compte » (règles à définir côté backend : créateur de la Tribu, Tribu vide,
     demandes en attente) ;
   - carte « Ma visibilité dans la Tribu » (masquer ses points dans le classement).
-- **Badges** : textes longs de Sport, Culture et Maison à valider avec le designer ; date d'obtention
-  (en attente de la maquette finale) ; nouveaux badges quand le système sera validé.
-- **Mot de passe oublié** (nécessite l'envoi d'emails côté backend).
-- **Notifications push** (Android ; iPhone seulement si l'app est installée).
-- **Accueil** :
-  - lien « Comment ça fonctionne ? » (contenu à définir) ;
-  - chargement : carré blanc avec roue par-dessus l'écran grisé (comme la maquette).
-- **Recherche de Tribu** : état affiché avant de taper (en attente du designer).
-- **Écran Récompense** : mascotte « flottante » de la maquette (avec son ombre) à exporter.
+- **Accueil** : chargement avec carré blanc et roue par-dessus l'écran grisé (comme la maquette).
