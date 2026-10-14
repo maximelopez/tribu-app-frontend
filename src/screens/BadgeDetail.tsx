@@ -5,10 +5,10 @@ import type { FamilyActivity } from '../store/familyStore';
 import useFamilyBadges from '../hooks/useFamilyBadges';
 import ScreenHeader from '../components/ScreenHeader';
 import ActivityCard from '../components/ActivityCard';
-import { BADGE_COLORS, BadgeIllustration } from '../components/BadgeCard';
+import { BadgeIllustration, getBadgeColors } from '../components/BadgeCard';
 import Spinner from '../components/Spinner';
 
-// Détail d'un badge : description, progression et activités de sa catégorie faites par la Tribu
+// Détail d'un badge : description, progression et, pour un badge de catégorie, les activités faites par la Tribu
 // (Figma : details-badge)
 export default function BadgeDetail() {
   const { badgeId } = useParams();
@@ -34,9 +34,11 @@ export default function BadgeDetail() {
     );
   }
 
-  const colors = BADGE_COLORS[badge.category] ?? BADGE_COLORS.maison;
-  const progressPercent = Math.round((badge.progress / badge.goal) * 100);
-  const relatedActivities = completedActivities.filter(fa => fa.activity?.category === badge.category);
+  const colors = getBadgeColors(badge);
+  const progressPercent = badge.goal > 0 ? Math.round((badge.progress / badge.goal) * 100) : 0;
+  const relatedActivities = badge.category
+    ? completedActivities.filter(fa => fa.activity?.category === badge.category)
+    : [];
 
   const openActivityDetail = (familyActivity: FamilyActivity) => {
     const activity = toCatalogActivity(familyActivity);
@@ -85,7 +87,7 @@ export default function BadgeDetail() {
           <div className="flex items-center justify-between text-base">
             <span className="font-outfit-bold" style={{ color: '#161616' }}>Progression</span>
             <span className="font-outfit" style={{ color: '#969696' }}>
-              {badge.progress} / {badge.goal} activités{badge.unlocked ? ' · obtenu' : ''}
+              {badge.progress} / {badge.goal}{badge.unlocked ? ' · obtenu' : ''}
             </span>
           </div>
           <div className="overflow-hidden" style={{ height: 8, borderRadius: 9999, backgroundColor: '#E2E5F0' }}>
@@ -93,29 +95,31 @@ export default function BadgeDetail() {
           </div>
         </div>
 
-        {/* Activités concernées : celles de la catégorie déjà terminées par la Tribu */}
-        <div className="flex flex-col shrink-0" style={{ gap: 12 }}>
-          <span className="font-outfit-bold text-base" style={{ color: '#161616' }}>Activités concernées</span>
-          {relatedActivities.length > 0 ? (
-            relatedActivities.map(fa => (
-              <ActivityCard
-                key={fa.id}
-                name={fa.activity.name}
-                description={fa.activity.description}
-                isPartner={fa.activity.isPartner}
-                offer={fa.activity.offer}
-                imageUrl={fa.activity.imageUrl}
-                category={fa.activity.category}
-                points={fa.pointsPerMember ?? fa.activity.points}
-                onPress={() => openActivityDetail(fa)}
-              />
-            ))
-          ) : (
-            <p className="font-outfit m-0" style={{ fontSize: 14, color: '#969696' }}>
-              Aucune activité terminée dans cette catégorie pour l'instant.
-            </p>
-          )}
-        </div>
+        {/* Activités concernées (badges de catégorie) : celles de la catégorie déjà terminées par la Tribu */}
+        {badge.category && (
+          <div className="flex flex-col shrink-0" style={{ gap: 12 }}>
+            <span className="font-outfit-bold text-base" style={{ color: '#161616' }}>Activités concernées</span>
+            {relatedActivities.length > 0 ? (
+              relatedActivities.map(fa => (
+                <ActivityCard
+                  key={fa.id}
+                  name={fa.activity.name}
+                  description={fa.activity.description}
+                  isPartner={fa.activity.isPartner}
+                  offer={fa.activity.offer}
+                  imageUrl={fa.activity.imageUrl}
+                  category={fa.activity.category}
+                  points={fa.pointsPerMember ?? fa.activity.points}
+                  onPress={() => openActivityDetail(fa)}
+                />
+              ))
+            ) : (
+              <p className="font-outfit m-0" style={{ fontSize: 14, color: '#969696' }}>
+                Aucune activité terminée dans cette catégorie pour l'instant.
+              </p>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

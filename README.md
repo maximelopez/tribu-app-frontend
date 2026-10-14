@@ -205,15 +205,20 @@ et le nombre de messages non lus, pour rattraper ce qui s'est passé pendant la 
 
 ### Badges
 
-Un badge par catégorie d'activité (Nature, Culture, Sport, Maison), obtenu quand la Tribu a terminé
-3 activités de la catégorie. Les règles et les textes sont dans le backend (`config/badges.ts`) :
-l'app les lit avec `GET /families/:id/badges`.
+24 badges sur 4 niveaux (`tier`) : bronze, argent, or et platine. Les règles et les textes sont dans le
+backend (`config/badges.ts`) : l'app les lit avec `GET /families/:id/badges`. Chaque badge a une
+progression (`progress / goal`) et, une fois obtenu, sa date (`unlockedAt`).
 
-- **Onglet Récompenses** : collection, dernier badge gagné, badges par thématique.
-- **Détail d'un badge** : texte long, progression, activités de la catégorie déjà faites.
-- **Écran Récompense** : carte du badge quand l'activité vient de le débloquer (`newBadge`).
+- **Onglet Récompenses** : collection (x / 24), dernier badge gagné, les 3 prochains badges (les plus
+  avancés) et le bouton « Voir tous les badges ».
+- **Tous les badges** : rangés par niveau (Bronze, Argent, Or, Platine).
+- **Détail d'un badge** : texte long, progression et, pour un badge de catégorie, les activités de la
+  catégorie déjà faites.
+- **Écran Récompense** : les badges que l'activité vient de débloquer (`newBadges`).
 - **Profil** : dernier badge obtenu par la Tribu.
 - **Détails d'une Tribu** : ses 3 derniers badges gagnés (visible avant de la rejoindre).
+- **Illustration** : celle de la catégorie pour les badges de catégorie. Pour les autres, un carré à la
+  couleur du niveau (`TIER_COLORS` dans `BadgeCard.tsx`), provisoire en attendant la maquette.
 
 ## Thème et design
 
@@ -264,8 +269,8 @@ vers `index.html` (`public/_redirects`), pour qu'un lien direct vers un écran f
 
 **En attente du designer**
 
-- **Badges** : textes longs de Sport, Culture et Maison à valider ; date d'obtention ; nouveaux badges
-  quand le système sera validé.
+- **Badges** : illustrations et couleurs des niveaux (bronze, argent, or, platine) ; textes à valider ;
+  date d'obtention.
 - **Accueil** : lien « Comment ça fonctionne ? » (contenu à définir).
 
 **Mis de côté**

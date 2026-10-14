@@ -1,13 +1,15 @@
 import { useNavigate } from 'react-router';
 import { useTheme } from '../context/ThemeContext';
-import useFamilyBadges from '../hooks/useFamilyBadges';
+import useFamilyBadges, { BADGE_TIERS, type BadgeTier } from '../hooks/useFamilyBadges';
 import ScreenHeader from '../components/ScreenHeader';
 import BadgeCard from '../components/BadgeCard';
 import Spinner from '../components/Spinner';
 import { mascotte1 } from '../assets';
 import FloatingMascot from '../components/FloatingMascot';
 
-// Tous les badges de la Tribu (Figma : tous-les-badges)
+const TIER_LABELS: Record<BadgeTier, string> = { bronze: 'Bronze', argent: 'Argent', or: 'Or', platine: 'Platine' };
+
+// Tous les badges de la Tribu, rangés par niveau (Figma : tous-les-badges)
 export default function AllBadges() {
   const { theme } = useTheme();
   const navigate = useNavigate();
@@ -37,9 +39,22 @@ export default function AllBadges() {
             </p>
           </div>
 
-          {data?.badges.map(badge => (
-            <BadgeCard key={badge.id} badge={badge} onPress={() => navigate(`/recompenses/badges/${badge.id}`)} />
-          ))}
+          {data && BADGE_TIERS.map(tier => {
+            const badges = data.badges.filter(b => b.tier === tier);
+            if (badges.length === 0) return null;
+            const unlocked = badges.filter(b => b.unlocked).length;
+            return (
+              <div key={tier} className="flex flex-col shrink-0" style={{ gap: 12, marginTop: 8 }}>
+                <div className="flex items-center justify-between text-base">
+                  <span className="font-outfit-bold" style={{ color: '#161616' }}>{TIER_LABELS[tier]}</span>
+                  <span className="font-outfit" style={{ color: '#969696' }}>{unlocked} / {badges.length}</span>
+                </div>
+                {badges.map(badge => (
+                  <BadgeCard key={badge.id} badge={badge} onPress={() => navigate(`/recompenses/badges/${badge.id}`)} />
+                ))}
+              </div>
+            );
+          })}
 
           {!data && (
             <p className="font-outfit text-base text-center m-0" style={{ color: '#969696', paddingTop: 12 }}>

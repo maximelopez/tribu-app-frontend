@@ -4,15 +4,20 @@ import { useFamilyStore } from '../store/familyStore';
 import type { Category } from '../store/familyStore';
 import { api } from '../api';
 
+// Niveau d'un badge, du plus courant au plus rare
+export type BadgeTier = 'bronze' | 'argent' | 'or' | 'platine';
+export const BADGE_TIERS: BadgeTier[] = ['bronze', 'argent', 'or', 'platine'];
+
 // Badge de la Tribu (backend : GET /families/:id/badges)
 export interface Badge {
   id: string;
-  category: Category;
+  tier: BadgeTier;
+  category: Category | null; // badges de catégorie seulement
   name: string;
   description: string; // texte court (cartes)
   details: string;     // texte long (détail du badge)
-  goal: number;        // activités à terminer dans la catégorie
-  progress: number;    // activités déjà terminées (max : goal)
+  goal: number;        // objectif à atteindre (activités, messages, niveau...)
+  progress: number;    // progression actuelle (max : goal)
   unlocked: boolean;
   unlockedAt: string | null;
 }

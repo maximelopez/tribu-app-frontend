@@ -14,7 +14,7 @@ interface ActivityRewardState {
   familyPoints: number;   // total de la Tribu après l'activité
   previousLevel: number;  // niveau avant l'activité (pour détecter un passage de niveau)
   levelInfo: LevelInfo;
-  newBadge?: Badge | null; // badge débloqué par l'activité (sinon null)
+  newBadges?: Badge[];    // badges débloqués par l'activité (du plus rare au plus courant)
 }
 
 // Écran affiché après "Terminer cette activité" (Figma : recompense (plein écran))
@@ -27,7 +27,7 @@ export default function ActivityReward() {
   // Ouvert sans données (ex : page rechargée) : retour à l'accueil
   if (!state) return <Navigate to="/" replace />;
 
-  const { familyName, pointsEarned, familyPoints, previousLevel, levelInfo, newBadge } = state;
+  const { familyName, pointsEarned, familyPoints, previousLevel, levelInfo, newBadges = [] } = state;
   const hasLeveledUp = levelInfo.level > previousLevel;
   const progressPercent = Math.round(Math.min(1, Math.max(0, levelInfo.isMax ? 1 : levelInfo.progress)) * 100);
 
@@ -62,8 +62,8 @@ export default function ActivityReward() {
           <span className="font-outfit" style={{ fontSize: 16, lineHeight: '20px', color: '#161616' }}>points gagnés</span>
         </div>
 
-        {/* Badge débloqué par cette activité */}
-        {newBadge && <BadgeCard badge={newBadge} />}
+        {/* Badges débloqués par cette activité */}
+        {newBadges.map(badge => <BadgeCard key={badge.id} badge={badge} />)}
 
         {/* Niveau */}
         <div

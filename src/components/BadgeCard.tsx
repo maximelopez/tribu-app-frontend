@@ -1,5 +1,6 @@
+import { Award } from 'lucide-react';
 import type { Category } from '../store/familyStore';
-import type { Badge } from '../hooks/useFamilyBadges';
+import type { Badge, BadgeTier } from '../hooks/useFamilyBadges';
 import { getActivityIllustration } from '../assets';
 
 // Couleur de chaque badge : bordure du détail et ombre des cartes (Figma : badge-nature, variantes)
@@ -10,13 +11,47 @@ export const BADGE_COLORS: Record<Category, { color: string; shadow: string }> =
   maison: { color: '#777777', shadow: 'rgba(150, 150, 150, 0.1)' },
 };
 
+// Couleur des niveaux (provisoire, en attendant la maquette) : badges sans catégorie
+export const TIER_COLORS: Record<BadgeTier, { color: string; background: string; shadow: string }> = {
+  bronze: { color: '#9A5A2C', background: '#F3D3B8', shadow: 'rgba(208, 136, 80, 0.15)' },
+  argent: { color: '#5E6977', background: '#E1E5EB', shadow: 'rgba(135, 146, 160, 0.15)' },
+  or: { color: '#9C7200', background: '#FBE7A6', shadow: 'rgba(242, 194, 48, 0.18)' },
+  platine: { color: '#3D5F7A', background: '#D6EAF6', shadow: 'rgba(127, 166, 196, 0.18)' },
+};
+
+// Couleurs d'un badge : celles de sa catégorie, sinon celles de son niveau
+export const getBadgeColors = (badge: Badge) =>
+  (badge.category && BADGE_COLORS[badge.category]) || TIER_COLORS[badge.tier] || BADGE_COLORS.maison;
+
 const LOCKED_SHADOW = 'rgba(150, 150, 150, 0.1)';
 
-// Illustration du badge (la même que les activités de sa catégorie). Pas encore obtenu : en gris
+// Illustration du badge : celle des activités de sa catégorie, sinon un carré à la couleur de son niveau
+// (provisoire, en attendant la maquette). Pas encore obtenu : en gris
 export function BadgeIllustration({ badge, size, radius }: { badge: Badge; size: number; radius: number }) {
+  const illustration = getActivityIllustration(badge.category);
+
+  if (!illustration) {
+    const tier = TIER_COLORS[badge.tier] ?? TIER_COLORS.bronze;
+    return (
+      <span
+        className="shrink-0 flex items-center justify-center"
+        style={{
+          width: size,
+          height: size,
+          borderRadius: radius,
+          backgroundColor: tier.background,
+          filter: badge.unlocked ? 'none' : 'grayscale(1)',
+          opacity: badge.unlocked ? 1 : 0.5,
+        }}
+      >
+        <Award size={Math.round(size * 0.5)} color={tier.color} strokeWidth={1.75} />
+      </span>
+    );
+  }
+
   return (
     <img
-      src={getActivityIllustration(badge.category) ?? undefined}
+      src={illustration}
       alt=""
       className="shrink-0 block"
       style={{
@@ -38,7 +73,7 @@ interface BadgeCardProps {
 
 // Carte d'un badge. Pas encore obtenu : grisée avec la progression (ex : 1 / 3)
 export default function BadgeCard({ badge, onPress }: BadgeCardProps) {
-  const colors = BADGE_COLORS[badge.category] ?? BADGE_COLORS.maison;
+  const colors = getBadgeColors(badge);
 
   return (
     <button
