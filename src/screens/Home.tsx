@@ -4,7 +4,8 @@ import { useUserStore } from '../store/userStore';
 import { useFamilyStore, toCatalogActivity } from '../store/familyStore';
 import type { FamilyActivity } from '../store/familyStore';
 import { useTheme } from '../context/ThemeContext';
-import JoinRequestItem from '../components/JoinRequestItem';
+import NotificationBell from '../components/NotificationBell';
+import NotificationPanel from '../components/NotificationPanel';
 import FamilyLeaderboard from '../components/FamilyLeaderboard';
 import ActivityCard from '../components/ActivityCard';
 import Spinner from '../components/Spinner';
@@ -29,6 +30,7 @@ export default function Home() {
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [cancelling, setCancelling] = useState(false);
   const [cancelError, setCancelError] = useState('');
+  const [showNotifications, setShowNotifications] = useState(false);
 
   if (!user) return null;
 
@@ -102,12 +104,14 @@ export default function Home() {
 
   return (
     <div className="flex-1 overflow-y-auto no-scrollbar" style={{ paddingTop: 'env(safe-area-inset-top)', paddingBottom: 24 }}>
-      {/* Bonjour, Prénom */}
-      <div className="w-full px-4 pt-6">
-        <h1 className="font-outfit-bold text-2xl font-normal m-0" style={{ color: '#161616' }}>
+      {/* Bonjour, Prénom + cloche des notifications */}
+      <div className="w-full px-4 pt-4 flex items-center justify-between" style={{ gap: 12 }}>
+        <h1 className="font-outfit-bold text-2xl font-normal m-0 min-w-0 truncate" style={{ color: '#161616' }}>
           Bonjour, <span style={{ color: theme.primary }}>{user.name}</span>
         </h1>
+        <NotificationBell onPress={() => setShowNotifications(true)} />
       </div>
+      {showNotifications && <NotificationPanel onClose={() => setShowNotifications(false)} />}
 
       <div className="px-4 mt-4">
         {isLoadingFamily && !family ? (
@@ -116,15 +120,6 @@ export default function Home() {
           </div>
         ) : family ? (
           <div className="w-full flex flex-col gap-3">
-            {/* Demandes en attente */}
-            {user.id === family.creatorId && family.joinRequests.length > 0 && (
-              <div className="flex flex-col gap-3">
-                {family.joinRequests.map(requestUser => (
-                  <JoinRequestItem key={requestUser.id} requestUser={requestUser} familyId={family.id} />
-                ))}
-              </div>
-            )}
-
             {/* Carte tribu : nom, niveau, classement */}
             <FamilyLeaderboard
               familyName={family.name}

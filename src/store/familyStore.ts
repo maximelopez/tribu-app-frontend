@@ -74,6 +74,35 @@ export interface PendingRequest {
   city: string;
 }
 
+// Notification de la cloche (backend : GET /notifications)
+export type NotificationType =
+  | 'join_request'
+  | 'request_accepted'
+  | 'request_rejected'
+  | 'member_joined'
+  | 'activity_started'
+  | 'activity_completed'
+  | 'badge_unlocked';
+
+export interface AppNotification {
+  id: string;
+  type: NotificationType;
+  data: {
+    familyId?: string | null;
+    familyName?: string | null;
+    userId?: string | null;
+    userName?: string | null;
+    activityId?: string | null;
+    activityName?: string | null;
+    points?: number | null;
+    badgeId?: string | null;
+    badgeName?: string | null;
+    status?: 'pending' | 'accepted' | 'rejected' | 'cancelled' | null; // demande pour rejoindre
+  };
+  read: boolean;
+  createdAt: string;
+}
+
 interface FamilyStore {
   family: Family | null;
   setFamily: (family: Family | null | ((prev: Family | null) => Family | null)) => void;
@@ -93,6 +122,11 @@ interface FamilyStore {
   // Demande envoyée pour rejoindre une Tribu, en attente de réponse (Accueil sans Tribu)
   pendingRequest: PendingRequest | null;
   setPendingRequest: (request: PendingRequest | null) => void;
+  // Notifications de la cloche (Accueil) et nombre de non lues
+  notifications: AppNotification[];
+  setNotifications: (list: AppNotification[] | ((prev: AppNotification[]) => AppNotification[])) => void;
+  unreadNotifications: number;
+  setUnreadNotifications: (count: number | ((prev: number) => number)) => void;
 }
 
 export const useFamilyStore = create<FamilyStore>((set) => ({
@@ -103,7 +137,15 @@ export const useFamilyStore = create<FamilyStore>((set) => ({
         ? familyOrUpdater(state.family)
         : familyOrUpdater,
     })),
-  clearFamily: () => set({ family: null, currentActivity: null, completedActivities: [], unreadCount: 0, pendingRequest: null }),
+  clearFamily: () => set({
+    family: null,
+    currentActivity: null,
+    completedActivities: [],
+    unreadCount: 0,
+    pendingRequest: null,
+    notifications: [],
+    unreadNotifications: 0,
+  }),
   isLoadingFamily: false,
   setIsLoadingFamily: (val) => set({ isLoadingFamily: val }),
   currentActivity: null,
@@ -122,4 +164,15 @@ export const useFamilyStore = create<FamilyStore>((set) => ({
     })),
   pendingRequest: null,
   setPendingRequest: (request) => set({ pendingRequest: request }),
+  notifications: [],
+  setNotifications: (listOrUpdater) =>
+    set((state) => ({
+      notifications: typeof listOrUpdater === 'function' ? listOrUpdater(state.notifications) : listOrUpdater,
+    })),
+  unreadNotifications: 0,
+  setUnreadNotifications: (countOrUpdater) =>
+    set((state) => ({
+      unreadNotifications:
+        typeof countOrUpdater === 'function' ? countOrUpdater(state.unreadNotifications) : countOrUpdater,
+    })),
 }));

@@ -3,7 +3,7 @@ import { useLocation } from 'react-router';
 import { socket } from '../socket';
 import { useUserStore } from '../store/userStore';
 import { useFamilyStore } from '../store/familyStore';
-import type { Family, FamilyActivity } from '../store/familyStore';
+import type { AppNotification, Family, FamilyActivity } from '../store/familyStore';
 import { api, expireSession } from '../api';
 
 // Temps réel de l'app connectée :
@@ -20,6 +20,8 @@ export default function useRealtime() {
   const setCompletedActivities = useFamilyStore((state) => state.setCompletedActivities);
   const setUnreadCount = useFamilyStore((state) => state.setUnreadCount);
   const setPendingRequest = useFamilyStore((state) => state.setPendingRequest);
+  const setNotifications = useFamilyStore((state) => state.setNotifications);
+  const setUnreadNotifications = useFamilyStore((state) => state.setUnreadNotifications);
 
   // Écran Chat affiché ? (les messages y sont lus directement, voir useFamilyChat)
   const location = useLocation();
@@ -105,6 +107,26 @@ export default function useRealtime() {
     if (familyId) setPendingRequest(null);
     else fetchPendingRequest();
 
+    // Notifications de la cloche (avec ou sans Tribu)
+    const fetchNotifications = async () => {
+      try {
+        const res = await api('notifications');
+        if (!res.ok) return;
+        const data = await res.json();
+        setNotifications(data.notifications ?? []);
+        setUnreadNotifications(data.unreadCount ?? 0);
+      } catch (error) {
+        console.error('Erreur notifications :', error);
+      }
+    };
+    fetchNotifications();
+
+    // Nouvelle notification en temps réel : en tête de liste, une non lue de plus
+    const handleNotification = (notification: AppNotification) => {
+      setNotifications((prev) => [notification, ...prev.filter((n) => n.id !== notification.id)]);
+      setUnreadNotifications((count) => count + 1);
+    };
+
     // Nouveau message d'un autre membre, chat non affiché : un non lu de plus
     const handleNewMessage = (message: { sender?: { _id?: string } }) => {
       if (isOnChatRef.current || message.sender?._id === userId) return;
@@ -117,6 +139,7 @@ export default function useRealtime() {
       resync();
       fetchUnreadCount();
       fetchPendingRequest();
+      fetchNotifications();
     };
 
     // Retour sur l'app (onglet ou PWA de nouveau au premier plan)
@@ -125,6 +148,7 @@ export default function useRealtime() {
         resync();
         fetchUnreadCount();
         fetchPendingRequest();
+        fetchNotifications();
       }
     };
 
@@ -240,6 +264,7 @@ export default function useRealtime() {
     socket.on('familyUpdated', handleFamilyUpdated);
     socket.on('familyAccepted', handleFamilyAccepted);
     socket.on('familyRejected', handleFamilyRejected);
+    socket.on('notification', handleNotification);
     socket.on('joinRequestRemoved', handleJoinRequestRemoved);
     socket.on('memberJoined', handleMemberJoined);
     socket.on('familyActivityUpdated', handleFamilyActivityUpdated);
@@ -253,6 +278,7 @@ export default function useRealtime() {
       socket.off('familyUpdated', handleFamilyUpdated);
       socket.off('familyAccepted', handleFamilyAccepted);
       socket.off('familyRejected', handleFamilyRejected);
+      socket.off('notification', handleNotification);
       socket.off('joinRequestRemoved', handleJoinRequestRemoved);
       socket.off('memberJoined', handleMemberJoined);
       socket.off('familyActivityUpdated', handleFamilyActivityUpdated);

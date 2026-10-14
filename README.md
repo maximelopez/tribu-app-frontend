@@ -69,7 +69,7 @@ src/
 | `BadgeCard` | Carte d'un badge (grisée avec la progression s'il n'est pas obtenu) |
 | `NoFamilyState` | État vide « pas encore de Tribu » (Chat, Récompenses) |
 | `FamilyLeaderboard`, `LeaderboardRow` | Classement des membres de la Tribu |
-| `JoinRequestItem` | Demande pour rejoindre la Tribu (accepter / refuser) |
+| `NotificationBell`, `NotificationPanel` | Cloche de l'Accueil (compteur de non lues) et panneau des notifications |
 | `MessageBubble` | Message du chat |
 | `ThemeSwitcher` | Choix du thème dans le Profil |
 | `ConfirmModal` | Popup de confirmation (bouton rouge pour une action destructive + bouton gris pour revenir) |
@@ -88,7 +88,7 @@ src/
 | Store | Contenu |
 |---|---|
 | `userStore` | Utilisateur connecté, token, onboarding terminé. Sauvegardé dans le `localStorage` |
-| `familyStore` | Tribu, activité en cours, activités terminées, messages non lus, demande en attente. En mémoire seulement |
+| `familyStore` | Tribu, activité en cours, activités terminées, messages non lus, demande en attente, notifications. En mémoire seulement |
 
 ## Navigation
 
@@ -129,6 +129,7 @@ src/
 | Événement | Effet dans l'app |
 |---|---|
 | `newMessage` | Message ajouté au chat, ou un non lu de plus si le chat n'est pas affiché |
+| `notification` | Nouvelle notification : en tête du panneau, compteur de la cloche + 1 |
 | `newJoinRequest`, `joinRequestRemoved` | Demandes pour rejoindre mises à jour (créateur) |
 | `familyAccepted` | Demande acceptée : la Tribu est chargée |
 | `familyRejected` | Demande refusée : l'Accueil revient à « Rejoindre ou créer une Tribu » |
@@ -138,6 +139,17 @@ src/
 
 Au retour sur l'app (PWA de nouveau au premier plan) ou après une reconnexion, l'app relit le profil
 et le nombre de messages non lus, pour rattraper ce qui s'est passé pendant la coupure.
+
+## Notifications
+
+- Cloche en haut de l'Accueil (avec ou sans Tribu), avec le nombre de notifications non lues.
+- Le panneau affiche les 30 dernières (`GET /notifications`). L'ouvrir marque tout comme lu
+  (`PATCH /notifications/read`), mais le point vert reste visible tant que le panneau est ouvert.
+- **Demande pour rejoindre** : le créateur l'accepte ou la refuse directement depuis la notification
+  (il n'y a plus de bloc de demandes sur l'Accueil). Une fois traitée, la notification affiche
+  « Demande acceptée », « Demande refusée » ou « Demande annulée ».
+- Toucher une notification ouvre l'écran concerné (activité, badge, recherche de Tribu après un refus).
+- Liste relue au démarrage, au retour sur l'app et après une reconnexion.
 
 ## Rejoindre une Tribu
 
@@ -206,7 +218,6 @@ vers `index.html` (`public/_redirects`), pour qu'un lien direct vers un écran f
 - **Mot de passe oublié** (nécessite l'envoi d'emails côté backend).
 - **Notifications push** (Android ; iPhone seulement si l'app est installée).
 - **Accueil** :
-  - cloche de notifications en haut à droite (avec compteur) ;
   - lien « Comment ça fonctionne ? » (contenu à définir) ;
   - chargement : carré blanc avec roue par-dessus l'écran grisé (comme la maquette).
 - **Recherche de Tribu** : état affiché avant de taper (en attente du designer).
