@@ -178,7 +178,15 @@ export default function NotificationPanel({ onClose }: NotificationPanelProps) {
                 tabIndex={isClickable ? 0 : undefined}
                 onClick={isClickable ? () => open(notification) : undefined}
                 className="flex items-start shrink-0"
-                style={{ border: '1px solid #CBD5E0', borderRadius: 14, padding: 12, gap: 12, cursor: isClickable ? 'pointer' : 'default' }}
+                style={{
+                  border: '1px solid #CBD5E0',
+                  borderRadius: 14,
+                  padding: 12,
+                  gap: 12,
+                  // Déjà lue avant l'ouverture du panneau : plus discrète (fond grisé)
+                  backgroundColor: isUnread ? '#FFFFFF' : '#F6F7F9',
+                  cursor: isClickable ? 'pointer' : 'default',
+                }}
               >
                 <span
                   className="flex items-center justify-center shrink-0"

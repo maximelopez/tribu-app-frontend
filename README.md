@@ -145,6 +145,8 @@ et le nombre de messages non lus, pour rattraper ce qui s'est passé pendant la 
 - Cloche en haut de l'Accueil (avec ou sans Tribu), avec le nombre de notifications non lues.
 - Le panneau affiche les 30 dernières (`GET /notifications`). L'ouvrir marque tout comme lu
   (`PATCH /notifications/read`), mais le point vert reste visible tant que le panneau est ouvert.
+- Les notifications déjà lues ont un fond grisé. Elles sont supprimées après 14 jours (une demande en
+  attente est gardée jusqu'à sa réponse).
 - **Demande pour rejoindre** : le créateur l'accepte ou la refuse directement depuis la notification
   (il n'y a plus de bloc de demandes sur l'Accueil). Une fois traitée, la notification affiche
   « Demande acceptée », « Demande refusée » ou « Demande annulée ».
