@@ -42,6 +42,12 @@ const activityIllustrations: Record<Category, string> = {
 export const getActivityIllustration = (category?: string | null) =>
   (category && activityIllustrations[category as Category]) || null;
 
+// Images des badges : un SVG par badge dans ./badges, nommé avec l'id du badge (ex : premier-pas.svg).
+// Remplacer un fichier suffit pour changer l'image d'un badge.
+const badgeImages = import.meta.glob<string>('./badges/*.svg', { eager: true, query: '?no-inline', import: 'default' });
+
+export const getBadgeImage = (id: string) => badgeImages[`./badges/${id}.svg`] ?? null;
+
 // Image d'une activité : sa photo si elle en a une, sinon l'illustration de sa catégorie
 export const getActivityImage = (activity?: { imageUrl?: string | null; category?: string | null } | null) =>
   activity?.imageUrl || getActivityIllustration(activity?.category);

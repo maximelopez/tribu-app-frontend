@@ -63,12 +63,7 @@ export default function BadgeDetail() {
             filter: `drop-shadow(0px 4px 6px ${badge.unlocked ? colors.shadow : 'rgba(150, 150, 150, 0.1)'})`,
           }}
         >
-          <div
-            className="overflow-hidden shrink-0"
-            style={{ borderRadius: 21, border: `3px solid ${badge.unlocked ? colors.color : '#E2E5F0'}` }}
-          >
-            <BadgeIllustration badge={badge} size={90} radius={0} />
-          </div>
+          <BadgeIllustration badge={badge} size={120} />
           <div className="flex flex-col items-center w-full" style={{ gap: 6 }}>
             <h1
               className="font-outfit-bold font-normal text-center m-0"

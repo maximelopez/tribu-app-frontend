@@ -72,7 +72,7 @@ src/
 ├── hooks/             Chargement des données et temps réel
 ├── store/             État global (zustand)
 ├── context/           Thème (vert, orange, rouge)
-└── assets/            Polices, avatars, mascottes, illustrations, icônes (index.ts)
+└── assets/            Polices, avatars, mascottes, illustrations, images des badges, icônes (index.ts)
 ```
 
 **Composants principaux**
@@ -217,8 +217,10 @@ progression (`progress / goal`) et, une fois obtenu, sa date (`unlockedAt`).
 - **Écran Récompense** : les badges que l'activité vient de débloquer (`newBadges`).
 - **Profil** : dernier badge obtenu par la Tribu.
 - **Détails d'une Tribu** : ses 3 derniers badges gagnés (visible avant de la rejoindre).
-- **Illustration** : celle de la catégorie pour les badges de catégorie. Pour les autres, un carré à la
-  couleur du niveau (`TIER_COLORS` dans `BadgeCard.tsx`), provisoire en attendant la maquette.
+- **Images** : un SVG par badge dans `src/assets/badges/`, nommé avec l'id du badge (ex :
+  `premier-pas.svg`, `nature-2.svg`). L'app les charge automatiquement (`getBadgeImage` dans
+  `assets/index.ts`) et les affiche en gris tant que le badge n'est pas obtenu. Pour changer l'image d'un
+  badge, il suffit de remplacer son fichier en gardant le même nom (taille conseillée : 96 × 96).
 
 ## Thème et design
 
@@ -269,8 +271,7 @@ vers `index.html` (`public/_redirects`), pour qu'un lien direct vers un écran f
 
 **En attente du designer**
 
-- **Badges** : illustrations et couleurs des niveaux (bronze, argent, or, platine) ; textes à valider ;
-  date d'obtention.
+- **Badges** : images finales du designer (à déposer dans `src/assets/badges/`) ; date d'obtention.
 - **Accueil** : lien « Comment ça fonctionne ? » (contenu à définir).
 
 **Mis de côté**
