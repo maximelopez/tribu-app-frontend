@@ -52,7 +52,7 @@ export default function FamilyLeaderboard({
             </span>
           </div>
           <div className="rounded-full overflow-hidden" style={{ height: 6, backgroundColor: 'rgba(255,255,255,0.08)' }}>
-            <div className="rounded-full bg-white" style={{ height: 6, width: `${progressPercent}%` }} />
+            <div className="progress-fill rounded-full bg-white" style={{ height: 6, width: `${progressPercent}%` }} />
           </div>
         </div>
       </div>

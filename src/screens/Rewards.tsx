@@ -58,7 +58,7 @@ export default function Rewards() {
               </span>
             </div>
             <div className="overflow-hidden" style={{ height: 8, borderRadius: 9999, backgroundColor: '#E2E5F0' }}>
-              <div style={{ width: `${progressPercent}%`, height: '100%', borderRadius: 9999, backgroundColor: theme.primary }} />
+              <div className="progress-fill" style={{ width: `${progressPercent}%`, height: '100%', borderRadius: 9999, backgroundColor: theme.primary }} />
             </div>
           </div>
 

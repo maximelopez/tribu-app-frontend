@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'react';
 import { Navigate, useLocation, useNavigate } from 'react-router';
 import { useTheme } from '../context/ThemeContext';
 import { mascotteActivity } from '../assets';
@@ -7,6 +8,8 @@ import type { Badge } from '../hooks/useFamilyBadges';
 import BadgeCard from '../components/BadgeCard';
 import Button from '../components/Button';
 import ScreenHeader from '../components/ScreenHeader';
+import Confetti from '../components/Confetti';
+import useCountUp from '../hooks/useCountUp';
 
 interface ActivityRewardState {
   familyName: string;
@@ -17,17 +20,24 @@ interface ActivityRewardState {
   newBadges?: Badge[];    // badges débloqués par l'activité (du plus rare au plus courant)
 }
 
+// Couleurs des confettis en plus de celles du thème
+const CONFETTI_EXTRA_COLORS = ['#FFC93C', '#7FD1FF', '#FF8FB1'];
+
 // Écran affiché après "Terminer cette activité" (Figma : recompense (plein écran))
 export default function ActivityReward() {
   const location = useLocation();
-  const navigate = useNavigate();
-  const { theme } = useTheme();
-
   const state = location.state as ActivityRewardState | null;
   // Ouvert sans données (ex : page rechargée) : retour à l'accueil
   if (!state) return <Navigate to="/" replace />;
+  return <RewardContent {...state} />;
+}
 
-  const { familyName, pointsEarned, familyPoints, previousLevel, levelInfo, newBadges = [] } = state;
+// Contenu animé : confettis, points qui défilent, badges qui apparaissent, barre de niveau qui se remplit
+function RewardContent({ familyName, pointsEarned, familyPoints, previousLevel, levelInfo, newBadges = [] }: ActivityRewardState) {
+  const navigate = useNavigate();
+  const { theme } = useTheme();
+  const displayedPoints = useCountUp(pointsEarned);
+
   const hasLeveledUp = levelInfo.level > previousLevel;
   const progressPercent = Math.round(Math.min(1, Math.max(0, levelInfo.isMax ? 1 : levelInfo.progress)) * 100);
 
@@ -35,6 +45,7 @@ export default function ActivityReward() {
     <div className="flex-1 min-h-0 flex flex-col">
       {/* Pas de retour vers l'activité terminée : on passe par "Continuer" */}
       <ScreenHeader title="Récompense" showBack={false} />
+      <Confetti colors={[theme.primary, theme.gradient, ...CONFETTI_EXTRA_COLORS]} />
 
       <div
         className="flex-1 overflow-y-auto no-scrollbar flex flex-col"
@@ -55,15 +66,19 @@ export default function ActivityReward() {
 
         {/* Points gagnés */}
         <div
-          className="flex flex-col items-center justify-center shrink-0 bg-white"
-          style={{ height: 74, gap: 4, borderRadius: 16 }}
+          className="pop-in flex flex-col items-center justify-center shrink-0 bg-white"
+          style={{ height: 74, gap: 4, borderRadius: 16, '--pop-delay': '0.1s' } as CSSProperties}
         >
-          <span className="font-outfit-bold" style={{ fontSize: 32, lineHeight: '40px', color: theme.primary }}>+{pointsEarned}</span>
+          <span className="font-outfit-bold" style={{ fontSize: 32, lineHeight: '40px', color: theme.primary }}>+{displayedPoints}</span>
           <span className="font-outfit" style={{ fontSize: 16, lineHeight: '20px', color: '#161616' }}>points gagnés</span>
         </div>
 
         {/* Badges débloqués par cette activité */}
-        {newBadges.map(badge => <BadgeCard key={badge.id} badge={badge} />)}
+        {newBadges.map((badge, i) => (
+          <div key={badge.id} className="pop-in shrink-0" style={{ '--pop-delay': `${0.9 + i * 0.15}s` } as CSSProperties}>
+            <BadgeCard badge={badge} />
+          </div>
+        ))}
 
         {/* Niveau */}
         <div
@@ -83,7 +98,10 @@ export default function ActivityReward() {
 
           {/* Barre d'XP */}
           <div className="overflow-hidden" style={{ height: 8, borderRadius: 100, backgroundColor: 'rgba(255, 255, 255, 0.25)' }}>
-            <div style={{ width: `${progressPercent}%`, height: '100%', borderRadius: 100, backgroundColor: '#FFFFFF' }} />
+            <div
+              className="progress-fill"
+              style={{ width: `${progressPercent}%`, height: '100%', borderRadius: 100, backgroundColor: '#FFFFFF', '--progress-delay': '0.6s' } as CSSProperties}
+            />
           </div>
 
           <div className="flex justify-between" style={{ opacity: 0.92 }}>

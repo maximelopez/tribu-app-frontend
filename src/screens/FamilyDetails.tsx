@@ -134,7 +134,7 @@ export default function FamilyDetails() {
               </div>
               <div className="relative overflow-hidden" style={{ height: 10, borderRadius: 5, backgroundColor: WHITE_LINE }}>
                 <div
-                  className="absolute left-0 top-0 bg-white"
+                  className="progress-fill absolute left-0 top-0 bg-white"
                   style={{ height: 10, borderRadius: 5, width: `${Math.round(level!.progress * 100)}%` }}
                 />
               </div>

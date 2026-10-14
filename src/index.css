@@ -100,9 +100,61 @@ textarea {
 .floating-mascot-shadow {
   animation: floating-mascot-shadow 1.4s ease-in-out infinite alternate;
 }
+/* Barres de progression : se remplissent à l'affichage, puis suivent les changements */
+@keyframes progress-fill {
+  from {
+    width: 0;
+  }
+}
+.progress-fill {
+  animation: progress-fill 0.9s cubic-bezier(0.22, 1, 0.36, 1) var(--progress-delay, 0.15s) both;
+  transition: width 0.6s ease-out;
+}
+
+/* Apparition avec un petit rebond (écran Récompense) */
+@keyframes pop-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.pop-in {
+  animation: pop-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) var(--pop-delay, 0s) both;
+}
+
+/* Confettis (composant Confetti) */
+@keyframes confetti-fall {
+  0% {
+    opacity: 1;
+    transform: translate3d(0, -20px, 0) rotate(0deg);
+  }
+  100% {
+    opacity: 0.9;
+    transform: translate3d(var(--drift), 105vh, 0) rotate(var(--spin));
+  }
+}
+.confetti-piece {
+  position: absolute;
+  top: 0;
+  animation: confetti-fall var(--dur) cubic-bezier(0.25, 0.6, 0.5, 1) var(--delay) both;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .floating-mascot,
-  .floating-mascot-shadow {
+  .floating-mascot-shadow,
+  .progress-fill,
+  .pop-in {
     animation: none;
+    transition: none;
+  }
+  .confetti-piece {
+    display: none;
   }
 }

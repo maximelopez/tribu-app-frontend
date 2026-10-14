@@ -19,6 +19,7 @@ avec un mode hors ligne basique. Elle parle au backend Tribu (API REST + Socket.
 - [Temps réel](#temps-réel)
 - [Fonctionnalités](#fonctionnalités)
 - [Thème et design](#thème-et-design)
+- [Animations](#animations)
 - [PWA](#pwa)
 - [Déploiement (Netlify)](#déploiement-netlify)
 - [À faire](#à-faire)
@@ -93,6 +94,7 @@ src/
 | `ThemeSwitcher` | Choix du thème dans le Profil |
 | `ConfirmModal` | Popup de confirmation (bouton rouge pour une action destructive + bouton gris pour revenir) |
 | `Spinner` | Roue de chargement (boutons, listes) |
+| `Confetti` | Pluie de confettis aux couleurs du thème (écran Récompense) |
 | `ErrorBoundary` | Entoure toute l'app : si un écran plante, affiche un message avec « Recharger » |
 
 **Hooks**
@@ -102,6 +104,7 @@ src/
 | `useFamilyData` | Charge la Tribu, ses membres, l'activité en cours et l'historique (une fois pour toute l'app) |
 | `useRealtime` | Socket.IO : connexion, événements de la Tribu, messages non lus, resynchronisation |
 | `useFamilyChat` | Messages du chat, envoi, marquer comme lu |
+| `useCountUp` | Nombre qui défile de 0 à sa valeur (points gagnés sur l'écran Récompense) |
 | `useFamilyBadges` | Badges de sa Tribu (rechargés quand une activité est terminée) ou d'une autre Tribu |
 
 **Stores**
@@ -236,6 +239,16 @@ progression (`progress / goal`) et, une fois obtenu, sa date (`unlockedAt`).
   ou « Partenariat » si elle n'en a pas.
 - **Illustrations des catégories** (`getActivityIllustration`) : utilisées pour les badges, et pour les
   activités qui n'ont pas encore de photo.
+
+## Animations
+
+Toutes définies dans `index.css`, et coupées si le téléphone est réglé sur « Réduire les animations ».
+
+- **Barres de progression** (classe `progress-fill`) : se remplissent à l'affichage (niveau de la Tribu,
+  collection de badges, détail d'un badge, écran Récompense). Délai réglable avec `--progress-delay`.
+- **Écran Récompense** : confettis (`Confetti`), points qui défilent (`useCountUp`), carte des points et
+  badges débloqués qui apparaissent avec un petit rebond (classe `pop-in`, délai `--pop-delay`).
+- **Mascotte flottante** (`FloatingMascot`).
 
 ## PWA
 

@@ -95,7 +95,7 @@ export default function BadgeDetail() {
                 </span>
               </div>
               <div className="overflow-hidden" style={{ height: 8, borderRadius: 9999, backgroundColor: '#E2E5F0' }}>
-                <div style={{ width: `${progressPercent}%`, height: '100%', borderRadius: 9999, backgroundColor: theme.primary }} />
+                <div className="progress-fill" style={{ width: `${progressPercent}%`, height: '100%', borderRadius: 9999, backgroundColor: theme.primary }} />
               </div>
               {badge.remainingText && (
                 <p className="font-outfit m-0" style={{ fontSize: 14, lineHeight: 'normal', color: '#777777' }}>
