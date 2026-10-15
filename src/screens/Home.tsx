@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { useUserStore } from '../store/userStore';
 import { useFamilyStore, toCatalogActivity } from '../store/familyStore';
@@ -7,7 +7,8 @@ import { useTheme } from '../context/ThemeContext';
 import NotificationBell from '../components/NotificationBell';
 import NotificationPanel from '../components/NotificationPanel';
 import FamilyLeaderboard from '../components/FamilyLeaderboard';
-import ActivityCard from '../components/ActivityCard';
+import ActivityCarousel from '../components/ActivityCarousel';
+import useCatalog, { sortByNewest } from '../hooks/useCatalog';
 import Spinner from '../components/Spinner';
 import ConfirmModal from '../components/ConfirmModal';
 import { api } from '../api';
@@ -26,12 +27,21 @@ export default function Home() {
   const setPendingRequest = useFamilyStore(state => state.setPendingRequest);
   const navigate = useNavigate();
   const { theme } = useTheme();
+  const { activities: catalog } = useCatalog();
 
   // Annulation de la demande en attente (avec confirmation)
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [cancelling, setCancelling] = useState(false);
   const [cancelError, setCancelError] = useState('');
   const [showNotifications, setShowNotifications] = useState(false);
+
+  // Idées d'activités : dans la ville de la Tribu (ou partout), pas encore faites ni en cours
+  const suggestions = useMemo(() => {
+    const doneIds = new Set(completedActivities.map(fa => toCatalogActivity(fa)._id));
+    if (currentActivity) doneIds.add(toCatalogActivity(currentActivity)._id);
+    return catalog.filter(a => !doneIds.has(a._id) && (!family?.city || !a.city || a.city === family.city));
+  }, [catalog, completedActivities, currentActivity, family?.city]);
+  const newest = useMemo(() => sortByNewest(suggestions).slice(0, 6), [suggestions]);
 
   if (!user) return null;
 
@@ -84,7 +94,6 @@ export default function Home() {
       activityCounts[p.id] = (activityCounts[p.id] ?? 0) + 1;
     })
   );
-  const latestActivities = completedActivities.slice(0, 3);
   const isActivityStarter = currentActivity?.startedBy === user.id;
   const currentIllustration = currentActivity ? getActivityImage(currentActivity.activity) : null;
 
@@ -170,34 +179,21 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Dernières activités de la Tribu */}
-            {latestActivities.length > 0 && (
-              <div className="flex flex-col" style={{ gap: 12, marginTop: 6 }}>
-                <div className="flex items-center justify-between">
-                  <span className="font-outfit-bold text-base" style={{ color: '#000000' }}>Dernières activités</span>
-                  {/* Historique complet si plus de 3 activités */}
-                  {completedActivities.length > latestActivities.length && (
-                    <button
-                      onClick={() => navigate('/historique?mode=family')}
-                      className="font-outfit"
-                      style={{ fontSize: 14, color: theme.primary, background: 'none', border: 'none', borderBottom: `1px solid ${theme.primary}`, padding: 0 }}
-                    >
-                      Voir plus →
-                    </button>
-                  )}
-                </div>
-                {latestActivities.map(fa => (
-                  <ActivityCard
-                    key={fa.id}
-                    name={fa.activity.name}
-                    description={fa.activity.description}
-                    isPartner={fa.activity.isPartner}
-                    offer={fa.activity.offer}
-                    imageUrl={fa.activity.imageUrl}
-                    category={fa.activity.category}
-                    onPress={() => openActivityDetail(fa)}
-                  />
-                ))}
+            {/* Idées d'activités (Figma : homepage-tribu) */}
+            {suggestions.length > 0 && (
+              <div className="flex flex-col" style={{ margin: '6px -16px 0', gap: 12 }}>
+                <ActivityCarousel
+                  title="Où sortir avec ta Tribu ?"
+                  titleSize={16}
+                  activities={suggestions}
+                  onSeeAll={() => navigate('/activites')}
+                />
+                <ActivityCarousel
+                  title={family.city ? `Les nouveautés à ${family.city}` : 'Les nouveautés'}
+                  titleSize={16}
+                  activities={newest}
+                  onSeeAll={() => navigate('/activites')}
+                />
               </div>
             )}
           </div>

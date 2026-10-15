@@ -38,6 +38,8 @@ export interface Activity {
   offer?: string | null; // offre partenaire (ex : "1 partie offerte"), seulement si isPartner
   isActive?: boolean; // false = retirée du catalogue (consultable, mais plus possible de la choisir)
   points?: number;    // points gagnés par chaque membre inscrit
+  city?: string | null;      // ville (une activité libre n'en a pas forcément)
+  createdAt?: string;        // date d'ajout au catalogue (section « Les nouveautés »)
 }
 
 // Activité lancée par la Tribu (backend : FamilyActivity)
