@@ -65,7 +65,8 @@ Sans cette variable, l'app affiche une erreur dans la console et ne peut pas joi
 src/
 ├── main.tsx           Point d'entrée (thème + routeur)
 ├── App.tsx            Routes et layouts (connexion, onboarding, app connectée, barre du bas)
-├── config.ts          Adresses du backend (lues depuis VITE_API_URL)
+├── config.ts          Adresses du backend (lues depuis VITE_API_URL), adresse de contact RGPD
+├── legal.ts           Textes de la politique de confidentialité et des CGU
 ├── api.ts             Appels au backend avec le token (déconnexion automatique si 401)
 ├── socket.ts          Connexion Socket.IO avec le token
 ├── screens/           Un fichier par écran
@@ -96,6 +97,7 @@ src/
 | `Spinner` | Roue de chargement (boutons, listes) |
 | `Confetti` | Pluie de confettis aux couleurs du thème (écran Récompense) |
 | `ErrorBoundary` | Entoure toute l'app : si un écran plante, affiche un message avec « Recharger » |
+| `LegalDocument` | Affiche un texte légal (politique de confidentialité ou CGU) |
 
 **Hooks**
 
@@ -137,6 +139,7 @@ src/
 | `/tribu/rechercher` | Rejoindre une Tribu (recherche) |
 | `/tribu/:id` | Détails d'une Tribu avant de la rejoindre |
 | `/tribu/creer` | Créer une Tribu |
+| `/confidentialite`, `/cgu` | Politique de confidentialité et CGU (accessibles connecté ou non) |
 
 ## Ajouter un écran
 
@@ -225,6 +228,18 @@ progression (`progress / goal`) et, une fois obtenu, sa date (`unlockedAt`).
   `premier-pas.svg`, `nature-2.svg`). L'app les charge automatiquement (`getBadgeImage` dans
   `assets/index.ts`) et les affiche en gris tant que le badge n'est pas obtenu. Pour changer l'image d'un
   badge, il suffit de remplacer son fichier en gardant le même nom (taille conseillée : 96 × 96).
+
+### Données personnelles (RGPD)
+
+- **Inscription** : case obligatoire « J'accepte les conditions d'utilisation et la politique de
+  confidentialité. J'ai 15 ans ou plus, ou l'accord de mes parents. » Les deux textes s'ouvrent par-dessus
+  le formulaire, sans perdre ce qui a été saisi. L'app envoie `acceptTerms: true` au backend.
+- **Profil** : section « Mes données » avec les liens vers les deux textes et l'adresse de contact pour
+  recevoir ou supprimer ses données (`CONTACT_EMAIL` dans `config.ts`).
+- **Textes** : dans `src/legal.ts`, écrits simplement pour être compris aussi par les enfants.
+
+Le détail (registre des traitements, durées, mineurs, IA Act) est dans la documentation du backend :
+`backend/docs/rgpd.md`.
 
 ## Thème et design
 

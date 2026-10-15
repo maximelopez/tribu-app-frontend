@@ -23,6 +23,7 @@ import ActivityReward from './screens/ActivityReward';
 import ActivityHistory from './screens/ActivityHistory';
 import AllBadges from './screens/AllBadges';
 import BadgeDetail from './screens/BadgeDetail';
+import LegalPage from './screens/LegalPage';
 
 // Cadre "téléphone" : largeur mobile, centré sur grand écran
 function PhoneFrame() {
@@ -67,6 +68,10 @@ export default function App() {
   return (
     <Routes>
       <Route element={<PhoneFrame />}>
+        {/* Pages légales : accessibles à tout moment (connecté ou non) */}
+        <Route path="/confidentialite" element={<LegalPage type="privacy" />} />
+        <Route path="/cgu" element={<LegalPage type="terms" />} />
+
         {!user || !token ? (
           <>
             <Route path="/inscription" element={<Signup />} />

@@ -7,3 +7,6 @@ if (!envUrl) {
 
 export const SERVER_URL = (envUrl ?? '').replace(/\/+$/, '');
 export const API_URL = `${SERVER_URL}/api/`;
+
+// Adresse de contact pour les demandes sur les données personnelles (RGPD) : à remplacer
+export const CONTACT_EMAIL = 'contact@example.com';

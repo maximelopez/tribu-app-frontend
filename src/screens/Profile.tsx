@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
-import { Pencil, X } from 'lucide-react';
+import { ChevronRight, Pencil, X } from 'lucide-react';
 import { useUserStore } from '../store/userStore';
 import { useFamilyStore, toCatalogActivity } from '../store/familyStore';
 import type { FamilyActivity } from '../store/familyStore';
@@ -13,6 +13,7 @@ import BadgeCard from '../components/BadgeCard';
 import useFamilyBadges from '../hooks/useFamilyBadges';
 import Spinner from '../components/Spinner';
 import { api } from '../api';
+import { CONTACT_EMAIL } from '../config';
 
 // Âge en années à partir de la date de naissance (ISO)
 const getAge = (birthdate?: string | null) => {
@@ -193,6 +194,37 @@ export default function Profile() {
             </div>
           </div>
         )}
+
+        {/* Mes données (RGPD) : textes légaux et contact pour les demandes */}
+        <div className="flex flex-col" style={{ gap: 10, padding: '4px 0' }}>
+          <span className="font-outfit-bold text-base" style={{ color: '#111' }}>Mes données</span>
+          <div className="bg-white flex flex-col" style={{ borderRadius: 16, boxShadow: '0px 4px 6px rgba(150, 150, 150, 0.1)' }}>
+            {[
+              { label: 'Politique de confidentialité', path: '/confidentialite' },
+              { label: "Conditions d'utilisation", path: '/cgu' },
+            ].map((link, index) => (
+              <button
+                key={link.path}
+                onClick={() => navigate(link.path)}
+                className="flex items-center justify-between font-outfit text-base text-left"
+                style={{
+                  padding: '14px 16px',
+                  color: '#161616',
+                  background: 'none',
+                  border: 'none',
+                  borderTop: index > 0 ? '1px solid #F0F0F5' : 'none',
+                }}
+              >
+                {link.label}
+                <ChevronRight size={20} color="#969696" strokeWidth={2} />
+              </button>
+            ))}
+          </div>
+          <p className="font-outfit m-0" style={{ fontSize: 14, lineHeight: 1.4, color: '#777777' }}>
+            Pour recevoir ou supprimer vos données, écrivez à{' '}
+            <a href={`mailto:${CONTACT_EMAIL}`} style={{ color: theme.primary }}>{CONTACT_EMAIL}</a>.
+          </p>
+        </div>
 
         {/* Déconnexion (Figma : bouton plein à la couleur du thème, en bas du profil) */}
         <Button title="Se déconnecter" onPress={logoutUser} color={theme.primary} />
