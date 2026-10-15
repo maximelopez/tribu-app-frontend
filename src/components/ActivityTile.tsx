@@ -1,14 +1,7 @@
 import { useTheme } from '../context/ThemeContext';
 import { getActivityImage } from '../assets';
-import type { Activity, Category } from '../store/familyStore';
-
-// Libellés des catégories
-export const CATEGORY_LABELS: Record<Category, string> = {
-  nature: 'Nature',
-  culture: 'Culture',
-  sport: 'Sport',
-  maison: 'Maison',
-};
+import type { Activity } from '../store/familyStore';
+import { CATEGORY_LABELS } from '../categories';
 
 const TEXT_DARK = '#161616';
 const TEXT_GREY = '#6B6B6B';

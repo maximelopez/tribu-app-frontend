@@ -9,7 +9,7 @@ import type { Activity, FamilyActivity } from '../store/familyStore';
 import { getActivityImage, getAvatar } from '../assets';
 import Button from '../components/Button';
 import ScreenHeader from '../components/ScreenHeader';
-import { CATEGORY_LABELS } from '../components/ActivityTile';
+import { CATEGORY_LABELS } from '../categories';
 import Spinner from '../components/Spinner';
 import ConfirmModal from '../components/ConfirmModal';
 import { api } from '../api';

@@ -1,5 +1,4 @@
-import { createContext, useState, useContext, useMemo, ReactNode } from 'react';
-import { useUserStore } from '../store/userStore';
+import { createContext, useContext } from 'react';
 
 // Noms alignés sur les modes Figma (collection "Color modes" : Green / Orange / Red)
 export type ThemeColor = 'green' | 'orange' | 'red';
@@ -32,32 +31,10 @@ interface ThemeContextProps {
   setThemeColor: (color: ThemeColor) => void;
 }
 
-const ThemeContext = createContext<ThemeContextProps>({
+export const ThemeContext = createContext<ThemeContextProps>({
   themeColor: 'green',
   theme: themeMap.green,
   setThemeColor: () => {},
 });
-
-export const ThemeProvider = ({ children }: { children: ReactNode }) => {
-  const user = useUserStore(state => state.user);
-
-  const userColor = normalizeThemeColor(user?.theme);
-  const [themeColor, setThemeColor] = useState<ThemeColor>(userColor ?? 'green');
-
-  // Le thème de l'utilisateur change (connexion, autre appareil) : on l'applique
-  const [lastUserColor, setLastUserColor] = useState(userColor);
-  if (userColor !== lastUserColor) {
-    setLastUserColor(userColor);
-    if (userColor) setThemeColor(userColor);
-  }
-
-  const theme = useMemo(() => themeMap[themeColor], [themeColor]);
-
-  return (
-    <ThemeContext.Provider value={{ themeColor, theme, setThemeColor }}>
-      {children}
-    </ThemeContext.Provider>
-  );
-};
 
 export const useTheme = () => useContext(ThemeContext);

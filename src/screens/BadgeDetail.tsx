@@ -3,14 +3,11 @@ import { CalendarCheck, Lock } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 import useFamilyBadges from '../hooks/useFamilyBadges';
 import ScreenHeader from '../components/ScreenHeader';
-import { BadgeIllustration, getBadgeColors } from '../components/BadgeCard';
+import { BadgeIllustration } from '../components/BadgeCard';
 import Spinner from '../components/Spinner';
+import { formatUnlockedDate, getBadgeColors } from '../badges';
 
 const LOCKED_SHADOW = 'rgba(150, 150, 150, 0.1)';
-
-// "Obtenu le 12 oct."
-const formatUnlockedDate = (date: string) =>
-  new Date(date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' });
 
 // Détail d'un badge (Figma : details-badge si obtenu, details-badge-blocked sinon)
 export default function BadgeDetail() {
