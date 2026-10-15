@@ -5,6 +5,8 @@ import useFamilyChat from '../hooks/useFamilyChat';
 import { useTheme } from '../context/ThemeContext';
 import MessageBubble from '../components/MessageBubble';
 import NoFamilyState from '../components/NoFamilyState';
+import NotificationBell from '../components/NotificationBell';
+import NotificationPanel from '../components/NotificationPanel';
 import { sendIcon } from '../assets';
 
 // Couleurs Figma (écran chat)
@@ -19,6 +21,7 @@ export default function Chat() {
   const family = useFamilyStore(state => state.family);
 
   const [text, setText] = useState('');
+  const [showNotifications, setShowNotifications] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
@@ -50,16 +53,20 @@ export default function Chat() {
 
   return (
     <div className="flex-1 min-h-0 flex flex-col" style={{ backgroundColor: CHAT_BG }}>
-      {/* En-tête */}
+      {/* En-tête : nom de la Tribu, membres et cloche des notifications (Figma : chat) */}
       <div
-        className="bg-white flex flex-col shrink-0"
-        style={{ padding: '16px 17px 8px', paddingTop: 'calc(16px + env(safe-area-inset-top))', gap: 4 }}
+        className="bg-white flex items-center shrink-0"
+        style={{ padding: '16px 16px 8px 17px', paddingTop: 'calc(16px + env(safe-area-inset-top))', gap: 12 }}
       >
-        <span className="font-outfit-bold text-base" style={{ color: theme.primary }}>Famille {family?.name}</span>
-        <span className="font-outfit text-base" style={{ color: TEXT_GREY }}>
-          {membersCount} membre{membersCount > 1 ? 's' : ''}
-        </span>
+        <div className="flex-1 min-w-0 flex flex-col" style={{ gap: 4 }}>
+          <span className="font-outfit-bold text-base truncate" style={{ color: theme.primary }}>Famille {family?.name}</span>
+          <span className="font-outfit text-base" style={{ color: TEXT_GREY }}>
+            {membersCount} membre{membersCount > 1 ? 's' : ''}
+          </span>
+        </div>
+        <NotificationBell onPress={() => setShowNotifications(true)} />
       </div>
+      {showNotifications && <NotificationPanel onClose={() => setShowNotifications(false)} />}
 
       {/* Messages */}
       <div className="flex-1 overflow-y-auto no-scrollbar flex flex-col" style={{ padding: '12px 18px 16px' }}>
