@@ -36,16 +36,21 @@ function CurrentPath() {
   return <p data-testid="path">{useLocation().pathname}</p>;
 }
 
-// Affiche un écran à une adresse, comme dans l'app
-export const renderScreen = (screen: ReactElement, { path = '/', url }: { path?: string; url?: string } = {}) =>
-  render(
-    <MemoryRouter initialEntries={[url ?? path]}>
+// Affiche un écran à une adresse, comme dans l'app (state : données passées par navigate)
+export const renderScreen = (
+  screen: ReactElement,
+  { path = '/', url, state }: { path?: string; url?: string; state?: unknown } = {}
+) => {
+  const [pathname, search] = (url ?? path).split('?');
+  return render(
+    <MemoryRouter initialEntries={[{ pathname, search: search ? `?${search}` : '', state }]}>
       <Routes>
         <Route path={path} element={screen} />
         <Route path="*" element={<CurrentPath />} />
       </Routes>
     </MemoryRouter>
   );
+};
 
 // Utilisateur connecté, onboarding terminé
 export const loginAs = (user: Partial<User> = {}) => {

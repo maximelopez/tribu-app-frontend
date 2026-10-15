@@ -48,7 +48,7 @@ depuis ton téléphone sur le même Wi-Fi (sans l'installation PWA, qui demande 
 | `npm run lint` | Vérifie la qualité du code (ESLint) |
 | `npm run typecheck` | Vérifie les types (TypeScript) |
 | `npm test` | Lance les tests (Vitest) |
-| `npm run test:coverage` | Lance les tests avec le rapport de couverture (`coverage/index.html`) |
+| `npm run test:coverage` | Lance les tests avec le rapport de couverture (`coverage/index.html`), minimum 75 % des lignes |
 
 ## Configuration (obligatoire)
 
@@ -88,8 +88,10 @@ src/
 tests/
 ├── setup.ts           Remet l'app à zéro après chaque test (déconnecté, sans Tribu)
 ├── helpers.tsx        Faux backend, affichage d'un écran, connexion d'un utilisateur
+├── fixtures.ts        Données de test (une Tribu, son catalogue, ses activités, ses badges)
 ├── unit/              Tests unitaires : thème, badges, activités, images, stores, appels au backend
-└── integration/       Tests d'intégration : composants, connexion, inscription, accès aux écrans, Tribu
+└── integration/       Tests d'intégration : composants, connexion, inscription, onboarding, accueil, Tribu,
+                       activités, récompenses, chat, temps réel
 ```
 
 **Composants principaux**

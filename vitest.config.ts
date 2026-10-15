@@ -13,6 +13,8 @@ export default defineConfig({
       provider: 'v8',
       include: ['src/**/*.{ts,tsx}'],
       exclude: ['src/main.tsx', 'src/vite-env.d.ts', 'src/assets/**'],
+      // Minimum demandé : en dessous, les tests échouent (CI et Netlify bloqués)
+      thresholds: { lines: 75, statements: 75, functions: 70, branches: 65 },
     },
   },
 });

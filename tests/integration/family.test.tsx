@@ -127,7 +127,7 @@ describe('Créer une Tribu', () => {
     expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
     await userEvent.click(screen.getByRole('button', { name: 'Créer ma Tribu' }));
 
-    await waitFor(() => expect(screen.getByTestId('path')).toHaveTextContent('/'));
+    await waitFor(() => expect(screen.getByTestId('path')).toHaveTextContent(/^\/$/));
     expect(calls[0]).toEqual({ method: 'POST', path: 'families', body: { name: 'Champions', city: 'Nantes' } });
     expect(useUserStore.getState().user?.familyId).toBe('f9');
   });
