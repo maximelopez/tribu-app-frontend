@@ -1,25 +1,43 @@
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router';
-import { Award, Check, Image as ImageIcon } from 'lucide-react';
+import type { ReactNode } from 'react';
+import { Award, Check, ChevronLeft, CircleCheck, Image as ImageIcon, MapPin } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 import { useUserStore } from '../store/userStore';
 import { useFamilyStore } from '../store/familyStore';
-import type { Activity, Category, FamilyActivity } from '../store/familyStore';
+import type { Activity, FamilyActivity } from '../store/familyStore';
 import { getActivityImage, getAvatar } from '../assets';
 import Button from '../components/Button';
 import ScreenHeader from '../components/ScreenHeader';
+import { CATEGORY_LABELS } from '../components/ActivityTile';
 import Spinner from '../components/Spinner';
 import ConfirmModal from '../components/ConfirmModal';
 import { api } from '../api';
 
-const CATEGORY_LABELS: Record<Category, string> = {
-  nature: 'Nature',
-  culture: 'Culture',
-  sport: 'Sport',
-  maison: 'Maison',
-};
+// Couleurs Figma
+const TEXT_DARK = '#161616';
+const TEXT_GREY = '#6B6B6B';
+const CHECKBOX_BORDER = '#8C9590';
+// Activité réalisée : vert « réussite », quelle que soit la couleur du thème
+const SUCCESS = '#00A16D';
+const SUCCESS_LIGHT = 'rgba(0, 161, 110, 0.1)';
 
-const CARD_SHADOW = '0px 4px 6px rgba(0, 0, 0, 0.08)';
+// Étiquette arrondie (catégorie, gratuite, déjà réalisée)
+const Tag = ({ children, color, background }: { children: ReactNode; color: string; background: string }) => (
+  <span className="font-outfit flex items-center rounded-full" style={{ fontSize: 14, padding: '4px 12px', gap: 6, color, backgroundColor: background }}>
+    {children}
+  </span>
+);
+
+// Case à cocher (Figma : checkbox)
+const Checkbox = ({ checked, color }: { checked: boolean; color: string }) => (
+  <span
+    className="flex items-center justify-center shrink-0"
+    style={{ width: 24, height: 24, borderRadius: 6, border: `2px solid ${checked ? color : CHECKBOX_BORDER}`, backgroundColor: checked ? color : '#FFFFFF' }}
+  >
+    {checked && <Check size={16} color="#FFFFFF" strokeWidth={3} />}
+  </span>
+);
 
 export default function ActivityDetail() {
   const { activityId } = useParams();
@@ -62,6 +80,8 @@ export default function ActivityDetail() {
   // Copie figée de l'activité en cours pendant qu'on quitte l'écran
   // (évite d'afficher un instant la liste des membres une fois l'activité terminée/annulée)
   const [leavingActivity, setLeavingActivity] = useState<FamilyActivity | null>(null);
+  // Popup de confirmation avant d'abandonner
+  const [showCancelConfirm, setShowCancelConfirm] = useState(false);
 
   if (!activity) {
     return (
@@ -85,7 +105,7 @@ export default function ActivityDetail() {
   // Déjà faite par la Tribu ? (une Tribu ne fait chaque activité qu'une fois)
   const completed = !ongoing ? completedActivities.find(fa => fa.activity.id === activity._id) : undefined;
   const completedDate = completed?.completedAt
-    ? new Date(completed.completedAt).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })
+    ? new Date(completed.completedAt).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' })
     : null;
 
   const toggleParticipant = (memberId: string) => {
@@ -176,9 +196,6 @@ export default function ActivityDetail() {
     }
   };
 
-  // Popup de confirmation avant d'annuler
-  const [showCancelConfirm, setShowCancelConfirm] = useState(false);
-
   // Annuler : aucun point, l'activité pourra être relancée
   const handleCancelActivity = async () => {
     if (!ongoing || !user?.familyId) return;
@@ -216,165 +233,234 @@ export default function ActivityDetail() {
     <p className="font-outfit text-center m-0" style={{ fontSize: 14, color: '#EA4A1F' }}>{errorMessage}</p>
   ) : null;
 
-  return (
-    <div className="flex-1 min-h-0 flex flex-col">
-      <ScreenHeader title="Détail de l'activité" />
+  // Retour : page précédente si elle existe, sinon l'accueil
+  const goBack = () => {
+    if (window.history.state?.idx > 0) navigate(-1);
+    else navigate('/', { replace: true });
+  };
 
-      <div className="flex-1 overflow-y-auto no-scrollbar" style={{ padding: '4px 16px 20px', paddingBottom: 'calc(20px + env(safe-area-inset-bottom))' }}>
-        <div className="flex flex-col" style={{ gap: 12 }}>
-          {/* Pastilles : catégorie (+ partenariat) */}
-          <div className="flex" style={{ gap: 6 }}>
-            <span
-              className="font-outfit flex items-center justify-center"
-              style={{ height: 21, minWidth: 81, padding: '0 10px', borderRadius: 999, backgroundColor: theme.secondary, color: theme.primary, fontSize: 14 }}
-            >
-              {CATEGORY_LABELS[activity.category] ?? 'Maison'}
-            </span>
-            {activity.isPartner && (
-              <span
-                className="font-outfit flex items-center justify-center"
-                style={{ height: 21, padding: '0 10px', borderRadius: 999, backgroundColor: theme.transparent, color: theme.primary, fontSize: 14 }}
-              >
-                {activity.offer || 'Partenariat'}
-              </span>
+  const image = getActivityImage(activity);
+
+  // Ligne d'un membre : avatar, prénom, case à cocher
+  const participantRow = (member: { id: string; name: string; avatar?: number | null }, checked: boolean, color: string, onPress?: () => void) => {
+    const content = (
+      <>
+        <img
+          src={getAvatar(member.avatar)}
+          alt=""
+          className="shrink-0"
+          style={{ width: 36, height: 36, borderRadius: 18, border: '3px solid #FFFFFF', objectFit: 'cover' }}
+        />
+        <span className="flex-1 min-w-0 font-outfit text-base truncate" style={{ color: TEXT_DARK }}>{member.name}</span>
+        <Checkbox checked={checked} color={color} />
+      </>
+    );
+    const style = { height: 56, borderRadius: 16, padding: '10px 16px', gap: 12, border: 'none' };
+    return onPress ? (
+      <button key={member.id} onClick={onPress} role="checkbox" aria-checked={checked} className="flex items-center bg-white text-left w-full" style={style}>
+        {content}
+      </button>
+    ) : (
+      <div key={member.id} className="flex items-center bg-white" style={style}>{content}</div>
+    );
+  };
+
+  // Barre du bas avec les actions (Figma : barre-action)
+  const actionBar = (children: ReactNode) => (
+    <div
+      className="bg-white flex flex-col shrink-0"
+      style={{
+        padding: '16px 16px 28px',
+        paddingBottom: 'calc(16px + max(12px, env(safe-area-inset-bottom)))',
+        gap: 10,
+        borderRadius: '24px 24px 0 0',
+        boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.08)',
+      }}
+    >
+      {errorText}
+      {children}
+    </div>
+  );
+
+  const infoText = (text: string) => (
+    <p className="font-outfit text-center m-0" style={{ fontSize: 14, color: '#969696' }}>{text}</p>
+  );
+
+  // Boutons selon l'état de l'activité
+  let actions: ReactNode = null;
+  if (ongoing) {
+    actions = isStarter ? (
+      <>
+        <Button title="Terminer cette activité" onPress={handleCompleteActivity} loading={loading} color={theme.primary} />
+        {/* Abandonner : aucun point, avec confirmation (Figma : confirmation-pour-cloturer) */}
+        <Button
+          title="Abandonner"
+          onPress={() => setShowCancelConfirm(true)}
+          disabled={loading}
+          color="#F3F3F8"
+          textColor="#161616"
+          borderColor="#CBD5E0"
+        />
+      </>
+    ) : (
+      infoText(`Activité en cours, lancée par ${starterName ?? 'un membre de la Tribu'} : c'est lui ou elle qui la validera.`)
+    );
+  } else if (completed) {
+    actions = null;
+  } else if (activity.isActive === false) {
+    // Retirée du catalogue : on peut la consulter (historique), plus la choisir
+    actions = infoText("Cette activité n'est plus proposée.");
+  } else if (hasFamily) {
+    actions = <Button title="Choisir cette activité" onPress={handleChooseActivity} loading={loading} color={theme.primary} />;
+  } else {
+    // Sans Tribu : on invite à en rejoindre une
+    actions = (
+      <>
+        {infoText('Rejoins ou crée une Tribu pour faire cette activité en famille')}
+        <Button title="Rejoindre une Tribu" onPress={() => navigate('/tribu/rechercher')} color={theme.primary} />
+      </>
+    );
+  }
+
+  // Participants affichés : ceux de l'activité en cours ou réalisée, sinon les membres à cocher
+  const fixedParticipants = ongoing?.participants ?? completed?.participants;
+  const participantsColor = completed ? SUCCESS : theme.primary;
+  const pointsEarned = completed?.pointsPerMember ?? points;
+  const participantsCount = completed?.participants.length ?? 0;
+
+  return (
+    <div className="flex-1 min-h-0 flex flex-col relative">
+      {/* Bouton retour, toujours visible par-dessus la photo */}
+      <button
+        onClick={goBack}
+        aria-label="Retour"
+        className="absolute z-10 flex items-center justify-center bg-white active:opacity-80"
+        style={{ left: 16, top: 'calc(12px + env(safe-area-inset-top))', width: 44, height: 44, borderRadius: 22, border: 'none', boxShadow: '0px 2px 4px rgba(13, 23, 18, 0.1)' }}
+      >
+        <ChevronLeft size={24} color={TEXT_DARK} strokeWidth={2} />
+      </button>
+
+      <div className="flex-1 overflow-y-auto no-scrollbar">
+        {/* Photo en grand (sinon l'illustration de la catégorie) */}
+        <div className="relative w-full overflow-hidden" style={{ height: 340, backgroundColor: theme.transparent }}>
+          {image ? (
+            <img src={image} alt="" className="w-full h-full block" style={{ objectFit: activity.imageUrl ? 'cover' : 'contain', padding: activity.imageUrl ? 0 : '60px 40px' }} />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center">
+              <ImageIcon size={48} color={theme.primary} strokeWidth={1.5} />
+            </div>
+          )}
+        </div>
+
+        {/* Contenu, posé sur la photo (Figma : contenu) */}
+        <div
+          className="relative flex flex-col"
+          style={{ marginTop: -40, padding: '24px 16px 24px', gap: 20, borderRadius: '28px 28px 0 0', backgroundColor: '#F3F3F8' }}
+        >
+          {/* Étiquettes */}
+          <div className="flex flex-wrap" style={{ gap: 8 }}>
+            <Tag color={theme.primary} background={theme.transparent}>{CATEGORY_LABELS[activity.category] ?? 'Maison'}</Tag>
+            {completed ? (
+              <Tag color={SUCCESS} background={SUCCESS_LIGHT}>
+                <CircleCheck size={16} color={SUCCESS} strokeWidth={2} />
+                Déjà réalisée
+              </Tag>
+            ) : (
+              <Tag color={theme.primary} background={theme.transparent}>
+                {activity.isPartner ? activity.offer || 'Partenariat' : 'Gratuite'}
+              </Tag>
             )}
           </div>
 
-          {/* Photo de l'activité (sinon l'illustration de sa catégorie) */}
-          {activity.imageUrl ? (
-            <img
-              src={activity.imageUrl}
-              alt=""
-              className="w-full block shrink-0"
-              style={{ height: 270, borderRadius: 16, objectFit: 'cover', backgroundColor: theme.transparent }}
-            />
-          ) : (
+          {/* Titre et description */}
+          <div className="flex flex-col" style={{ gap: 8 }}>
+            <h1 className="font-outfit-bold font-normal m-0" style={{ fontSize: 32, lineHeight: 'normal', color: TEXT_DARK }}>{activity.name}</h1>
+            <p className="font-outfit text-base m-0" style={{ lineHeight: 'normal', color: TEXT_GREY }}>{activity.description}</p>
+          </div>
+
+          {/* Activité déjà réalisée par la Tribu (Figma : bandeau-realisee) */}
+          {completed && (
             <div
-              className="flex items-center justify-center overflow-hidden shrink-0"
-              style={{ height: 270, borderRadius: 16, backgroundColor: theme.transparent }}
+              className="flex items-center"
+              style={{ padding: 16, gap: 12, borderRadius: 20, border: `1.5px solid ${SUCCESS}`, backgroundColor: SUCCESS_LIGHT }}
             >
-              {getActivityImage(activity) ? (
-                <img src={getActivityImage(activity)!} alt="" style={{ width: 200, height: 200, borderRadius: 24, objectFit: 'cover' }} />
-              ) : (
-                <ImageIcon size={48} color={theme.primary} strokeWidth={1.5} />
-              )}
+              <span className="flex items-center justify-center shrink-0" style={{ width: 44, height: 44, borderRadius: 22, backgroundColor: SUCCESS }}>
+                <CircleCheck size={20} color="#FFFFFF" strokeWidth={2} />
+              </span>
+              <div className="flex flex-col min-w-0" style={{ gap: 2 }}>
+                <span className="font-outfit-bold text-base" style={{ color: TEXT_DARK }}>
+                  {completedDate ? `Activité réalisée le ${completedDate}` : 'Activité réalisée'}
+                </span>
+                <span className="font-outfit" style={{ fontSize: 14, color: TEXT_GREY }}>
+                  Bravo ! Votre Tribu l’a déjà vécue ensemble.
+                </span>
+              </div>
             </div>
           )}
 
-          {/* Titre + description */}
-          <h1 className="font-outfit-bold font-normal m-0" style={{ fontSize: 32, lineHeight: 'normal', color: '#15201A' }}>{activity.name}</h1>
-          <p className="font-outfit m-0" style={{ fontSize: 14, lineHeight: 'normal', color: '#777777' }}>{activity.description}</p>
-
-          {/* Récompense */}
-          <div className="flex items-center bg-white" style={{ boxShadow: CARD_SHADOW, borderRadius: 20, padding: 20, gap: 16 }}>
-            <Award size={30} color={theme.primary} strokeWidth={1.75} className="shrink-0" />
-            <div className="flex flex-col" style={{ gap: 2 }}>
-              <span className="font-outfit-bold text-base" style={{ color: '#111' }}>Récompense</span>
-              <span className="font-outfit-bold" style={{ fontSize: 20, color: theme.primary }}>
-                + {points} points par membre
-              </span>
-            </div>
-          </div>
-
-          {ongoing ? (
-            <>
-              {/* Activité en cours */}
-              {errorText}
-              {isStarter ? (
-                <>
-                  <Button title="Terminer cette activité" onPress={handleCompleteActivity} loading={loading} color={theme.primary} />
-                  {/* Abandonner : aucun point, avec confirmation (Figma : confirmation-pour-cloturer) */}
-                  <Button
-                    title="Abandonner"
-                    onPress={() => setShowCancelConfirm(true)}
-                    disabled={loading}
-                    color="#F3F3F8"
-                    textColor="#161616"
-                    borderColor="#CBD5E0"
-                  />
-                </>
-              ) : (
-                <p className="font-outfit text-center m-0" style={{ fontSize: 14, color: '#969696' }}>
-                  Activité en cours, lancée par {starterName ?? 'un membre de la Tribu'} : c'est lui ou elle qui la validera.
-                </p>
-              )}
-            </>
-          ) : completed ? (
-            /* Activité déjà faite par la Tribu */
-            <div
-              className="flex flex-col items-center"
-              style={{ backgroundColor: theme.transparent, borderRadius: 16, padding: '14px 16px', gap: 4 }}
-            >
-              <div className="flex items-center" style={{ gap: 6 }}>
-                <Check size={18} color={theme.primary} strokeWidth={3} />
-                <span className="font-outfit-bold text-base" style={{ color: theme.primary }}>
-                  Activité faite par votre Tribu
+          {/* Infos pratiques : le lieu (seulement si l'activité a une ville) */}
+          {activity.city && (
+            <div className="bg-white flex flex-col" style={{ padding: 16, gap: 14, borderRadius: 20 }}>
+              <div className="flex items-center" style={{ gap: 12 }}>
+                <span className="flex items-center justify-center shrink-0" style={{ width: 40, height: 40, borderRadius: 12, backgroundColor: theme.transparent }}>
+                  <MapPin size={20} color={theme.primary} strokeWidth={2} />
                 </span>
+                <div className="flex flex-col min-w-0">
+                  <span className="font-outfit" style={{ fontSize: 14, color: TEXT_GREY }}>Lieu</span>
+                  <span className="font-outfit-bold text-base" style={{ color: TEXT_DARK }}>{activity.city}</span>
+                </div>
               </div>
-              <span className="font-outfit text-center" style={{ fontSize: 14, color: '#161616' }}>
-                {completedDate ? `Le ${completedDate}, ` : ''}avec {completed.participants.map(p => p.name).join(', ')}
-              </span>
             </div>
-          ) : activity.isActive === false ? (
-            /* Retirée du catalogue : on peut la consulter (historique), plus la choisir */
-            <p className="font-outfit text-center m-0" style={{ fontSize: 14, color: '#969696' }}>
-              Cette activité n'est plus proposée.
-            </p>
-          ) : hasFamily ? (
-            <>
-              {/* Qui participe ? */}
-              <span className="font-outfit-bold text-base" style={{ color: '#161616' }}>Qui participe ?</span>
+          )}
 
-              {members.map(member => {
-                const isChecked = participants.includes(member.id);
-                return (
-                  <button
-                    key={member.id}
-                    onClick={() => toggleParticipant(member.id)}
-                    role="checkbox"
-                    aria-checked={isChecked}
-                    className="flex items-center bg-white text-left"
-                    style={{ boxShadow: CARD_SHADOW, borderRadius: 16, padding: '10px 20px', gap: 27, border: 'none' }}
-                  >
-                    <img
-                      src={getAvatar(member.avatar)}
-                      alt=""
-                      style={{ width: 36, height: 36, borderRadius: 18, border: '3px solid #FFFFFF', objectFit: 'cover' }}
-                    />
-                    <span className="flex-1 font-outfit truncate" style={{ fontSize: 14, color: '#161616' }}>{member.name}</span>
-
-                    {/* Case à cocher */}
-                    <span
-                      className="flex items-center justify-center shrink-0"
-                      style={{
-                        width: 18,
-                        height: 18,
-                        borderRadius: 2,
-                        border: `2px solid ${isChecked ? theme.primary : '#969696'}`,
-                        backgroundColor: isChecked ? theme.primary : 'transparent',
-                      }}
-                    >
-                      {isChecked && <Check size={14} color="#FFFFFF" strokeWidth={3} />}
+          {/* Récompense (Figma : recompense) */}
+          {(() => {
+            const color = completed ? SUCCESS : theme.primary;
+            const light = completed ? SUCCESS_LIGHT : theme.transparent;
+            return (
+              <div className="bg-white flex flex-col" style={{ padding: 16, gap: 14, borderRadius: 20, border: `1.5px solid ${color}` }}>
+                <div className="flex items-center" style={{ gap: 12 }}>
+                  <span className="flex items-center justify-center shrink-0" style={{ width: 40, height: 40, borderRadius: 12, backgroundColor: color }}>
+                    <Award size={20} color="#FFFFFF" strokeWidth={2} />
+                  </span>
+                  <div className="flex flex-col min-w-0">
+                    <span className="font-outfit-bold text-base" style={{ color: TEXT_DARK }}>
+                      {completed ? 'Récompense obtenue' : 'Récompense Tribu'}
                     </span>
-                  </button>
-                );
-              })}
+                    {completed && (
+                      <span className="font-outfit" style={{ fontSize: 14, color }}>Ajoutée au niveau de votre Tribu</span>
+                    )}
+                  </div>
+                </div>
+                <div className="flex flex-col items-center text-center" style={{ padding: 16, gap: 4, borderRadius: 16, backgroundColor: light }}>
+                  <span className="font-outfit-bold" style={{ fontSize: 20, color }}>
+                    {completed ? `+ ${pointsEarned} points gagnés` : `+ ${points} points par membre`}
+                  </span>
+                  <span className="font-outfit" style={{ fontSize: 14, color: TEXT_GREY }}>
+                    {completed
+                      ? `par chacun des ${participantsCount} participant${participantsCount > 1 ? 's' : ''}`
+                      : 'Validez l’activité ensemble pour les gagner'}
+                  </span>
+                </div>
+              </div>
+            );
+          })()}
 
-              {errorText}
-
-              <Button title="Choisir cette activité" onPress={handleChooseActivity} loading={loading} color={theme.primary} />
-            </>
-          ) : (
-            <>
-              {/* Sans Tribu : on invite à en rejoindre une */}
-              <p className="font-outfit text-center m-0" style={{ fontSize: 14, color: '#969696' }}>
-                Rejoins ou crée une Tribu pour faire cette activité en famille
-              </p>
-              <Button title="Rejoindre une Tribu" onPress={() => navigate('/tribu/rechercher')} color={theme.primary} />
-            </>
+          {/* Participants : à choisir, ou ceux de l'activité en cours / réalisée */}
+          {(fixedParticipants || (hasFamily && activity.isActive !== false)) && (
+            <div className="flex flex-col" style={{ gap: 8 }}>
+              <span className="font-outfit-bold text-base" style={{ color: TEXT_DARK }}>
+                {completed ? 'Qui a participé ?' : 'Qui participe ?'}
+              </span>
+              {fixedParticipants
+                ? fixedParticipants.map(p => participantRow(p, true, participantsColor))
+                : members.map(member => participantRow(member, participants.includes(member.id), theme.primary, () => toggleParticipant(member.id)))}
+            </div>
           )}
         </div>
       </div>
+
+      {actions && actionBar(actions)}
 
       <ConfirmModal
         visible={showCancelConfirm}
