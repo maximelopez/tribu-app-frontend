@@ -11,6 +11,9 @@ import { mascotteLunettes } from '../assets';
 
 // Onglet Récompenses : collection de badges de la Tribu (Figma : mes-badges, recompense-empty-state)
 
+// Nombre de derniers badges obtenus affichés
+const LAST_BADGES_COUNT = 3;
+
 export default function Rewards() {
   const { theme } = useTheme();
   const navigate = useNavigate();
@@ -28,8 +31,11 @@ export default function Rewards() {
     );
   }
 
-  // Badges obtenus (dans l'ordre de la collection)
-  const unlockedBadges = (data?.badges ?? []).filter(b => b.unlocked);
+  // Les 3 derniers badges obtenus (le plus récent en premier). Tous les badges : écran « Voir tous les badges »
+  const lastUnlockedBadges = (data?.badges ?? [])
+    .filter(b => b.unlocked)
+    .sort((a, b) => new Date(b.unlockedAt!).getTime() - new Date(a.unlockedAt!).getTime())
+    .slice(0, LAST_BADGES_COUNT);
   // Prochain objectif : le badge pas encore obtenu le plus avancé (en pourcentage de l'objectif)
   const nextBadge = (data?.badges ?? [])
     .filter(b => !b.unlocked)
@@ -60,10 +66,10 @@ export default function Rewards() {
             </div>
           </div>
 
-          {/* Badges obtenus */}
-          {unlockedBadges.length > 0 && (
+          {/* Derniers badges obtenus */}
+          {lastUnlockedBadges.length > 0 && (
             <div className="flex flex-col shrink-0" style={{ gap: 10, marginTop: 8 }}>
-              {unlockedBadges.map(badge => (
+              {lastUnlockedBadges.map(badge => (
                 <BadgeCard key={badge.id} badge={badge} onPress={() => openBadge(badge.id)} />
               ))}
             </div>

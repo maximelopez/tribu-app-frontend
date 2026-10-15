@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
+import { House } from 'lucide-react';
 import { useUserStore } from '../store/userStore';
 import { useFamilyStore } from '../store/familyStore';
 import type { LevelInfo } from '../store/familyStore';
@@ -34,6 +35,7 @@ export default function FamilyDetails() {
   const navigate = useNavigate();
   const { theme } = useTheme();
   const user = useUserStore(state => state.user);
+  const pendingRequest = useFamilyStore(state => state.pendingRequest);
   const setPendingRequest = useFamilyStore(state => state.setPendingRequest);
   const badgesData = useFamilyBadges(familyId).data;
 
@@ -72,9 +74,8 @@ export default function FamilyDetails() {
         return;
       }
 
-      // L'Accueil affiche alors "Demande envoyée"
+      // On reste sur l'écran : il affiche « Demande envoyée » (l'Accueil aussi)
       setPendingRequest({ familyId: family.id, name: family.name, city: family.city });
-      navigate('/', { replace: true });
     } catch (error) {
       console.error('Erreur rejoindre famille :', error);
       setErrorMessage('Impossible de se connecter au serveur.');
@@ -110,7 +111,7 @@ export default function FamilyDetails() {
       ) : (
         <div
           className="flex-1 overflow-y-auto no-scrollbar flex flex-col"
-          style={{ padding: '8px 16px 20px', paddingBottom: 'calc(20px + env(safe-area-inset-bottom))', gap: 20 }}
+          style={{ padding: '8px 16px 20px', gap: 20 }}
         >
           {/* Carte de la Tribu : nom, membres, ville, niveau */}
           <div className="flex flex-col" style={{ backgroundColor: theme.primary, borderRadius: 20, padding: '18px 20px', gap: 14 }}>
@@ -179,13 +180,45 @@ export default function FamilyDetails() {
             </div>
           )}
 
-          {/* Envoyer une demande */}
-          <div className="flex flex-col" style={{ gap: 8 }}>
-            {errorMessage ? (
-              <p className="font-outfit text-center m-0" style={{ fontSize: 14, color: '#EA4A1F' }}>{errorMessage}</p>
-            ) : null}
+        </div>
+      )}
+
+      {/* Zone d'actions fixe en bas (Figma : zone-actions) */}
+      {family && (
+        <div
+          className="shrink-0 bg-white flex flex-col"
+          style={{
+            gap: 10,
+            padding: '16px 16px 28px',
+            paddingBottom: 'calc(28px + env(safe-area-inset-bottom))',
+            borderRadius: '24px 24px 0 0',
+            boxShadow: '0px -4px 16px rgba(0, 0, 0, 0.06)',
+          }}
+        >
+          {errorMessage ? (
+            <p className="font-outfit text-center m-0" style={{ fontSize: 14, color: '#EA4A1F' }}>{errorMessage}</p>
+          ) : null}
+          {/* Demande déjà envoyée à cette Tribu (Figma : famille-details-request-ok) */}
+          {pendingRequest?.familyId === family.id ? (
+            <div
+              role="status"
+              className="flex items-center justify-center font-outfit-bold text-base"
+              style={{ height: 48, borderRadius: 15, backgroundColor: theme.transparent, color: theme.primary }}
+            >
+              Demande envoyée !
+            </div>
+          ) : (
             <Button title="Envoyer une demande" onPress={handleJoinFamily} loading={loading} color={theme.primary} />
-          </div>
+          )}
+          {/* Figma : btn-retour-accueil */}
+          <button
+            onClick={() => navigate('/', { replace: true })}
+            className="flex items-center justify-center bg-white font-outfit-bold text-base active:opacity-80"
+            style={{ height: 48, gap: 8, borderRadius: 15, border: '1.5px solid #D9DEDB', color: TEXT_DARK }}
+          >
+            <House size={18} color={TEXT_DARK} strokeWidth={2} />
+            Retour à l’accueil
+          </button>
         </div>
       )}
     </div>
