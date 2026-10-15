@@ -38,31 +38,30 @@ export default function useFamilyBadges(otherFamilyId?: string) {
   const familyId = otherFamilyId ?? myFamilyId;
   const completedCount = useFamilyStore(state => state.completedActivities.length);
 
-  const [data, setData] = useState<FamilyBadges | null>(null);
-  const [loading, setLoading] = useState(true);
+  // Badges chargés, avec la Tribu à laquelle ils appartiennent
+  const [loaded, setLoaded] = useState<{ familyId: string; data: FamilyBadges | null } | null>(null);
 
   useEffect(() => {
-    if (!familyId) {
-      setData(null);
-      setLoading(false);
-      return;
-    }
+    if (!familyId) return;
 
     let cancelled = false;
     const fetchBadges = async () => {
+      let data: FamilyBadges | null = null;
       try {
         const res = await api(`families/${familyId}/badges`);
-        if (res.ok && !cancelled) setData(await res.json());
+        if (res.ok) data = await res.json();
       } catch (error) {
         console.error('Erreur badges:', error);
-      } finally {
-        if (!cancelled) setLoading(false);
       }
+      // En cas d'erreur, on garde les badges déjà affichés de cette Tribu
+      if (!cancelled) setLoaded(prev => ({ familyId, data: data ?? (prev?.familyId === familyId ? prev.data : null) }));
     };
 
     fetchBadges();
     return () => { cancelled = true; };
   }, [familyId, completedCount]);
 
-  return { data, loading };
+  // Badges de la bonne Tribu seulement (pas ceux d'une Tribu affichée avant)
+  const isCurrent = !!familyId && loaded?.familyId === familyId;
+  return { data: isCurrent ? loaded.data : null, loading: !!familyId && !isCurrent };
 }

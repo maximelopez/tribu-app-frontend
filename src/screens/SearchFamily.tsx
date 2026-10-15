@@ -54,11 +54,7 @@ export default function SearchFamily() {
   const isSearching = query.length > 0 || city !== null;
 
   useEffect(() => {
-    if (!isSearching) {
-      setFamilies([]);
-      setHasSearched(false);
-      return;
-    }
+    if (!isSearching) return;
 
     // Petit délai : on attend que l'utilisateur ait fini de taper
     const timer = setTimeout(async () => {
@@ -79,6 +75,14 @@ export default function SearchFamily() {
     return () => clearTimeout(timer);
   }, [query, city, isSearching]);
 
+  // Plus de texte ni de ville : on efface les résultats
+  const clearIfEmpty = (nextSearch: string, nextCity: string | null) => {
+    if (!nextSearch.trim() && nextCity === null) {
+      setFamilies([]);
+      setHasSearched(false);
+    }
+  };
+
   return (
     <div className="flex-1 min-h-0 flex flex-col">
       <ScreenHeader title="Rejoindre une Tribu" />
@@ -92,7 +96,10 @@ export default function SearchFamily() {
           <Search size={18} color="#757575" />
           <input
             value={search}
-            onChange={e => setSearch(e.target.value)}
+            onChange={e => {
+              setSearch(e.target.value);
+              clearIfEmpty(e.target.value, city);
+            }}
             placeholder="Rechercher une Tribu"
             aria-label="Rechercher une Tribu"
             type="search"
@@ -113,7 +120,10 @@ export default function SearchFamily() {
                 return (
                   <button
                     key={value ?? 'all'}
-                    onClick={() => setCity(value)}
+                    onClick={() => {
+                      setCity(value);
+                      clearIfEmpty(search, value);
+                    }}
                     aria-pressed={isActive}
                     className="rounded-full flex items-center justify-center shrink-0 font-outfit"
                     style={{

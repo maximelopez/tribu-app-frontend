@@ -8,10 +8,7 @@ export default function useCountUp(target: number, duration = 900, delay = 200) 
   const [value, setValue] = useState(() => (prefersReducedMotion() ? target : 0));
 
   useEffect(() => {
-    if (prefersReducedMotion()) {
-      setValue(target);
-      return;
-    }
+    if (prefersReducedMotion()) return;
 
     let frame = 0;
     let start: number | null = null;
@@ -32,5 +29,6 @@ export default function useCountUp(target: number, duration = 900, delay = 200) 
     };
   }, [target, duration, delay]);
 
-  return value;
+  // Sans animation : directement la valeur finale
+  return prefersReducedMotion() ? target : value;
 }
