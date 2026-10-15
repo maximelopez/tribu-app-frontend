@@ -10,3 +10,6 @@ export const API_URL = `${SERVER_URL}/api/`;
 
 // Adresse de contact pour les demandes sur les données personnelles (RGPD)
 export const CONTACT_EMAIL = 'contact.tribufamily@gmail.com';
+
+// Villes proposées à la création d'une Tribu
+export const CITIES = ['Angers', 'Nantes', 'Paris'];

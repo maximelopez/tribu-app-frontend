@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
-import { ChartLine, Award, Users } from 'lucide-react';
+import { ChartLine, Award, Users, ChevronDown, Check } from 'lucide-react';
 import { useUserStore } from '../store/userStore';
 import { useTheme } from '../context/ThemeContext';
 import { mascotteTribu } from '../assets';
@@ -8,6 +8,7 @@ import Input from '../components/Input';
 import Button from '../components/Button';
 import ScreenHeader from '../components/ScreenHeader';
 import { api } from '../api';
+import { CITIES } from '../config';
 
 // Couleurs Figma (creer-tribu)
 const TEXT_TITLE = '#1C1F1C';
@@ -29,8 +30,14 @@ export default function CreateFamily() {
 
   const [name, setName] = useState('');
   const [city, setCity] = useState('');
+  const [cityMenuOpen, setCityMenuOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [loading, setLoading] = useState(false);
+
+  const chooseCity = (value: string) => {
+    setCity(value);
+    setCityMenuOpen(false);
+  };
 
   const handleCreateFamily = async () => {
     if (!user || loading) return;
@@ -85,8 +92,8 @@ export default function CreateFamily() {
             <img src={mascotteTribu} alt="" style={{ width: 65, height: 65, objectFit: 'contain' }} />
           </div>
           <div className="flex-1 flex flex-col" style={{ gap: 3, paddingBottom: 4 }}>
-            <span className="font-outfit-bold" style={{ fontSize: 17, color: TEXT_TITLE }}>Votre Tribu prend vie</span>
-            <span className="font-outfit" style={{ fontSize: 13, lineHeight: '18px', color: TEXT_MUTED }}>
+            <span className="font-outfit-bold" style={{ fontSize: 20, color: TEXT_TITLE }}>Votre Tribu prend vie</span>
+            <span className="font-outfit" style={{ fontSize: 14, color: TEXT_MUTED }}>
               Un nom et une ville suffisent !
             </span>
           </div>
@@ -98,18 +105,75 @@ export default function CreateFamily() {
           <Input value={name} onChangeText={setName} placeholder="Ex : DreamTeam" color={theme.primary} />
         </label>
 
-        {/* Ville */}
-        <label className="flex flex-col" style={{ gap: 9 }}>
-          <span className="font-outfit text-base" style={{ color: '#000000' }}>Ville :</span>
-          <Input value={city} onChangeText={setCity} placeholder="Ex : Angers" color={theme.primary} onSubmitEditing={handleCreateFamily} returnKeyType="done" />
-        </label>
+        {/* Ville : liste déroulante (Figma : input-dropdown) */}
+        <div className="flex flex-col" style={{ gap: 9 }}>
+          <span id="city-label" className="font-outfit text-base" style={{ color: '#000000' }}>Ville :</span>
+          <div className="relative">
+            <button
+              type="button"
+              onClick={() => setCityMenuOpen(open => !open)}
+              aria-haspopup="listbox"
+              aria-expanded={cityMenuOpen}
+              aria-labelledby="city-label"
+              className="w-full flex items-center font-outfit text-base text-left"
+              style={{
+                height: 48,
+                padding: '0 12px',
+                gap: 10,
+                border: `1px solid ${cityMenuOpen ? theme.primary : '#969696'}`,
+                borderRadius: 16,
+                backgroundColor: '#FAFAFA',
+                color: city ? '#161616' : '#969696',
+              }}
+            >
+              <span className="flex-1">{city || 'Choisis ta ville'}</span>
+              <ChevronDown
+                size={20}
+                color="#161616"
+                style={{ transform: cityMenuOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}
+              />
+            </button>
+
+            {/* Liste des villes, sous le champ */}
+            {cityMenuOpen && (
+              <>
+                <div className="fixed inset-0 z-10" onClick={() => setCityMenuOpen(false)} />
+                <ul
+                  role="listbox"
+                  aria-labelledby="city-label"
+                  className="absolute z-20 left-0 right-0 bg-white flex flex-col m-0"
+                  style={{ top: 52, padding: 6, borderRadius: 16, listStyle: 'none', boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.12)' }}
+                >
+                  {CITIES.map(value => {
+                    const isSelected = value === city;
+                    return (
+                      <li key={value}>
+                        <button
+                          type="button"
+                          role="option"
+                          aria-selected={isSelected}
+                          onClick={() => chooseCity(value)}
+                          className="w-full flex items-center justify-between font-outfit text-base text-left"
+                          style={{ padding: '10px 12px', borderRadius: 10, border: 'none', color: '#161616', backgroundColor: isSelected ? theme.transparent : 'transparent' }}
+                        >
+                          {value}
+                          {isSelected && <Check size={16} color={theme.primary} strokeWidth={3} />}
+                        </button>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </>
+            )}
+          </div>
+        </div>
 
         {/* Ce qui attend votre Tribu (informatif) */}
         <div
           className="bg-white flex flex-col"
           style={{ marginTop: 4, borderRadius: 18, border: `1px solid ${CARD_BORDER}`, padding: '18px 18px 6px' }}
         >
-          <span className="font-outfit-bold" style={{ fontSize: 15, color: TEXT_TITLE, marginBottom: 6 }}>
+          <span className="font-outfit-bold" style={{ fontSize: 16, color: TEXT_TITLE, marginBottom: 6 }}>
             Ce qui attend votre Tribu
           </span>
 
@@ -126,15 +190,15 @@ export default function CreateFamily() {
                 <Icon size={24} color={theme.primary} strokeWidth={2} />
               </span>
               <span className="flex-1 flex flex-col" style={{ gap: 2 }}>
-                <span className="font-outfit-bold" style={{ fontSize: 14, color: TEXT_TITLE }}>{title}</span>
-                <span className="font-outfit" style={{ fontSize: 12, lineHeight: '17px', color: TEXT_MUTED }}>{text}</span>
+                <span className="font-outfit" style={{ fontSize: 14, color: TEXT_TITLE }}>{title}</span>
+                <span className="font-outfit" style={{ fontSize: 14, color: TEXT_MUTED }}>{text}</span>
               </span>
             </div>
           ))}
         </div>
 
         {/* Bouton juste sous le contenu (comme la maquette) */}
-        <div style={{ marginTop: 22 }}>
+        <div>
           {errorMessage ? (
             <p className="font-outfit text-center m-0 mb-2" style={{ color: '#EA4A1F' }}>{errorMessage}</p>
           ) : null}
