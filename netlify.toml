@@ -1,7 +1,7 @@
-# Netlify : l'app n'est déployée que si le lint et le build (avec TypeScript) passent.
+# Netlify : l'app n'est déployée que si le lint, les tests et le build (avec TypeScript) passent.
 # Sinon, l'ancienne version reste en ligne.
 [build]
-  command = "npm run lint && npm run build"
+  command = "npm run lint && npm test && npm run build"
   publish = "dist"
 
 [build.environment]

@@ -47,6 +47,8 @@ depuis ton téléphone sur le même Wi-Fi (sans l'installation PWA, qui demande 
 | `npm run preview` | Sert `dist/` en local, service worker actif (pour tester la PWA) |
 | `npm run lint` | Vérifie la qualité du code (ESLint) |
 | `npm run typecheck` | Vérifie les types (TypeScript) |
+| `npm test` | Lance les tests (Vitest) |
+| `npm run test:coverage` | Lance les tests avec le rapport de couverture (`coverage/index.html`) |
 
 ## Configuration (obligatoire)
 
@@ -82,6 +84,10 @@ src/
 ├── store/             État global (zustand)
 ├── context/           Thème (vert, orange, rouge)
 └── assets/            Polices, avatars, mascottes, illustrations, images des badges, icônes (index.ts)
+
+tests/
+├── setup.ts           Remet l'app à zéro après chaque test (déconnecté, sans Tribu)
+└── unit/              Tests unitaires : thème, badges, activités, images, stores, appels au backend
 ```
 
 **Composants principaux**
@@ -294,25 +300,27 @@ Toutes définies dans `index.css`, et coupées si le téléphone est réglé sur
 |---|---|---|
 | **ESLint** | `npm run lint` | Erreurs fréquentes, code inutile, règles de React (ordre et dépendances des hooks, state recopié dans un effet, rendu qui doit rester pur) |
 | **TypeScript** | `npm run typecheck` | Erreurs de type (mode strict) |
+| **Vitest** | `npm test` | Tests automatiques, dans un faux navigateur (jsdom), sans appeler le vrai backend |
 
 La configuration d'ESLint est dans `eslint.config.js` (règles recommandées de JavaScript, TypeScript et React).
 
 ## CI/CD
 
 **CI (GitHub Actions)** : à chaque push ou pull request sur `master`, le workflow `.github/workflows/ci.yml`
-installe les dépendances (`npm ci`), lance le lint, vérifie les types puis construit l'app.
+installe les dépendances (`npm ci`), lance le lint, vérifie les types, lance les tests avec la couverture
+puis construit l'app. Le rapport de couverture est gardé 14 jours (artefact `rapport-couverture`).
 Le résultat est visible dans l'onglet *Actions* du dépôt et sur le badge en haut de ce README.
 
 **Déploiement continu (Netlify)** : chaque push sur `master` redéploie l'app. Les réglages sont dans `netlify.toml` :
 
 | Réglage | Valeur |
 |---|---|
-| Build command | `npm run lint && npm run build` |
+| Build command | `npm run lint && npm test && npm run build` |
 | Publish directory | `dist` |
 | Node.js | 22 |
 | Variable (dans Netlify) | `VITE_API_URL` |
 
-Si le lint ou TypeScript échoue, Netlify ne déploie pas et l'ancienne version reste en ligne.
+Si le lint, un test ou TypeScript échoue, Netlify ne déploie pas et l'ancienne version reste en ligne.
 Toutes les adresses sont redirigées vers `index.html` (`public/_redirects`), pour qu'un lien direct vers un écran fonctionne.
 
 ## À faire

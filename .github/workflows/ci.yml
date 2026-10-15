@@ -1,4 +1,4 @@
-# CI : à chaque push ou pull request sur master, on vérifie le code et on construit l'app.
+# CI : à chaque push ou pull request sur master, on vérifie le code, on lance les tests et on construit l'app.
 name: CI
 
 on:
@@ -30,5 +30,16 @@ jobs:
       - name: Vérifier les types
         run: npm run typecheck
 
+      - name: Lancer les tests avec la couverture
+        run: npm run test:coverage
+
       - name: Construire l'app
         run: npm run build
+
+      - name: Garder le rapport de couverture
+        if: always() # même si un test échoue
+        uses: actions/upload-artifact@v6
+        with:
+          name: rapport-couverture
+          path: coverage/
+          retention-days: 14
