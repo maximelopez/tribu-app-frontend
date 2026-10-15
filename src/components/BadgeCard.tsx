@@ -1,4 +1,5 @@
 import type { Badge, BadgeTier } from '../hooks/useFamilyBadges';
+import { Lock } from 'lucide-react';
 import { getActivityIllustration, getBadgeImage } from '../assets';
 
 // Ombre de chaque niveau : cartes et détail d'un badge obtenu
@@ -11,7 +12,9 @@ export const TIER_COLORS: Record<BadgeTier, { shadow: string }> = {
 
 export const getBadgeColors = (badge: Badge) => TIER_COLORS[badge.tier] ?? TIER_COLORS.bronze;
 
-const LOCKED_SHADOW = 'rgba(150, 150, 150, 0.1)';
+// « Obtenu le 12 oct. »
+export const formatUnlockedDate = (date: string) =>
+  new Date(date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' });
 
 // Image du badge (assets/badges/<id>.svg). Pas encore obtenu : en gris.
 // Si l'image manque, l'illustration de sa catégorie sert de secours.
@@ -41,37 +44,46 @@ interface BadgeCardProps {
   onPress?: () => void;
 }
 
-// Carte d'un badge. Pas encore obtenu : grisée avec la progression (ex : 1 / 3)
+// Carte d'un badge (Figma : badge). Obtenu : date d'obtention. Pas encore obtenu : grisé, cadenas et progression (ex : 1 / 3)
 export default function BadgeCard({ badge, onPress }: BadgeCardProps) {
-  const colors = getBadgeColors(badge);
+  const { unlocked } = badge;
 
   return (
     <button
       type="button"
       onClick={onPress}
       disabled={!onPress}
-      className="w-full shrink-0 bg-white flex items-center text-left active:opacity-85"
+      className="w-full shrink-0 flex items-center text-left active:opacity-85"
       style={{
-        minHeight: 82,
-        padding: '14px 20px 14px 14px',
+        padding: '14px 16px',
         gap: 14,
         borderRadius: 16,
-        border: 'none',
-        filter: `drop-shadow(0px 4px 6px ${badge.unlocked ? colors.shadow : LOCKED_SHADOW})`,
+        border: '1px solid #ECEFEE',
+        backgroundColor: unlocked ? '#FFFFFF' : '#FAFBFA',
+        boxShadow: unlocked ? '0px 4px 6px rgba(0, 0, 0, 0.06)' : 'none',
         cursor: onPress ? 'pointer' : 'default',
       }}
     >
       <BadgeIllustration badge={badge} size={56} />
 
-      <div className="flex-1 min-w-0 flex flex-col" style={{ gap: 2 }}>
-        <span className="font-outfit-bold text-base" style={{ lineHeight: 'normal', color: badge.unlocked ? '#111111' : '#969696' }}>
+      <div className="flex-1 min-w-0 flex flex-col" style={{ gap: 3 }}>
+        <span className="font-outfit-bold text-base" style={{ lineHeight: 'normal', color: unlocked ? '#161616' : '#9AA19D' }}>
           {badge.name}
         </span>
-        <span className="font-outfit" style={{ fontSize: 14, lineHeight: 'normal', color: '#777777' }}>{badge.description}</span>
+        <span className="font-outfit" style={{ fontSize: 14, lineHeight: 'normal', color: unlocked ? '#6B746F' : '#9AA19D' }}>
+          {badge.description}
+        </span>
       </div>
 
-      {!badge.unlocked && (
-        <span className="font-outfit shrink-0" style={{ fontSize: 14, color: '#969696' }}>
+      {unlocked ? (
+        badge.unlockedAt && (
+          <span className="font-outfit shrink-0" style={{ fontSize: 14, color: '#9AA19D' }}>
+            Obtenu le {formatUnlockedDate(badge.unlockedAt)}
+          </span>
+        )
+      ) : (
+        <span className="font-outfit shrink-0 flex items-center" style={{ fontSize: 14, gap: 4, color: '#6B746F' }}>
+          <Lock size={12} color="#6B746F" strokeWidth={2.5} />
           {badge.progress} / {badge.goal}
         </span>
       )}

@@ -11,8 +11,6 @@ import { mascotteLunettes } from '../assets';
 
 // Onglet Récompenses : collection de badges de la Tribu (Figma : mes-badges, recompense-empty-state)
 
-// Nombre de badges affichés dans « Prochains badges »
-const NEXT_BADGES_COUNT = 3;
 export default function Rewards() {
   const { theme } = useTheme();
   const navigate = useNavigate();
@@ -30,12 +28,12 @@ export default function Rewards() {
     );
   }
 
-  const lastUnlocked = data?.lastUnlocked ?? null;
-  // Prochains badges : ceux pas encore obtenus les plus avancés (en pourcentage de l'objectif)
-  const nextBadges = (data?.badges ?? [])
+  // Badges obtenus (dans l'ordre de la collection)
+  const unlockedBadges = (data?.badges ?? []).filter(b => b.unlocked);
+  // Prochain objectif : le badge pas encore obtenu le plus avancé (en pourcentage de l'objectif)
+  const nextBadge = (data?.badges ?? [])
     .filter(b => !b.unlocked)
-    .sort((a, b) => b.progress / b.goal - a.progress / a.goal)
-    .slice(0, NEXT_BADGES_COUNT);
+    .sort((a, b) => b.progress / b.goal - a.progress / a.goal)[0] ?? null;
   const openBadge = (badgeId: string) => navigate(`/recompenses/badges/${badgeId}`);
   const progressPercent = data && data.total > 0 ? Math.round((data.unlockedCount / data.total) * 100) : 0;
 
@@ -62,21 +60,20 @@ export default function Rewards() {
             </div>
           </div>
 
-          {/* Dernier badge gagné */}
-          {lastUnlocked && (
-            <div className="flex flex-col shrink-0" style={{ gap: 12, marginTop: 8 }}>
-              <span className="font-outfit-bold text-base" style={{ color: '#000000' }}>Dernier badge gagné</span>
-              <BadgeCard badge={lastUnlocked} onPress={() => openBadge(lastUnlocked.id)} />
+          {/* Badges obtenus */}
+          {unlockedBadges.length > 0 && (
+            <div className="flex flex-col shrink-0" style={{ gap: 10, marginTop: 8 }}>
+              {unlockedBadges.map(badge => (
+                <BadgeCard key={badge.id} badge={badge} onPress={() => openBadge(badge.id)} />
+              ))}
             </div>
           )}
 
-          {/* Prochains badges */}
-          {nextBadges.length > 0 && (
-            <div className="flex flex-col shrink-0" style={{ gap: 12, marginTop: lastUnlocked ? 0 : 8 }}>
-              <span className="font-outfit-bold text-base" style={{ color: '#000000' }}>Prochains badges</span>
-              {nextBadges.map(badge => (
-                <BadgeCard key={badge.id} badge={badge} onPress={() => openBadge(badge.id)} />
-              ))}
+          {/* Prochain objectif */}
+          {nextBadge && (
+            <div className="flex flex-col shrink-0" style={{ gap: 12, marginTop: 8 }}>
+              <span className="font-outfit-bold text-base" style={{ color: '#000000' }}>Prochain objectif</span>
+              <BadgeCard badge={nextBadge} onPress={() => openBadge(nextBadge.id)} />
             </div>
           )}
 
