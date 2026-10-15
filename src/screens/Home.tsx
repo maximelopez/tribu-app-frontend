@@ -30,11 +30,12 @@ export default function Home() {
   const [showNotifications, setShowNotifications] = useState(false);
 
   // Idées d'activités : dans la ville de la Tribu (ou partout), pas encore faites ni en cours
+  const familyCity = family?.city;
   const suggestions = useMemo(() => {
     const doneIds = new Set(completedActivities.map(fa => toCatalogActivity(fa)._id));
     if (currentActivity) doneIds.add(toCatalogActivity(currentActivity)._id);
-    return catalog.filter(a => !doneIds.has(a._id) && (!family?.city || !a.city || a.city === family.city));
-  }, [catalog, completedActivities, currentActivity, family?.city]);
+    return catalog.filter(a => !doneIds.has(a._id) && (!familyCity || !a.city || a.city === familyCity));
+  }, [catalog, completedActivities, currentActivity, familyCity]);
   const newest = useMemo(() => sortByNewest(suggestions).slice(0, 6), [suggestions]);
 
   if (!user) return null;

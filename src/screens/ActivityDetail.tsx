@@ -287,7 +287,7 @@ export default function ActivityDetail() {
   );
 
   // Boutons selon l'état de l'activité
-  let actions: ReactNode = null;
+  let actions: ReactNode;
   if (ongoing) {
     actions = isStarter ? (
       <>

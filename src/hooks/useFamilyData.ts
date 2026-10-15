@@ -37,7 +37,7 @@ export default function useFamilyData() {
 
         setFamily({
           ...dataFamily.family,
-          joinRequests: dataFamily.family.joinRequests.map((u: any) =>
+          joinRequests: dataFamily.family.joinRequests.map((u: string | { id: string; name: string }) =>
             typeof u === 'string' ? { id: u, name: 'Utilisateur inconnu' } : u
           ),
           members: dataMembers.users,

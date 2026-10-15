@@ -3,7 +3,7 @@ import { useLocation } from 'react-router';
 import { socket } from '../socket';
 import { useUserStore } from '../store/userStore';
 import { useFamilyStore } from '../store/familyStore';
-import type { AppNotification, Family, FamilyActivity } from '../store/familyStore';
+import type { AppNotification, Family, FamilyActivity, Member } from '../store/familyStore';
 import { api, expireSession } from '../api';
 
 // Temps réel de l'app connectée :
@@ -248,7 +248,7 @@ export default function useRealtime() {
           } : prev);
 
           // Les points de l'utilisateur connecté aussi
-          const me = dataMembers.users?.find((m: any) => m.id === userId);
+          const me = dataMembers.users?.find((m: Member) => m.id === userId);
           if (me) setUser((prev) => (prev ? { ...prev, points: me.points } : prev));
         } catch (error) {
           console.error('Erreur mise à jour après activité terminée :', error);
@@ -283,5 +283,5 @@ export default function useRealtime() {
       socket.off('memberJoined', handleMemberJoined);
       socket.off('familyActivityUpdated', handleFamilyActivityUpdated);
     };
-  }, [userId, familyId]);
+  }, [userId, familyId, setUser, setFamily, setCurrentActivity, setCompletedActivities, setUnreadCount, setPendingRequest, setNotifications, setUnreadNotifications]);
 }
