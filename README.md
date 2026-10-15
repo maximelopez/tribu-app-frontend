@@ -87,7 +87,9 @@ src/
 
 tests/
 ├── setup.ts           Remet l'app à zéro après chaque test (déconnecté, sans Tribu)
-└── unit/              Tests unitaires : thème, badges, activités, images, stores, appels au backend
+├── helpers.tsx        Faux backend, affichage d'un écran, connexion d'un utilisateur
+├── unit/              Tests unitaires : thème, badges, activités, images, stores, appels au backend
+└── integration/       Tests d'intégration : composants, connexion, inscription, accès aux écrans, Tribu
 ```
 
 **Composants principaux**
@@ -300,7 +302,7 @@ Toutes définies dans `index.css`, et coupées si le téléphone est réglé sur
 |---|---|---|
 | **ESLint** | `npm run lint` | Erreurs fréquentes, code inutile, règles de React (ordre et dépendances des hooks, state recopié dans un effet, rendu qui doit rester pur) |
 | **TypeScript** | `npm run typecheck` | Erreurs de type (mode strict) |
-| **Vitest** | `npm test` | Tests automatiques, dans un faux navigateur (jsdom), sans appeler le vrai backend |
+| **Vitest + Testing Library** | `npm test` | Tests automatiques des fonctions, composants et écrans, dans un faux navigateur (jsdom), sans appeler le vrai backend |
 
 La configuration d'ESLint est dans `eslint.config.js` (règles recommandées de JavaScript, TypeScript et React).
 

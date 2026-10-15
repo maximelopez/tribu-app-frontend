@@ -7,8 +7,8 @@ import { reactRefresh } from 'eslint-plugin-react-refresh';
 import globals from 'globals';
 
 export default defineConfig(
-  // Fichiers ignorés : code compilé
-  { ignores: ['dist/', 'dev-dist/'] },
+  // Fichiers ignorés : code compilé et rapport de couverture
+  { ignores: ['dist/', 'dev-dist/', 'coverage/'] },
 
   // Règles recommandées de JavaScript et de TypeScript
   js.configs.recommended,
@@ -26,5 +26,11 @@ export default defineConfig(
       // Variable inutilisée : erreur, sauf si son nom commence par _ (volontairement ignorée)
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
     },
+  },
+
+  // Tests : le rechargement à chaud ne les concerne pas
+  {
+    files: ['tests/**'],
+    rules: { 'react-refresh/only-export-components': 'off' },
   },
 );
