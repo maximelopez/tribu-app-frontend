@@ -1,5 +1,7 @@
 # Tribu - PWA (React + Vite)
 
+[![CI](https://github.com/maximelopez/tribu-app-frontend/actions/workflows/ci.yml/badge.svg)](https://github.com/maximelopez/tribu-app-frontend/actions/workflows/ci.yml)
+
 Application Tribu en Progressive Web App : installable sur téléphone (Android et iPhone),
 avec un mode hors ligne basique. Elle parle au backend Tribu (API REST + Socket.IO).
 
@@ -21,7 +23,8 @@ avec un mode hors ligne basique. Elle parle au backend Tribu (API REST + Socket.
 - [Thème et design](#thème-et-design)
 - [Animations](#animations)
 - [PWA](#pwa)
-- [Déploiement (Netlify)](#déploiement-netlify)
+- [Qualité du code](#qualité-du-code)
+- [CI/CD](#cicd)
 - [À faire](#à-faire)
 
 ## Lancer en local
@@ -42,6 +45,8 @@ depuis ton téléphone sur le même Wi-Fi (sans l'installation PWA, qui demande 
 | `npm run dev` | Développement avec rechargement automatique |
 | `npm run build` | Vérifie les types (`tsc -b`) puis crée la version finale dans `dist/` |
 | `npm run preview` | Sert `dist/` en local, service worker actif (pour tester la PWA) |
+| `npm run lint` | Vérifie la qualité du code (ESLint) |
+| `npm run typecheck` | Vérifie les types (TypeScript) |
 
 ## Configuration (obligatoire)
 
@@ -67,6 +72,8 @@ src/
 ├── App.tsx            Routes et layouts (connexion, onboarding, app connectée, barre du bas)
 ├── config.ts          Adresses du backend (lues depuis VITE_API_URL), adresse de contact RGPD
 ├── legal.ts           Textes de la politique de confidentialité et des CGU
+├── categories.ts      Libellés des catégories d'activités
+├── badges.ts          Couleurs des badges, date d'obtention (« Obtenu le 12 oct. »)
 ├── api.ts             Appels au backend avec le token (déconnexion automatique si 401)
 ├── socket.ts          Connexion Socket.IO avec le token
 ├── screens/           Un fichier par écran
@@ -93,6 +100,7 @@ src/
 | `NotificationBell`, `NotificationPanel` | Cloche de l'Accueil (compteur de non lues) et panneau des notifications |
 | `MessageBubble` | Message du chat |
 | `ThemeSwitcher` | Choix du thème dans le Profil |
+| `ThemeProvider` | Fournit le thème à toute l'app (celui de l'utilisateur, ou vert par défaut) |
 | `ConfirmModal` | Popup de confirmation (bouton rouge pour une action destructive + bouton gris pour revenir) |
 | `Spinner` | Roue de chargement (boutons, listes) |
 | `Confetti` | Pluie de confettis aux couleurs du thème (écran Récompense) |
@@ -280,16 +288,32 @@ Toutes définies dans `index.css`, et coupées si le téléphone est réglé sur
   une nouvelle version, fermer complètement l'app puis la relancer (une app seulement remise au premier
   plan garde l'ancienne version jusqu'au prochain lancement).
 
-## Déploiement (Netlify)
+## Qualité du code
+
+| Outil | Commande | Rôle |
+|---|---|---|
+| **ESLint** | `npm run lint` | Erreurs fréquentes, code inutile, règles de React (ordre et dépendances des hooks, state recopié dans un effet, rendu qui doit rester pur) |
+| **TypeScript** | `npm run typecheck` | Erreurs de type (mode strict) |
+
+La configuration d'ESLint est dans `eslint.config.js` (règles recommandées de JavaScript, TypeScript et React).
+
+## CI/CD
+
+**CI (GitHub Actions)** : à chaque push ou pull request sur `master`, le workflow `.github/workflows/ci.yml`
+installe les dépendances (`npm ci`), lance le lint, vérifie les types puis construit l'app.
+Le résultat est visible dans l'onglet *Actions* du dépôt et sur le badge en haut de ce README.
+
+**Déploiement continu (Netlify)** : chaque push sur `master` redéploie l'app. Les réglages sont dans `netlify.toml` :
 
 | Réglage | Valeur |
 |---|---|
-| Build command | `npm run build` |
+| Build command | `npm run lint && npm run build` |
 | Publish directory | `dist` |
-| Variable | `VITE_API_URL` |
+| Node.js | 22 |
+| Variable (dans Netlify) | `VITE_API_URL` |
 
-Chaque push sur la branche principale redéploie automatiquement. Toutes les adresses sont redirigées
-vers `index.html` (`public/_redirects`), pour qu'un lien direct vers un écran fonctionne.
+Si le lint ou TypeScript échoue, Netlify ne déploie pas et l'ancienne version reste en ligne.
+Toutes les adresses sont redirigées vers `index.html` (`public/_redirects`), pour qu'un lien direct vers un écran fonctionne.
 
 ## À faire
 

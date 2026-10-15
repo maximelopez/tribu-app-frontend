@@ -1,0 +1,34 @@
+# CI : à chaque push ou pull request sur master, on vérifie le code et on construit l'app.
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  verifications:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Récupérer le code
+        uses: actions/checkout@v7
+
+      - name: Installer Node.js 22
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: npm # garde les dépendances en cache
+
+      - name: Installer les dépendances
+        run: npm ci
+
+      - name: Vérifier la qualité du code
+        run: npm run lint
+
+      - name: Vérifier les types
+        run: npm run typecheck
+
+      - name: Construire l'app
+        run: npm run build
