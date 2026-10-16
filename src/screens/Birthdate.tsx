@@ -4,6 +4,7 @@ import { useUserStore } from '../store/userStore';
 import { themeMap } from '../context/ThemeContext';
 import { backgroundMap } from '../assets';
 import Button from '../components/Button';
+import { ChevronRight } from 'lucide-react';
 import OnboardingLayout from '../components/OnboardingLayout';
 import { api } from '../api';
 
@@ -145,7 +146,14 @@ export default function Birthdate() {
 
       {/* Suivant */}
       <div style={{ marginTop: 90 }}>
-        <Button title="Suivant" onPress={handleNext} loading={loading} color="#FFFFFF" textColor={BRAND.primary} />
+        <Button
+          title="Suivant"
+          onPress={handleNext}
+          loading={loading}
+          color="#FFFFFF"
+          textColor={BRAND.primary}
+          icon={<ChevronRight size={20} color={BRAND.primary} strokeWidth={2.5} />}
+        />
       </div>
     </OnboardingLayout>
   );

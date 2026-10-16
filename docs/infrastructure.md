@@ -10,7 +10,7 @@ L'organisation du code est dans [architecture.md](architecture.md), et la justif
 |---|---|---|
 | Hébergement de l'application | Netlify, offre gratuite | Fichiers statiques servis par un CDN (serveurs répartis dans le monde, dont l'Europe) |
 | Adresse | https://app-tribu.netlify.app | HTTPS inclus |
-| Déploiement | Netlify, à chaque push sur `master` | Seulement si le lint, les tests et le build passent (`netlify.toml`) |
+| Déploiement | Netlify, à chaque push sur `master` | Seulement si le lint, les tests et le build passent : Netlify relance ces vérifications lui-même avant de publier (`netlify.toml`), en même temps que la CI |
 | Intégration continue | GitHub Actions | Lint, types, tests avec couverture, build (`.github/workflows/ci.yml`) |
 | Réglages | `netlify.toml` (dans le projet) | Commande de build, version de Node.js, dossier publié, en-têtes de sécurité |
 
@@ -130,4 +130,5 @@ Ces améliorations seront traitées avec l'audit d'accessibilité et d'éco-conc
 |---|---|
 | Token dans le `localStorage` | Cookie `HttpOnly` (demande des changements dans l'API) |
 | Tout le code dans un seul fichier JavaScript | Chargement des écrans à la demande (*lazy loading*) si l'app grossit |
+| Netlify n'attend pas la CI GitHub : il refait les mêmes vérifications, sauf le seuil de couverture | Déployer depuis la CI (`netlify deploy` dans `ci.yml`, builds automatiques de Netlify coupés) |
 | Offre gratuite de Netlify | Offre payante si la bande passante ou les minutes de build ne suffisent plus |

@@ -12,14 +12,15 @@ import { api } from '../api';
 // Avant l'onboarding, l'app est toujours en vert (couleurs de la maquette)
 const BRAND = themeMap.green;
 
-// Règle du mot de passe (identique au backend) : 10 caractères minimum + 4 critères
+// Règle du mot de passe (identique au backend) : 5 critères, dont 10 caractères minimum
+const MIN_PASSWORD_LENGTH = 10;
 const PASSWORD_CHECKS = [
+  (p: string) => p.length >= MIN_PASSWORD_LENGTH,
   (p: string) => /[a-z]/.test(p),
   (p: string) => /[A-Z]/.test(p),
   (p: string) => /\d/.test(p),
   (p: string) => /[^A-Za-z0-9]/.test(p),
 ];
-const MIN_PASSWORD_LENGTH = 10;
 
 type FieldRef = HTMLInputElement & HTMLTextAreaElement;
 
@@ -45,7 +46,7 @@ export default function Signup() {
 
   // Jauge : un segment par critère respecté
   const passedChecks = PASSWORD_CHECKS.filter(check => check(password)).length;
-  const isPasswordValid = passedChecks === PASSWORD_CHECKS.length && password.length >= MIN_PASSWORD_LENGTH;
+  const isPasswordValid = passedChecks === PASSWORD_CHECKS.length;
 
   const handlePasswordFocus = () => {
     // Laisse le clavier s'ouvrir, puis montre la règle et la jauge

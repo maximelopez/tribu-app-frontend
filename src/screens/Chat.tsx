@@ -10,7 +10,8 @@ import NotificationPanel from '../components/NotificationPanel';
 import { sendIcon } from '../assets';
 
 // Couleurs Figma (écran chat)
-const CHAT_BG = '#F3F3F8';
+// Fond transparent : la courbe décorative reste visible derrière les messages
+const CHAT_BG = 'transparent';
 const TEXT_GREY = '#969696';
 const INPUT_TEXT = '#0D1217';
 

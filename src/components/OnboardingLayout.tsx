@@ -30,10 +30,18 @@ export default function OnboardingLayout({ background, backgroundColor, showBack
         <button
           onClick={() => navigate(-1)}
           aria-label="Retour"
-          className="absolute flex items-center justify-center"
-          style={{ top: 'calc(8px + env(safe-area-inset-top))', left: 8, width: 40, height: 40, background: 'none', border: 'none' }}
+          className="absolute flex items-center justify-center bg-white active:opacity-80"
+          style={{
+            top: 'calc(16px + env(safe-area-inset-top))',
+            left: 16,
+            width: 44,
+            height: 44,
+            borderRadius: 22,
+            border: 'none',
+            boxShadow: '0px 2px 4px rgba(13, 23, 18, 0.1)',
+          }}
         >
-          <ChevronLeft size={28} color="#FFFFFF" strokeWidth={2} />
+          <ChevronLeft size={24} color="#161616" strokeWidth={2} />
         </button>
       )}
 

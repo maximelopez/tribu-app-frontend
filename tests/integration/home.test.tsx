@@ -35,32 +35,37 @@ describe('Accueil sans Tribu', () => {
 });
 
 describe('Accueil avec une Tribu', () => {
-  it('affiche la Tribu, son classement et les idées dans sa ville', async () => {
+  it('affiche la carte de la Tribu, ses membres et les idées dans sa ville', async () => {
     loginAs({ familyId: 'f1' });
     useFamilyStore.getState().setFamily(family);
     mockApi(catalogRoute);
     renderScreen(<Home />);
 
     expect(screen.getByText('Champions')).toBeInTheDocument();
+    expect(screen.getByText('2 membres · Angers')).toBeInTheDocument();
+    expect(screen.getByText('620 / 1000 pts')).toBeInTheDocument();
+    expect(screen.getByText('380 pts avant le niveau 5')).toBeInTheDocument();
     expect(screen.getByText('Thomas')).toBeInTheDocument();
-    expect(screen.getByText('Rien de prévu cette semaine')).toBeInTheDocument();
+    expect(screen.getByText('Moi')).toBeInTheDocument();
+    expect(screen.getByText('0 / 4 activités')).toBeInTheDocument();
     expect(await screen.findByText('Où sortir avec ta Tribu ?')).toBeInTheDocument();
     expect(screen.getAllByText('Pique-nique').length).toBeGreaterThan(0);
     expect(screen.getAllByText('Jeux de société').length).toBeGreaterThan(0); // sans ville : partout
     expect(screen.queryByText('Bowling')).not.toBeInTheDocument(); // à Nantes
   });
 
-  it('montre l\'activité en cours à valider et ne la propose plus', async () => {
+  it('montre l\'activité en cours en haut et ne la propose plus', async () => {
     loginAs({ familyId: 'f1' });
     useFamilyStore.getState().setFamily(family);
     useFamilyStore.getState().setCurrentActivity(familyActivity(picnic));
     mockApi(catalogRoute);
     renderScreen(<Home />);
 
-    expect(screen.getByText('Pique-nique à valider')).toBeInTheDocument();
+    expect(screen.getByText('En cours')).toBeInTheDocument();
+    expect(screen.getAllByText('Pique-nique')).toHaveLength(1); // seulement dans la carte « En cours »
     await screen.findByText('Où sortir avec ta Tribu ?');
-    expect(screen.queryByText('Pique-nique')).not.toBeInTheDocument(); // déjà en cours
-    await userEvent.click(screen.getByRole('button', { name: 'Valider' }));
+    expect(screen.getAllByText('Pique-nique')).toHaveLength(1); // pas dans les idées : déjà en cours
+    await userEvent.click(screen.getByRole('button', { name: "Terminer l'activité" }));
     expect(screen.getByTestId('path')).toHaveTextContent('/activites/a1');
   });
 
@@ -97,5 +102,21 @@ describe('Accueil avec une Tribu', () => {
     expect(await within(panel).findByText('Demande acceptée')).toBeInTheDocument();
     expect(calls.find(c => c.path === 'families/f1/join-requests/u7')?.body).toEqual({ accept: true });
     expect(calls.some(c => c.path === 'notifications/read')).toBe(true);
+  });
+});
+
+describe('Objectif de la semaine', () => {
+  it('compte les activités terminées depuis lundi', async () => {
+    loginAs({ familyId: 'f1' });
+    useFamilyStore.getState().setFamily(family);
+    const now = new Date();
+    useFamilyStore.getState().setCompletedActivities([
+      familyActivity(picnic, { id: 'fa1', status: 'completed', completedAt: now.toISOString() }),
+      familyActivity(picnic, { id: 'fa2', status: 'completed', completedAt: new Date(now.getTime() - 30 * 24 * 3600 * 1000).toISOString() }),
+    ]);
+    mockApi(catalogRoute);
+    renderScreen(<Home />);
+    expect(screen.getByText('1 / 4 activités')).toBeInTheDocument();
+    expect(screen.getByText('Encore 3 activités pour boucler la semaine !')).toBeInTheDocument();
   });
 });

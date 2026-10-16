@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { ChevronLeft, X } from 'lucide-react';
 import Button from './Button';
 
 // Rouge des actions qui suppriment ou abandonnent quelque chose (Figma : btn-danger)
@@ -65,8 +66,23 @@ export default function ConfirmModal({
         </div>
 
         <div className="flex flex-col w-full" style={{ gap: 10, paddingTop: 8 }}>
-          <Button title={confirmLabel} onPress={onConfirm} loading={loading} color={confirmColor} />
-          <Button title={cancelLabel} onPress={onCancel} disabled={loading} color="#F3F3F8" textColor="#161616" />
+          <Button
+            title={confirmLabel}
+            onPress={onConfirm}
+            loading={loading}
+            color={confirmColor}
+            icon={<X size={18} color="#FFFFFF" strokeWidth={2.5} />}
+            iconPosition="left"
+          />
+          <Button
+            title={cancelLabel}
+            onPress={onCancel}
+            disabled={loading}
+            color="#F3F3F8"
+            textColor="#161616"
+            icon={<ChevronLeft size={18} color="#161616" strokeWidth={2.5} />}
+            iconPosition="left"
+          />
         </div>
       </div>
     </div>

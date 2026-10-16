@@ -4,6 +4,7 @@ import { useTheme } from '../context/ThemeContext';
 import { useUserStore } from '../store/userStore';
 import { AVATARS, backgroundMap, getAvatar } from '../assets';
 import Button from '../components/Button';
+import { ChevronRight } from 'lucide-react';
 import OnboardingLayout from '../components/OnboardingLayout';
 import { api } from '../api';
 
@@ -76,6 +77,7 @@ export default function AvatarSelection() {
           disabled={!selectedAvatar}
           color="#FFFFFF"
           textColor={theme.primary}
+          icon={<ChevronRight size={20} color={theme.primary} strokeWidth={2.5} />}
         />
       </div>
     </OnboardingLayout>

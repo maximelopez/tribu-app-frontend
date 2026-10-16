@@ -11,6 +11,7 @@ import useCatalog, { sortByNewest } from '../hooks/useCatalog';
 import Spinner from '../components/Spinner';
 import { mascotteActivity } from '../assets';
 import FloatingMascot from '../components/FloatingMascot';
+import HeaderBell from '../components/HeaderBell';
 
 // Couleurs Figma
 const TEXT_STRONG = '#161616';
@@ -86,6 +87,10 @@ export default function Activities() {
       {/* En-tête : titre et ville */}
       <div className="relative" style={{ padding: '16px 16px 0' }}>
         <h1 className="font-outfit-bold font-normal m-0" style={{ fontSize: 20, color: TEXT_STRONG }}>Activités</h1>
+        {/* Cloche des notifications (Figma : bouton-notifications) */}
+        <div className="absolute" style={{ right: 16, top: 16 }}>
+          <HeaderBell />
+        </div>
         <button
           onClick={() => setCityMenuOpen(open => !open)}
           aria-haspopup="listbox"

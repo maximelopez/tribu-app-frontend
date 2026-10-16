@@ -91,6 +91,8 @@ src/
 ├── legal.ts           Textes de la politique de confidentialité et des CGU
 ├── categories.ts      Libellés des catégories d'activités
 ├── badges.ts          Couleurs des badges, date d'obtention (« Obtenu le 12 oct. »)
+├── weeklyGoal.ts      Objectif de la semaine (4 activités terminées depuis lundi)
+├── decoForRoute.ts    Courbe décorative à afficher selon l'écran
 ├── api.ts             Appels au backend avec le token (déconnexion automatique si 401)
 ├── socket.ts          Connexion Socket.IO avec le token
 ├── screens/           Un fichier par écran
@@ -116,15 +118,18 @@ e2e/                   Tests système (Playwright) : parcours complets avec le v
 | Composant | Rôle |
 |---|---|
 | `Button`, `Input` | Bouton principal (48px) et champ de formulaire |
-| `ScreenHeader` | En-tête des écrans enfants (titre + bouton retour rond) |
+| `ScreenHeader` | En-tête des écrans (titre, bouton retour rond, place à droite pour la cloche) |
+| `DecoBackground` | Courbe décorative en fond des écrans, à la couleur du thème |
 | `OnboardingLayout` | Fond à motifs et logo des écrans d'onboarding (date, couleur, avatar) |
 | `TabBar` | Barre du bas (point rouge sur Chat s'il y a des messages non lus) |
 | `ActivityCard` | Carte d'activité avec sa photo (ou l'illustration de sa catégorie), option `points` |
 | `BadgeCard` | Carte d'un badge (grisée avec la progression s'il n'est pas obtenu) |
 | `NoFamilyState` | État vide « pas encore de Tribu » (Chat, Récompenses) |
 | `FloatingMascot` | Mascotte qui flotte dans son rond avec son ombre, en boucle (états vides, écran Récompense). Taille `grande` ou `petite` |
-| `FamilyLeaderboard`, `LeaderboardRow` | Classement des membres de la Tribu |
-| `NotificationBell`, `NotificationPanel` | Cloche de l'Accueil (compteur de non lues) et panneau des notifications |
+| `TribeCard` | Carte de la Tribu sur l'Accueil : niveau, progression, objectif de la semaine, membres |
+| `OngoingActivityCard` | Carte de l'activité en cours sur l'Accueil |
+| `NotificationBell`, `NotificationPanel` | Cloche (compteur de non lues) et panneau des notifications |
+| `HeaderBell` | Cloche + panneau, prête à poser en haut d'un écran (Activités, Récompenses, Profil) |
 | `MessageBubble` | Message du chat |
 | `ThemeSwitcher` | Choix du thème dans le Profil |
 | `ThemeProvider` | Fournit le thème à toute l'app (celui de l'utilisateur, ou vert par défaut) |
@@ -220,12 +225,13 @@ et le nombre de messages non lus, pour rattraper ce qui s'est passé pendant la 
 - Chaque participant d'une activité terminée gagne ses points, et la Tribu gagne les points de tous
   les participants.
 - Le niveau de la Tribu (1 à 10) et sa progression sont calculés par le backend (`levelInfo`).
-- `FamilyLeaderboard` affiche le niveau, la barre de progression, « Encore X pts avant le niveau N »
-  et le classement des membres par points.
+- `TribeCard` affiche le niveau, la barre de progression, « X pts avant le niveau N »
+  et les membres classés par nombre d'activités.
+- Objectif de la semaine : 4 activités terminées depuis lundi, calculé dans l'app (`weeklyGoal.ts`).
 
 ### Notifications
 
-- Cloche en haut de l'Accueil (avec ou sans Tribu), avec le nombre de notifications non lues.
+- Cloche en haut de l'Accueil, des Activités, des Récompenses et du Profil, avec le nombre de notifications non lues.
 - Le panneau affiche les 30 dernières (`GET /notifications`). L'ouvrir marque tout comme lu
   (`PATCH /notifications/read`), mais le point vert reste visible tant que le panneau est ouvert.
 - Les notifications déjà lues ont un fond grisé. Elles sont supprimées après 14 jours (une demande en
@@ -366,6 +372,9 @@ Le résultat est visible dans l'onglet *Actions* du dépôt et sur le badge en h
 | En-têtes de sécurité | `Content-Security-Policy`, `X-Frame-Options`... (voir [docs/infrastructure.md](docs/infrastructure.md)) |
 
 Si le lint, un test ou TypeScript échoue, Netlify ne déploie pas et l'ancienne version reste en ligne.
+Netlify n'attend pas la fin de la CI GitHub : les deux se lancent en même temps à chaque push. Netlify relance
+lui-même le lint, les tests et le build avant de publier, donc une version cassée n'est jamais mise en ligne.
+Le seuil de couverture, lui, n'est vérifié que par la CI.
 Toutes les adresses sont redirigées vers `index.html` (`public/_redirects`), pour qu'un lien direct vers un écran fonctionne.
 
 ## À faire

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
-import { ChevronRight, Pencil, X } from 'lucide-react';
+import { ChevronRight, LogOut, Pencil, X } from 'lucide-react';
 import { useUserStore } from '../store/userStore';
 import { useFamilyStore, toCatalogActivity } from '../store/familyStore';
 import type { FamilyActivity } from '../store/familyStore';
@@ -8,7 +8,8 @@ import { useTheme } from '../context/ThemeContext';
 import { AVATARS, getAvatar } from '../assets';
 import ThemeSwitcher from '../components/ThemeSwitcher';
 import Button from '../components/Button';
-import ActivityCard from '../components/ActivityCard';
+import ActivityTile from '../components/ActivityTile';
+import HeaderBell from '../components/HeaderBell';
 import BadgeCard from '../components/BadgeCard';
 import useFamilyBadges from '../hooks/useFamilyBadges';
 import Spinner from '../components/Spinner';
@@ -102,8 +103,11 @@ export default function Profile() {
   return (
     <div className="flex-1 min-h-0 flex flex-col">
       {/* En-tête */}
-      <div className="flex items-center justify-center shrink-0" style={{ height: 50, marginTop: 'env(safe-area-inset-top)' }}>
+      <div className="relative flex items-center justify-center shrink-0" style={{ height: 60, marginTop: 'env(safe-area-inset-top)' }}>
         <h1 className="font-outfit-bold font-normal m-0" style={{ fontSize: 20, color: '#161616' }}>Profil</h1>
+        <div className="absolute" style={{ right: 16, top: 8 }}>
+          <HeaderBell />
+        </div>
       </div>
 
       <div className="flex-1 overflow-y-auto no-scrollbar flex flex-col" style={{ padding: '18px 16px 24px 17px', gap: 18 }}>
@@ -178,18 +182,10 @@ export default function Profile() {
                 </button>
               )}
             </div>
-            <div className="flex flex-col" style={{ gap: 12 }}>
+            {/* Carrousel horizontal (Figma : carte-activite-klub) */}
+            <div className="flex overflow-x-auto no-scrollbar" style={{ gap: 12, margin: '0 -16px 0 -17px', padding: '2px 16px 12px 17px' }}>
               {myLatestActivities.map(fa => (
-                <ActivityCard
-                  key={fa.id}
-                  name={fa.activity.name}
-                  description={fa.activity.description}
-                  isPartner={fa.activity.isPartner}
-                  offer={fa.activity.offer}
-                  imageUrl={fa.activity.imageUrl}
-                  category={fa.activity.category}
-                  onPress={() => openActivityDetail(fa)}
-                />
+                <ActivityTile key={fa.id} activity={toCatalogActivity(fa)} onPress={() => openActivityDetail(fa)} />
               ))}
             </div>
           </div>
@@ -227,7 +223,13 @@ export default function Profile() {
         </div>
 
         {/* Déconnexion (Figma : bouton plein à la couleur du thème, en bas du profil) */}
-        <Button title="Se déconnecter" onPress={logoutUser} color={theme.primary} />
+        <Button
+          title="Se déconnecter"
+          onPress={logoutUser}
+          color={theme.primary}
+          icon={<LogOut size={20} color="#FFFFFF" strokeWidth={2} />}
+          iconPosition="left"
+        />
       </div>
 
       {/* Modale : choisir un avatar (Figma : profil-choix-avatar) */}

@@ -96,14 +96,19 @@ describe('Écran Récompense', () => {
     familyName: 'Champions', pointsEarned: 100, familyPoints: 1020, previousLevel: 4,
     levelInfo: { level: 5, isMax: false, remaining: 480, progress: 0.1 },
     newBadges: [badge('premier-pas', 'Premier pas', { unlocked: true, unlockedAt: '2026-10-14T10:00:00.000Z' })],
+    activity: { imageUrl: null, category: 'nature' as const },
   };
 
   it('félicite la Tribu avec les points, le nouveau niveau et les badges', async () => {
     renderScreen(<ActivityReward />, { path: '/recompense', state: reward });
     expect(screen.getByText('Bravo, Champions !')).toBeInTheDocument();
     expect(screen.getByText('Vous êtes Niveau 5 !')).toBeInTheDocument();
+    expect(screen.getByText('Nouveau badge débloqué')).toBeInTheDocument();
     expect(screen.getByText('Premier pas')).toBeInTheDocument();
-    expect(await screen.findByText('+100', {}, { timeout: 2000 })).toBeInTheDocument(); // les points défilent
+    expect(screen.getByText('Nature')).toBeInTheDocument();
+    expect(screen.getByText('Terminée')).toBeInTheDocument();
+    expect(screen.getByText('Niveau supérieur')).toBeInTheDocument();
+    expect(await screen.findByText('+100 points', {}, { timeout: 2000 })).toBeInTheDocument(); // les points défilent
     await userEvent.click(screen.getByRole('button', { name: 'Continuer' }));
     expect(screen.getByTestId('path')).toHaveTextContent(/^\/$/);
   });

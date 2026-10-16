@@ -13,6 +13,8 @@ interface ButtonProps {
   icon?: ReactNode;
   borderColor?: string;
   type?: 'button' | 'submit';
+  // Place de l'icône : avant ou après le texte
+  iconPosition?: 'left' | 'right';
 }
 
 // Bouton principal (Figma : "Sign in" — dégradé Color → Color-Gradient, 48px, coins 16)
@@ -28,6 +30,7 @@ export default function Button({
   icon,
   borderColor,
   type = 'button',
+  iconPosition = 'right',
 }: ButtonProps) {
   const { theme } = useTheme();
   const isDisabled = loading || disabled;
@@ -45,7 +48,7 @@ export default function Button({
       type={type}
       onClick={handleClick}
       disabled={isDisabled}
-      className="w-full shrink-0 flex items-center justify-center gap-4 rounded-2xl transition-opacity active:opacity-80"
+      className="w-full shrink-0 flex items-center justify-center gap-2 rounded-2xl transition-opacity active:opacity-80"
       style={{
         height: 48,
         border: borderColor ? `0.5px solid ${borderColor}` : 'none',
@@ -57,10 +60,11 @@ export default function Button({
         <Spinner color={textColor || '#FFFFFF'} />
       ) : (
         <>
+          {iconPosition === 'left' && icon}
           <span className="font-outfit-bold text-base" style={{ color: textColor || '#FFFFFF' }}>
             {title}
           </span>
-          {icon}
+          {iconPosition === 'right' && icon}
         </>
       )}
     </button>

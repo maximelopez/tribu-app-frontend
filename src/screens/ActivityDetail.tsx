@@ -181,6 +181,7 @@ export default function ActivityDetail() {
           previousLevel: family?.levelInfo?.level ?? data.levelInfo.level,
           levelInfo: data.levelInfo,
           newBadges: data.newBadges ?? [], // badges débloqués par cette activité
+          activity: { imageUrl: activity.imageUrl, category: activity.category }, // photo et catégorie en haut
         },
       });
 

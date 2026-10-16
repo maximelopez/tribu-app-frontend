@@ -70,9 +70,9 @@ Quelques principes :
 
 ## 5. Scénarios testés
 
-**112 tests automatiques** au total : 27 tests unitaires, 77 tests d'intégration et 8 tests système.
+**116 tests automatiques** au total : 30 tests unitaires, 78 tests d'intégration et 8 tests système.
 
-### Tests unitaires (27)
+### Tests unitaires (30)
 
 | Thème | Scénarios | Résultat attendu |
 |---|---|---|
@@ -81,9 +81,10 @@ Quelques principes :
 | Activités | Tri par nouveauté (activités sans date à la fin), conversion d'une activité de la Tribu, libellés des catégories | Ordre correct, liste de départ non modifiée |
 | Images | Photo de l'activité, illustration de la catégorie, catégorie inconnue, avatar par défaut | La bonne image, ou rien |
 | Stores | Session gardée dans le `localStorage`, déconnexion, activités supprimées du catalogue ignorées, messages non lus, remise à zéro | Données à jour et cohérentes |
+| Objectif de la semaine | Début de semaine (lundi), activités comptées depuis lundi, textes selon le nombre restant | « Encore N activités », « Plus qu'une activité », « Objectif atteint » |
 | Appels au backend | Adresse, token, corps JSON, session expirée (401), mauvais mot de passe (401 sans être connecté) | Déconnexion et retour à la connexion seulement si la session a expiré |
 
-### Tests d'intégration (77)
+### Tests d'intégration (78)
 
 | Thème | Scénarios | Résultat attendu |
 |---|---|---|
@@ -92,7 +93,7 @@ Quelques principes :
 | Inscription | Mot de passe faible, CGU non acceptées, inscription réussie, email déjà utilisé | Aucun appel au serveur tant que le formulaire n'est pas valide, accord aux CGU envoyé |
 | Accès aux écrans | Écran protégé sans être connecté, onboarding pas terminé, pages légales | Inscription, onboarding, ou page légale accessible sans compte |
 | Onboarding | Date incomplète ou impossible, parcours complet (date, couleur, avatar, chargement) | Les 3 choix enregistrés, puis l'app s'ouvre |
-| Accueil | Sans Tribu, demande en attente (annulation), avec Tribu (classement, idées dans la ville), activité en cours, activité déjà faite, notifications | Les bonnes cartes, les idées sans les activités en cours ou déjà faites, demande acceptée depuis la cloche |
+| Accueil | Sans Tribu, demande en attente (annulation), avec Tribu (carte Tribu : niveau, objectif de la semaine, membres ; idées dans la ville), activité en cours, activité déjà faite, notifications | Les bonnes cartes, les idées sans les activités en cours ou déjà faites, demande acceptée depuis la cloche |
 | Rechercher une Tribu | Filtre par ville dès l'arrivée, recherche dès 1 caractère, filtre par ville, aucun résultat, recherche effacée | Les bons résultats et les bons messages |
 | Détails d'une Tribu | Informations de la Tribu, envoi d'une demande, demande refusée par le serveur, Tribu introuvable | « Demande envoyée ! » en restant sur l'écran, ou le message d'erreur |
 | Créer une Tribu | Ville manquante, création avec la liste déroulante | Tribu créée avec la ville choisie, retour à l'accueil |
@@ -130,7 +131,7 @@ Chaque user story des spécifications (voir le `docs/specifications.md` du backe
 | T3 Demander à rejoindre | `integration/family` (envoyer), `integration/home` (annuler), `e2e/parcours-rejoindre` | R6 |
 | T4 Accepter ou refuser | `integration/home` (accepter depuis la cloche), `integration/realtime` (acceptée, refusée), `e2e/parcours-rejoindre` | R7 |
 | T5 Modifier la Tribu | `integration/realtime` (Tribu renommée) | R8 |
-| T6 Classement des membres | `integration/home` (classement) | R9 |
+| T6 Classement des membres | `integration/home` (membres de la carte Tribu) | R9 |
 | A1 Parcourir le catalogue | `integration/activities` (catalogue) | R10 |
 | A2 Lancer une activité | `integration/activities` (lancer, participants), `integration/realtime` (lancée par un autre membre) | R11 |
 | A3 Terminer une activité | `integration/activities` (terminer), `e2e/parcours-activite` | R12 |

@@ -27,7 +27,6 @@ export default function TabBar() {
     <nav
       className="shrink-0"
       style={{
-        backgroundColor: '#F3F3F8',
         padding: '8px 7px',
         paddingBottom: 'max(8px, env(safe-area-inset-bottom))',
       }}

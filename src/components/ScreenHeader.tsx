@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import { ChevronLeft } from 'lucide-react';
 import { useNavigate } from 'react-router';
 
@@ -7,6 +8,8 @@ interface ScreenHeaderProps {
   showBack?: boolean;
   titleFont?: 'bold' | 'regular';
   backgroundColor?: string;
+  // Élément à droite du titre (ex : cloche des notifications)
+  right?: ReactNode;
 }
 
 // En-tête des écrans "empilés" (équivalent du header natif de mobile)
@@ -14,7 +17,8 @@ export default function ScreenHeader({
   title = '',
   showBack = true,
   titleFont = 'bold',
-  backgroundColor = '#F3F3F8',
+  backgroundColor = 'transparent',
+  right,
 }: ScreenHeaderProps) {
   const navigate = useNavigate();
 
@@ -56,6 +60,11 @@ export default function ScreenHeader({
           {title}
         </h1>
       ) : null}
+      {right && (
+        <div className="absolute" style={{ right: 16, bottom: 8 }}>
+          {right}
+        </div>
+      )}
     </header>
   );
 }

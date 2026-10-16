@@ -1,5 +1,8 @@
-import { Navigate, Outlet, Route, Routes } from 'react-router';
+import { Navigate, Outlet, Route, Routes, useLocation } from 'react-router';
 import { useUserStore } from './store/userStore';
+import { useFamilyStore } from './store/familyStore';
+import DecoBackground from './components/DecoBackground';
+import { decoForRoute } from './decoForRoute';
 import useFamilyData from './hooks/useFamilyData';
 import useRealtime from './hooks/useRealtime';
 import TabBar from './components/TabBar';
@@ -25,15 +28,23 @@ import AllBadges from './screens/AllBadges';
 import BadgeDetail from './screens/BadgeDetail';
 import LegalPage from './screens/LegalPage';
 
-// Cadre "téléphone" : largeur mobile, centré sur grand écran
+// Cadre "téléphone" : largeur mobile, centré sur grand écran, avec la courbe décorative de l'écran
 function PhoneFrame() {
+  const { pathname } = useLocation();
+  const hasFamily = useUserStore(state => !!state.user?.familyId);
+  const hasOngoingActivity = useFamilyStore(state => !!state.currentActivity);
+  const deco = decoForRoute(pathname, hasFamily, hasOngoingActivity);
+
   return (
     <div className="h-full flex justify-center">
       <div
         className="relative w-full h-full flex flex-col overflow-hidden"
         style={{ maxWidth: 430, backgroundColor: '#F3F3F8', boxShadow: '0 0 24px rgba(0,0,0,0.06)' }}
       >
-        <Outlet />
+        {deco && <DecoBackground variant={deco.variant} flipped={deco.flipped} />}
+        <div className="relative flex-1 min-h-0 flex flex-col">
+          <Outlet />
+        </div>
       </div>
     </div>
   );

@@ -3,6 +3,7 @@ import { useUserStore } from '../store/userStore';
 import { useTheme } from '../context/ThemeContext';
 import useFamilyBadges from '../hooks/useFamilyBadges';
 import ScreenHeader from '../components/ScreenHeader';
+import HeaderBell from '../components/HeaderBell';
 import NoFamilyState from '../components/NoFamilyState';
 import BadgeCard from '../components/BadgeCard';
 import Button from '../components/Button';
@@ -45,7 +46,7 @@ export default function Rewards() {
 
   return (
     <div className="flex-1 min-h-0 flex flex-col">
-      <ScreenHeader title="Récompenses" showBack={false} />
+      <ScreenHeader title="Récompenses" showBack={false} right={<HeaderBell />} />
 
       {loading && !data ? (
         <div className="flex-1 flex items-center justify-center">

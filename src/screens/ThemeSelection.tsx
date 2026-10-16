@@ -4,6 +4,7 @@ import type { ThemeColor } from '../context/ThemeContext';
 import { useUserStore } from '../store/userStore';
 import { backgroundMap } from '../assets';
 import Button from '../components/Button';
+import { ChevronRight } from 'lucide-react';
 import OnboardingLayout from '../components/OnboardingLayout';
 import { api } from '../api';
 
@@ -67,7 +68,13 @@ export default function ThemeSelection() {
 
       {/* Suivant */}
       <div style={{ marginTop: 91 }}>
-        <Button title="Suivant" onPress={() => navigate('/bienvenue/avatar')} color="#FFFFFF" textColor={theme.primary} />
+        <Button
+          title="Suivant"
+          onPress={() => navigate('/bienvenue/avatar')}
+          color="#FFFFFF"
+          textColor={theme.primary}
+          icon={<ChevronRight size={20} color={theme.primary} strokeWidth={2.5} />}
+        />
       </div>
     </OnboardingLayout>
   );
