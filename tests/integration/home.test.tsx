@@ -65,7 +65,28 @@ describe('Accueil avec une Tribu', () => {
     expect(screen.getAllByText('Pique-nique')).toHaveLength(1); // seulement dans la carte « En cours »
     await screen.findByText('Où sortir avec ta Tribu ?');
     expect(screen.getAllByText('Pique-nique')).toHaveLength(1); // pas dans les idées : déjà en cours
+  });
+
+  it('« Terminer l\'activité » ouvre le détail de l\'activité', async () => {
+    loginAs({ familyId: 'f1' });
+    useFamilyStore.getState().setFamily(family);
+    useFamilyStore.getState().setCurrentActivity(familyActivity(picnic));
+    mockApi(catalogRoute);
+    renderScreen(<Home />);
+
     await userEvent.click(screen.getByRole('button', { name: "Terminer l'activité" }));
+    expect(screen.getByTestId('path')).toHaveTextContent('/activites/a1');
+  });
+
+  it('les autres membres peuvent seulement voir l\'activité en cours', async () => {
+    loginAs({ familyId: 'f1' });
+    useFamilyStore.getState().setFamily(family);
+    useFamilyStore.getState().setCurrentActivity(familyActivity(picnic, { startedBy: 'u5' }));
+    mockApi(catalogRoute);
+    renderScreen(<Home />);
+
+    expect(screen.queryByRole('button', { name: "Terminer l'activité" })).not.toBeInTheDocument();
+    await userEvent.click(screen.getByRole('button', { name: "Voir l'activité" }));
     expect(screen.getByTestId('path')).toHaveTextContent('/activites/a1');
   });
 

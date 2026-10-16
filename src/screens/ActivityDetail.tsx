@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router';
 import type { ReactNode } from 'react';
-import { Award, Check, ChevronLeft, CircleCheck, Image as ImageIcon, MapPin } from 'lucide-react';
+import { Award, Check, ChevronLeft, CircleCheck, Flag, Image as ImageIcon, MapPin, X } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 import { useUserStore } from '../store/userStore';
 import { useFamilyStore } from '../store/familyStore';
@@ -12,6 +12,7 @@ import ScreenHeader from '../components/ScreenHeader';
 import { CATEGORY_LABELS } from '../categories';
 import Spinner from '../components/Spinner';
 import ConfirmModal from '../components/ConfirmModal';
+import useCompleteActivity from '../hooks/useCompleteActivity';
 import { api } from '../api';
 
 // Couleurs Figma
@@ -47,7 +48,6 @@ export default function ActivityDetail() {
 
   const user = useUserStore(state => state.user);
   const family = useFamilyStore(state => state.family);
-  const setFamily = useFamilyStore(state => state.setFamily);
   const currentActivity = useFamilyStore(state => state.currentActivity);
   const setCurrentActivity = useFamilyStore(state => state.setCurrentActivity);
   const completedActivities = useFamilyStore(state => state.completedActivities);
@@ -74,8 +74,12 @@ export default function ActivityDetail() {
 
   // Membres cochés pour participer
   const [participants, setParticipants] = useState<string[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
+  const [requestLoading, setLoading] = useState(false);
+  const [requestError, setErrorMessage] = useState('');
+  // Terminer l'activité : partagé avec l'Accueil
+  const { completeActivity, completing, completeError } = useCompleteActivity();
+  const loading = requestLoading || completing;
+  const errorMessage = requestError || completeError;
 
   // Copie figée de l'activité en cours pendant qu'on quitte l'écran
   // (évite d'afficher un instant la liste des membres une fois l'activité terminée/annulée)
@@ -150,51 +154,12 @@ export default function ActivityDetail() {
   };
 
   // Terminer : chaque participant gagne les points (seulement celui qui l'a lancée)
-  const handleCompleteActivity = async () => {
-    if (!ongoing || !user?.familyId || loading) return;
-
-    setLoading(true);
+  const handleCompleteActivity = () => {
+    if (!ongoing || loading) return;
     setErrorMessage('');
     // Figé dès maintenant : le serveur prévient la Tribu en temps réel (familyActivityUpdated)
     // avant même de répondre, ce qui vide l'activité en cours pendant la requête
-    setLeavingActivity(ongoing);
-
-    try {
-      const response = await api(`families/${user.familyId}/activities/${ongoing.id}/complete`, {
-        method: 'PATCH',
-      });
-      const data = await response.json();
-
-      if (!response.ok) {
-        setLeavingActivity(null);
-        setErrorMessage(data.message || 'Une erreur est survenue.');
-        return;
-      }
-
-      // Écran récompense (remplace le détail : pas de retour possible dessus)
-      navigate('/recompense', {
-        replace: true,
-        state: {
-          familyName: family?.name ?? 'la Tribu',
-          pointsEarned: data.familyPointsEarned,
-          familyPoints: data.familyPoints,
-          previousLevel: family?.levelInfo?.level ?? data.levelInfo.level,
-          levelInfo: data.levelInfo,
-          newBadges: data.newBadges ?? [], // badges débloqués par cette activité
-          activity: { imageUrl: activity.imageUrl, category: activity.category }, // photo et catégorie en haut
-        },
-      });
-
-      // Points et niveau de la Tribu à jour tout de suite (le temps réel recharge le reste)
-      setFamily(prev => (prev ? { ...prev, points: data.familyPoints, levelInfo: data.levelInfo } : prev));
-      setCurrentActivity(null);
-    } catch (error) {
-      setLeavingActivity(null);
-      console.error("Erreur fin d'activité :", error);
-      setErrorMessage('Impossible de se connecter au serveur.');
-    } finally {
-      setLoading(false);
-    }
+    completeActivity(ongoing, { onStart: () => setLeavingActivity(ongoing), onFail: () => setLeavingActivity(null) });
   };
 
   // Annuler : aucun point, l'activité pourra être relancée
@@ -242,8 +207,8 @@ export default function ActivityDetail() {
 
   const image = getActivityImage(activity);
 
-  // Ligne d'un membre : avatar, prénom, case à cocher
-  const participantRow = (member: { id: string; name: string; avatar?: number | null }, checked: boolean, color: string, onPress?: () => void) => {
+  // Ligne d'un membre : avatar, prénom, case à cocher (pas de case pendant l'activité en cours)
+  const participantRow = (member: { id: string; name: string; avatar?: number | null }, checked: boolean, color: string, onPress?: () => void, showCheckbox = true) => {
     const content = (
       <>
         <img
@@ -253,7 +218,7 @@ export default function ActivityDetail() {
           style={{ width: 36, height: 36, borderRadius: 18, border: '3px solid #FFFFFF', objectFit: 'cover' }}
         />
         <span className="flex-1 min-w-0 font-outfit text-base truncate" style={{ color: TEXT_DARK }}>{member.name}</span>
-        <Checkbox checked={checked} color={color} />
+        {showCheckbox && <Checkbox checked={checked} color={color} />}
       </>
     );
     const style = { height: 56, borderRadius: 16, padding: '10px 16px', gap: 12, border: 'none' };
@@ -292,16 +257,24 @@ export default function ActivityDetail() {
   if (ongoing) {
     actions = isStarter ? (
       <>
-        <Button title="Terminer cette activité" onPress={handleCompleteActivity} loading={loading} color={theme.primary} />
-        {/* Abandonner : aucun point, avec confirmation (Figma : confirmation-pour-cloturer) */}
         <Button
-          title="Abandonner"
-          onPress={() => setShowCancelConfirm(true)}
-          disabled={loading}
-          color="#F3F3F8"
-          textColor="#161616"
-          borderColor="#CBD5E0"
+          title="Terminer l'activité"
+          onPress={handleCompleteActivity}
+          loading={loading}
+          color={theme.primary}
+          icon={<Flag size={20} color="#FFFFFF" strokeWidth={2} />}
+          iconPosition="left"
         />
+        {/* Abandonner : simple lien, aucun point, avec confirmation (Figma : confirmation-pour-cloturer) */}
+        <button
+          onClick={() => setShowCancelConfirm(true)}
+          disabled={loading}
+          className="flex items-center justify-center font-outfit-bold text-base active:opacity-70"
+          style={{ height: 40, gap: 8, border: 'none', background: 'none', color: TEXT_GREY }}
+        >
+          <X size={18} color={TEXT_GREY} strokeWidth={2} />
+          Abandonner l'activité
+        </button>
       </>
     ) : (
       infoText(`Activité en cours, lancée par ${starterName ?? 'un membre de la Tribu'} : c'est lui ou elle qui la validera.`)
@@ -366,6 +339,8 @@ export default function ActivityDetail() {
                 <CircleCheck size={16} color={SUCCESS} strokeWidth={2} />
                 Déjà réalisée
               </Tag>
+            ) : ongoing ? (
+              <Tag color={theme.primary} background={theme.transparent}>En cours</Tag>
             ) : (
               <Tag color={theme.primary} background={theme.transparent}>
                 {activity.isPartner ? activity.offer || 'Partenariat' : 'Gratuite'}
@@ -451,11 +426,17 @@ export default function ActivityDetail() {
           {(fixedParticipants || (hasFamily && activity.isActive !== false)) && (
             <div className="flex flex-col" style={{ gap: 8 }}>
               <span className="font-outfit-bold text-base" style={{ color: TEXT_DARK }}>
-                {completed ? 'Qui a participé ?' : 'Qui participe ?'}
+                {completed ? 'Qui a participé ?' : ongoing ? 'Ils participent' : 'Qui participe ?'}
               </span>
               {fixedParticipants
-                ? fixedParticipants.map(p => participantRow(p, true, participantsColor))
+                ? fixedParticipants.map(p => participantRow(p, true, participantsColor, undefined, !ongoing))
                 : members.map(member => participantRow(member, participants.includes(member.id), theme.primary, () => toggleParticipant(member.id)))}
+              {/* Activité en cours : combien de membres y participent (Figma : details-activité en cours) */}
+              {ongoing && (
+                <span className="font-outfit" style={{ fontSize: 14, color: TEXT_GREY }}>
+                  {ongoing.participants.length} membre{ongoing.participants.length > 1 ? 's' : ''} sur {members.length || ongoing.participants.length} participe{ongoing.participants.length > 1 ? 'nt' : ''} à cette activité.
+                </span>
+              )}
             </div>
           )}
         </div>

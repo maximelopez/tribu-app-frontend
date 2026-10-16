@@ -108,7 +108,9 @@ describe('Détail d\'une activité', () => {
     });
     renderDetail();
 
-    await userEvent.click(await screen.findByRole('button', { name: 'Terminer cette activité' }));
+    expect(await screen.findByText('Ils participent')).toBeInTheDocument();
+    expect(screen.getByText('2 membres sur 2 participent à cette activité.')).toBeInTheDocument();
+    await userEvent.click(screen.getByRole('button', { name: "Terminer l'activité" }));
     await waitFor(() => expect(screen.getByTestId('path')).toHaveTextContent(/^\/recompense$/));
     expect(useFamilyStore.getState().currentActivity).toBeNull();
     expect(useFamilyStore.getState().family?.points).toBe(720);
@@ -120,7 +122,7 @@ describe('Détail d\'une activité', () => {
     const calls = mockApi({ 'GET activities/a1': { body: picnic }, 'PATCH families/f1/activities/fa-a1/cancel': { body: {} } });
     renderDetail();
 
-    await userEvent.click(await screen.findByRole('button', { name: 'Abandonner' }));
+    await userEvent.click(await screen.findByRole('button', { name: "Abandonner l'activité" }));
     const dialog = screen.getByRole('dialog', { name: 'Abandonner cette activité ?' });
     await userEvent.click(within(dialog).getByRole('button', { name: 'Oui, abandonner' }));
 
@@ -135,7 +137,7 @@ describe('Détail d\'une activité', () => {
     mockApi({ 'GET activities/a1': { body: picnic } });
     renderDetail();
     expect(await screen.findByText(/lancée par Thomas/)).toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: 'Terminer cette activité' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: "Terminer l'activité" })).not.toBeInTheDocument();
   });
 
   it('indique une activité déjà réalisée par la Tribu', async () => {

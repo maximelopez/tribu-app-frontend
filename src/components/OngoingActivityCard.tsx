@@ -34,7 +34,7 @@ export default function OngoingActivityCard({ activity, city, isStarter, onOpen 
           {subtitle && <span className="font-outfit w-full truncate" style={{ fontSize: 14, color: '#5F5F5F' }}>{subtitle}</span>}
         </div>
       </div>
-      {/* Celui qui l'a lancée la termine. Les autres membres peuvent la voir */}
+      {/* Les deux boutons ouvrent le détail : celui qui l'a lancée la termine là-bas */}
       <Button
         title={isStarter ? "Terminer l'activité" : "Voir l'activité"}
         onPress={onOpen}

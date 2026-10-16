@@ -148,6 +148,7 @@ e2e/                   Tests système (Playwright) : parcours complets avec le v
 | `useFamilyChat` | Messages du chat, envoi, marquer comme lu |
 | `useCountUp` | Nombre qui défile de 0 à sa valeur (points gagnés sur l'écran Récompense) |
 | `useFamilyBadges` | Badges de sa Tribu (rechargés quand une activité est terminée) ou d'une autre Tribu |
+| `useCompleteActivity` | Termine l'activité en cours et ouvre l'écran Récompense |
 
 **Stores**
 

@@ -18,10 +18,11 @@ test('inscription, création de Tribu, activité terminée et récompense', asyn
   await page.getByRole('checkbox', { name: /Camille/ }).click();
   await page.getByRole('button', { name: 'Choisir cette activité' }).click();
 
-  // L'accueil affiche l'activité en cours
+  // L'accueil affiche l'activité en cours, on la termine depuis son détail
   await expect(page.getByText('En cours')).toBeVisible();
   await page.getByRole('button', { name: "Terminer l'activité" }).click();
-  await page.getByRole('button', { name: 'Terminer cette activité' }).click();
+  await expect(page.getByText('Ils participent')).toBeVisible();
+  await page.getByRole('button', { name: "Terminer l'activité" }).click();
 
   // Écran Récompense : points gagnés et premier badge
   await expect(page.getByRole('heading', { name: `Bravo, ${familyName} !` })).toBeVisible();
