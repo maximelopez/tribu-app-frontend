@@ -6,3 +6,5 @@ dev-dist
 *.tsbuildinfo
 .DS_Store
 coverage
+playwright-report
+test-results

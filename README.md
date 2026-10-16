@@ -24,6 +24,7 @@ avec un mode hors ligne basique. Elle parle au backend Tribu (API REST + Socket.
 - [Animations](#animations)
 - [PWA](#pwa)
 - [Qualité du code](#qualité-du-code)
+- [Tests système](#tests-système)
 - [CI/CD](#cicd)
 - [À faire](#à-faire)
 
@@ -49,6 +50,7 @@ depuis ton téléphone sur le même Wi-Fi (sans l'installation PWA, qui demande 
 | `npm run typecheck` | Vérifie les types (TypeScript) |
 | `npm test` | Lance les tests (Vitest) |
 | `npm run test:coverage` | Lance les tests avec le rapport de couverture (`coverage/index.html`), minimum 75 % des lignes |
+| `npm run test:e2e` | Lance les tests système (Playwright) : l'app et le vrai backend, dans un vrai navigateur (voir [Tests système](#tests-système)) |
 
 ## Configuration (obligatoire)
 
@@ -92,6 +94,8 @@ tests/
 ├── unit/              Tests unitaires : thème, badges, activités, images, stores, appels au backend
 └── integration/       Tests d'intégration : composants, connexion, inscription, onboarding, accueil, Tribu,
                        activités, récompenses, chat, temps réel
+
+e2e/                   Tests système (Playwright) : parcours complets avec le vrai backend
 ```
 
 **Composants principaux**
@@ -307,6 +311,28 @@ Toutes définies dans `index.css`, et coupées si le téléphone est réglé sur
 | **Vitest + Testing Library** | `npm test` | Tests automatiques des fonctions, composants et écrans, dans un faux navigateur (jsdom), sans appeler le vrai backend |
 
 La configuration d'ESLint est dans `eslint.config.js` (règles recommandées de JavaScript, TypeScript et React).
+
+## Tests système
+
+Les tests système vérifient l'application entière, comme un utilisateur : un navigateur au format téléphone
+clique dans l'app, qui parle au vrai backend. Rien n'est simulé.
+
+**Avant le premier lancement :**
+
+- le backend doit être dans le dossier voisin (`tribu-app/backend`), avec ses dépendances installées (`npm install`) ;
+- installer le navigateur de Playwright : `npx playwright install chromium`.
+
+**Lancement :** `npm run test:e2e`. Playwright démarre tout seul le backend (`npm run start:e2e`, base MongoDB en mémoire,
+vide à chaque lancement) et l'app, puis lance les parcours. La vraie base n'est jamais touchée.
+
+| Fichier | Parcours |
+|---|---|
+| `parcours-activite.spec.ts` | Inscription, onboarding, création d'une Tribu, choix d'une activité, fin de l'activité, écran Récompense (points et badge « Premier pas »), points à jour sur l'accueil |
+| `parcours-rejoindre.spec.ts` | Deux téléphones en même temps : demande pour rejoindre une Tribu, notification et acceptation en direct, arrivée dans la Tribu sans recharger, message de chat reçu en direct |
+| `limites.spec.ts` | Écran protégé sans être connecté, email déjà utilisé, mauvais mot de passe, lien direct vers une activité, session expirée, Tribu introuvable |
+
+Rapport détaillé : `npx playwright show-report` (avec captures et traces en cas d'échec).
+Ces tests se lancent en local (ils ont besoin du backend) ; la CI lance les tests unitaires et d'intégration.
 
 ## CI/CD
 
