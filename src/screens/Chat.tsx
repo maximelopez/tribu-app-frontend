@@ -47,7 +47,7 @@ export default function Chat() {
 
   // Pas encore de Tribu (Figma : chat-empty-state)
   if (!user?.familyId) {
-    return <NoFamilyState message="Rejoins ou crée ta Tribu pour échanger avec ta famille !" />;
+    return <NoFamilyState title="Chat" message="Rejoins ou crée ta Tribu pour échanger avec ta famille !" />;
   }
 
   const membersCount = family?.members?.length ?? 0;
@@ -60,7 +60,7 @@ export default function Chat() {
         style={{ padding: '16px 16px 8px 17px', paddingTop: 'calc(16px + env(safe-area-inset-top))', gap: 12 }}
       >
         <div className="flex-1 min-w-0 flex flex-col" style={{ gap: 4 }}>
-          <span className="font-outfit-bold text-base truncate" style={{ color: theme.primary }}>Famille {family?.name}</span>
+          <h1 className="font-outfit-bold font-normal text-base truncate m-0" style={{ color: theme.primary }}>Famille {family?.name}</h1>
           <span className="font-outfit text-base" style={{ color: TEXT_GREY }}>
             {membersCount} membre{membersCount > 1 ? 's' : ''}
           </span>

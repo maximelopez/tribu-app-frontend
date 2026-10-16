@@ -146,6 +146,12 @@ textarea {
   animation: confetti-fall var(--dur) cubic-bezier(0.25, 0.6, 0.5, 1) var(--delay) both;
 }
 
+/* Navigation au clavier : contour bien visible sur l'élément sélectionné (pas au doigt ni à la souris) */
+:focus-visible {
+  outline: 3px solid #161616 !important;
+  outline-offset: 2px;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .floating-mascot,
   .floating-mascot-shadow,

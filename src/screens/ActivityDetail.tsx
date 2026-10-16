@@ -314,7 +314,8 @@ export default function ActivityDetail() {
         <ChevronLeft size={24} color={TEXT_DARK} strokeWidth={2} />
       </button>
 
-      <div className="flex-1 overflow-y-auto no-scrollbar">
+      {/* tabIndex : zone qui défile atteignable au clavier (flèches pour lire) */}
+      <div className="flex-1 overflow-y-auto no-scrollbar" tabIndex={0}>
         {/* Photo en grand (sinon l'illustration de la catégorie) */}
         <div className="relative w-full overflow-hidden" style={{ height: 340, backgroundColor: theme.transparent }}>
           {image ? (

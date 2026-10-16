@@ -73,7 +73,8 @@ function RewardContent({ familyName, pointsEarned, familyPoints, previousLevel, 
         <ChevronLeft size={24} color={TEXT_DARK} strokeWidth={2} />
       </button>
 
-      <div className="flex-1 overflow-y-auto no-scrollbar">
+      {/* tabIndex : zone qui défile atteignable au clavier (flèches pour lire) */}
+      <div className="flex-1 overflow-y-auto no-scrollbar" tabIndex={0}>
         {/* Photo de l'activité (sinon l'illustration de sa catégorie) */}
         <div className="relative w-full overflow-hidden" style={{ height: 230, backgroundColor: theme.transparent }}>
           {image && (

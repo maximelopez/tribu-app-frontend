@@ -70,7 +70,7 @@ Quelques principes :
 
 ## 5. Scénarios testés
 
-**120 tests automatiques** au total : 30 tests unitaires, 82 tests d'intégration et 8 tests système.
+**121 tests automatiques** au total : 30 tests unitaires, 82 tests d'intégration et 9 tests système.
 
 ### Tests unitaires (30)
 
@@ -103,7 +103,7 @@ Quelques principes :
 | Chat | Sans Tribu, historique, messages lus, envoi, message reçu, message vide | Messages affichés en direct, rien n'est envoyé si le message est vide |
 | Temps réel | Connexion du socket, chargement de la Tribu, messages non lus (chat ouvert ou non), notifications, Tribu renommée, activité lancée puis terminée, nouveau membre, demande acceptée ou refusée, token refusé | L'app se met à jour sans recharger la page |
 
-### Tests système (8)
+### Tests système (9)
 
 | Parcours | Étapes | Résultat attendu |
 |---|---|---|
@@ -115,6 +115,7 @@ Quelques principes :
 | Lien direct | Ouvrir une activité puis recharger la page | L'activité s'affiche toujours |
 | Session expirée | Token remplacé par un faux, page rechargée | Retour à la connexion |
 | Tribu introuvable | Rechercher un nom qui n'existe pas | « Aucune Tribu trouvée :( » |
+| Accessibilité | axe sur 11 écrans : connexion, inscription, CGU, accueil (sans et avec Tribu), chat (sans et avec Tribu), activités, détail d'une activité, récompenses, profil | Aucune erreur WCAG 2.1 AA, sauf le contraste des couleurs du thème (voir [accessibilite.md](accessibilite.md)) |
 
 ## 6. Couverture des spécifications
 

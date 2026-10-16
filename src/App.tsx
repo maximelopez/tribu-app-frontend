@@ -43,9 +43,10 @@ function PhoneFrame() {
         style={{ maxWidth: 430, backgroundColor: '#F3F3F8', boxShadow: '0 0 24px rgba(0,0,0,0.06)' }}
       >
         {deco && <DecoBackground variant={deco.variant} flipped={deco.flipped} />}
-        <div className="relative flex-1 min-h-0 flex flex-col">
+        {/* Zone principale de chaque écran (lecteurs d'écran : « aller au contenu principal ») */}
+        <main className="relative flex-1 min-h-0 flex flex-col">
           <Outlet />
-        </div>
+        </main>
       </div>
     </div>
   );
@@ -62,9 +63,9 @@ function AuthenticatedLayout() {
 function TabsLayout() {
   return (
     <>
-      <main className="flex-1 min-h-0 flex flex-col">
+      <div className="flex-1 min-h-0 flex flex-col">
         <Outlet />
-      </main>
+      </div>
       <TabBar />
     </>
   );

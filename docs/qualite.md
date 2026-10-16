@@ -63,15 +63,4 @@ L'application elle-même n'utilise pas d'IA.
 
 ## 4. Accessibilité
 
-Mesures déjà en place :
-
-| Mesure | Exemple |
-|---|---|
-| **Libellés sur les boutons sans texte** | « Retour », « Envoyer », « Notifications, 1 non lue », « Messages non lus » |
-| **Rôles des éléments** | Cases à cocher (`role="checkbox"`), listes déroulantes (`listbox`, `option`), popups (`dialog`), filtres sélectionnés (`aria-pressed`) |
-| **Champs avec un libellé** | Chaque champ de formulaire a un texte qui le décrit (« Votre adresse mail : ») |
-| **Images décoratives ignorées** | `alt=""` sur les illustrations, pour que les lecteurs d'écran ne les lisent pas |
-| **Clavier** | Échap ferme les popups et le panneau des notifications |
-| **Réduire les animations** | Les animations sont désactivées si l'utilisateur l'a demandé dans les réglages de son téléphone |
-
-Les tests vérifient une partie de l'accessibilité : ils trouvent les boutons et les champs par leur nom et leur rôle, comme un lecteur d'écran. Un audit complet (contrastes, navigation au clavier, lecteur d'écran) est prévu, avec l'éco-conception.
+L'audit d'accessibilité (axe, règles WCAG 2.1 AA, 26 écrans), les corrections, les mesures en place et la limite connue des couleurs du thème sont dans [accessibilite.md](accessibilite.md). Un test système vérifie ces règles automatiquement.

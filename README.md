@@ -18,7 +18,8 @@ avec un mode hors ligne basique. Elle parle au backend Tribu (API REST + Socket.
 | [docs/architecture.md](docs/architecture.md) | Organisation du code, navigation, circulation des données, temps réel, PWA, évolutivité |
 | [docs/tests.md](docs/tests.md) | Stratégie de tests : outils, scénarios, couverture, actions correctives |
 | [docs/infrastructure.md](docs/infrastructure.md) | Hébergement Netlify, performance (poids mesuré), sécurité, éco-conception |
-| [docs/qualite.md](docs/qualite.md) | Qualité du code, vérifications automatiques, usage de l'IA, accessibilité |
+| [docs/qualite.md](docs/qualite.md) | Qualité du code, vérifications automatiques, usage de l'IA |
+| [docs/accessibilite.md](docs/accessibilite.md) | Accessibilité : audit (axe, WCAG 2.1 AA), corrections, limite connue des couleurs, test automatique |
 | [docs/rgpd.md](docs/rgpd.md) | Données personnelles côté application : consentement, données gardées sur le téléphone, cookies |
 
 Les spécifications, la recette et la partie backend sont dans le dossier `docs/` du backend.
@@ -356,6 +357,7 @@ vide à chaque lancement) et l'app, puis lance les parcours. La vraie base n'est
 | `parcours-activite.spec.ts` | Inscription, onboarding, création d'une Tribu, choix d'une activité, fin de l'activité, écran Récompense (points et badge « Premier pas »), points à jour sur l'accueil |
 | `parcours-rejoindre.spec.ts` | Deux téléphones en même temps : demande pour rejoindre une Tribu, notification et acceptation en direct, arrivée dans la Tribu sans recharger, message de chat reçu en direct |
 | `limites.spec.ts` | Écran protégé sans être connecté, email déjà utilisé, mauvais mot de passe, lien direct vers une activité, session expirée, Tribu introuvable |
+| `accessibilite.spec.ts` | Règles d'accessibilité (axe, WCAG 2.1 AA) sur 11 écrans principaux |
 
 Rapport détaillé : `npx playwright show-report` (avec captures et traces en cas d'échec).
 La stratégie de tests complète (outils, scénarios, couverture, actions correctives) est détaillée dans [docs/tests.md](docs/tests.md).

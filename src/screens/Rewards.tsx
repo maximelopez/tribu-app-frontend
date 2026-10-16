@@ -25,6 +25,7 @@ export default function Rewards() {
   if (!familyId) {
     return (
       <NoFamilyState
+        title="Récompenses"
         message="Rejoins ou crée ta Tribu pour gagner tes premiers points et badges !"
         image={mascotteLunettes}
         circleColor="rgba(255, 157, 0, 0.1)"

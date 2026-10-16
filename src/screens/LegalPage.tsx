@@ -12,6 +12,7 @@ export default function LegalPage({ type }: { type: 'privacy' | 'terms' }) {
 
       <div
         className="flex-1 overflow-y-auto no-scrollbar"
+        tabIndex={0} // zone qui défile : atteignable au clavier (flèches pour lire)
         style={{ padding: '8px 20px 24px', paddingBottom: 'calc(24px + env(safe-area-inset-bottom))' }}
       >
         <h1 className="font-outfit-bold font-normal m-0" style={{ fontSize: 24, color: '#161616', marginBottom: 6 }}>
