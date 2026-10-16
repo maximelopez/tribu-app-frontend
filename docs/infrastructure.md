@@ -12,7 +12,7 @@ L'organisation du code est dans [architecture.md](architecture.md), et la justif
 | Adresse | https://app-tribu.netlify.app | HTTPS inclus |
 | Déploiement | Netlify, à chaque push sur `master` | Seulement si le lint, les tests et le build passent (`netlify.toml`) |
 | Intégration continue | GitHub Actions | Lint, types, tests avec couverture, build (`.github/workflows/ci.yml`) |
-| Réglages | `netlify.toml` (dans le projet) | Commande de build, version de Node.js, dossier publié |
+| Réglages | `netlify.toml` (dans le projet) | Commande de build, version de Node.js, dossier publié, en-têtes de sécurité |
 
 ## 2. Performance
 
@@ -53,8 +53,26 @@ Le code (JavaScript et CSS) pèse moins de 140 Ko compressé : il se télécharg
 | **Session expirée** | Si l'API refuse le token (401), l'app déconnecte et efface les données de la session |
 | **Écrans protégés** | Sans être connecté, seuls l'inscription, la connexion et les pages légales s'affichent. La vraie protection reste celle de l'API |
 | **Pas de HTML injecté** | Les textes (messages du chat, noms) sont affichés par React, qui empêche l'exécution de code envoyé par un autre utilisateur (protection contre le XSS) |
+| **En-têtes de sécurité HTTP** | Consignes envoyées au navigateur avec chaque fichier (voir ci-dessous) |
 | **Dépendances surveillées** | `npm audit` et des versions récentes et maintenues (voir [stack.md](stack.md)) |
 | **Déploiement seulement si les vérifications passent** | Le lint, les 104 tests et TypeScript bloquent une version cassée |
+
+### En-têtes de sécurité HTTP
+
+Netlify envoie avec chaque fichier des consignes de sécurité pour le navigateur. Elles sont écrites dans `netlify.toml`, donc versionnées avec le code. Ce sont des protections en plus : elles limitent les dégâts si une autre barrière cédait.
+
+| En-tête | Consigne | Risque évité |
+|---|---|---|
+| `Content-Security-Policy` | L'app ne peut charger que ses propres fichiers, parler qu'à l'API Tribu (HTTPS et WebSocket) et afficher des photos venant de Cloudinary. Tout le reste est bloqué | Un code injecté (faille XSS) ne pourrait ni s'exécuter, ni envoyer le token vers un autre site |
+| `X-Frame-Options: DENY` (et `frame-ancestors 'none'`) | L'app ne peut pas être affichée dans un autre site | Un faux site qui affiche Tribu en transparence pour faire cliquer l'utilisateur sans qu'il le sache (*clickjacking*) |
+| `X-Content-Type-Options: nosniff` | Le navigateur ne devine pas le type d'un fichier | Un fichier pris par erreur pour un script |
+| `Referrer-Policy` | Les autres sites ne voient pas l'adresse exacte de la page d'où l'on vient | Fuite d'adresses internes de l'app |
+| `Permissions-Policy` | Caméra, micro et position bloqués | Utilisation de ces fonctions par un code non prévu |
+| `Strict-Transport-Security` | Le navigateur utilise toujours HTTPS pendant 1 an | Connexion forcée en HTTP non chiffré |
+
+**Vérification** : l'application a été construite puis servie en local avec ces en-têtes. Les 8 tests système passent, et aucun blocage n'apparaît dans la console du navigateur sur les écrans principaux (inscription, onboarding, accueil, activités, récompenses, chat, profil, pages légales). Le service worker de la PWA fonctionne. Après le déploiement, les en-têtes peuvent être contrôlés sur securityheaders.com.
+
+**Limite acceptée** : `style-src` autorise les styles écrits directement sur les éléments (`'unsafe-inline'`), car les couleurs du thème sont appliquées de cette façon. Les scripts, eux, ne sont autorisés que depuis les fichiers de l'app.
 
 ### Stockage du token
 
@@ -65,7 +83,7 @@ Le token est gardé dans le `localStorage` du navigateur, pour que l'utilisateur
 | Lecture par un script de la page | Possible : une faille XSS pourrait voler le token | Impossible |
 | Mise en place | Simple, fonctionne avec l'API et Socket.IO | Demande des changements dans l'API (cookies, protection CSRF, domaines) |
 
-**Pourquoi ce choix** : simple et compatible avec l'API et le temps réel. Le risque est limité parce que React protège contre le XSS, que l'app ne charge aucun script externe (pas de publicité, pas d'outil de suivi) et que le token a une durée de validité (30 jours).
+**Pourquoi ce choix** : simple et compatible avec l'API et le temps réel. Le risque est limité parce que React protège contre le XSS, que la `Content-Security-Policy` bloque les scripts externes et l'envoi de données vers un autre site, et que le token a une durée de validité (30 jours).
 
 ## 4. Consommation énergétique (éco-conception)
 
@@ -110,7 +128,6 @@ Ces améliorations seront traitées avec l'audit d'accessibilité et d'éco-conc
 
 | Limite actuelle | Évolution possible |
 |---|---|
-| Netlify n'envoie pas d'**en-têtes de sécurité HTTP** (interdire l'affichage de l'app dans une autre page, limiter les scripts autorisés, etc.) | Les ajouter dans `netlify.toml` (`X-Frame-Options`, `Content-Security-Policy`, `Referrer-Policy`...) |
 | Token dans le `localStorage` | Cookie `HttpOnly` (demande des changements dans l'API) |
 | Tout le code dans un seul fichier JavaScript | Chargement des écrans à la demande (*lazy loading*) si l'app grossit |
 | Offre gratuite de Netlify | Offre payante si la bande passante ou les minutes de build ne suffisent plus |

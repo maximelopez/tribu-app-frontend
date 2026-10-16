@@ -363,6 +363,7 @@ Le résultat est visible dans l'onglet *Actions* du dépôt et sur le badge en h
 | Publish directory | `dist` |
 | Node.js | 22 |
 | Variable (dans Netlify) | `VITE_API_URL` |
+| En-têtes de sécurité | `Content-Security-Policy`, `X-Frame-Options`... (voir [docs/infrastructure.md](docs/infrastructure.md)) |
 
 Si le lint, un test ou TypeScript échoue, Netlify ne déploie pas et l'ancienne version reste en ligne.
 Toutes les adresses sont redirigées vers `index.html` (`public/_redirects`), pour qu'un lien direct vers un écran fonctionne.

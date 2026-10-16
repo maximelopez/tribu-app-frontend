@@ -6,3 +6,21 @@
 
 [build.environment]
   NODE_VERSION = "22"
+
+# En-têtes de sécurité : consignes envoyées au navigateur avec chaque fichier de l'app
+[[headers]]
+  for = "/*"
+  [headers.values]
+    # Ce que l'app a le droit de charger : ses propres fichiers, l'API Tribu (HTTPS et WebSocket)
+    # et les photos des activités (Cloudinary). Tout le reste est bloqué.
+    Content-Security-Policy = "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://res.cloudinary.com; font-src 'self'; connect-src 'self' https://tribu-app-backend.onrender.com wss://tribu-app-backend.onrender.com; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'"
+    # L'app ne peut pas être affichée dans un autre site (protection contre le clickjacking)
+    X-Frame-Options = "DENY"
+    # Le navigateur ne devine pas le type des fichiers
+    X-Content-Type-Options = "nosniff"
+    # Les autres sites ne voient pas de quelle page de l'app on vient
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    # L'app n'utilise ni caméra, ni micro, ni position
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+    # Toujours en HTTPS, pendant 1 an
+    Strict-Transport-Security = "max-age=31536000"
