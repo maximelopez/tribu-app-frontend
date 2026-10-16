@@ -10,6 +10,19 @@ avec un mode hors ligne basique. Elle parle au backend Tribu (API REST + Socket.
 - **Backend** : https://tribu-app-backend.onrender.com (dépôt `tribu-app-backend`, voir son README)
 - **Maquette** : Figma (section `main-part`), référence pour tous les écrans
 
+## Documentation
+
+| Document | Contenu |
+|---|---|
+| [docs/stack.md](docs/stack.md) | Choix techniques (PWA, React, Vite, Zustand, Tailwind, Netlify), veille et performances attendues |
+| [docs/architecture.md](docs/architecture.md) | Organisation du code, navigation, circulation des données, temps réel, PWA, évolutivité |
+| [docs/tests.md](docs/tests.md) | Stratégie de tests : outils, scénarios, couverture, actions correctives |
+| [docs/infrastructure.md](docs/infrastructure.md) | Hébergement Netlify, performance (poids mesuré), sécurité, éco-conception |
+| [docs/qualite.md](docs/qualite.md) | Qualité du code, vérifications automatiques, usage de l'IA, accessibilité |
+| [docs/rgpd.md](docs/rgpd.md) | Données personnelles côté application : consentement, données gardées sur le téléphone, cookies |
+
+Les spécifications, la recette et la partie backend sont dans le dossier `docs/` du backend.
+
 ## Sommaire
 
 - [Lancer en local](#lancer-en-local)
@@ -226,8 +239,8 @@ et le nombre de messages non lus, pour rattraper ce qui s'est passé pendant la 
 ### Rejoindre une Tribu
 
 - Une seule demande en attente à la fois : pour en envoyer une autre, il faut annuler la première.
-- Après l'envoi, l'Accueil affiche « Demande envoyée » avec le bouton « Annuler la demande »
-  (confirmation avec `ConfirmModal`).
+- Après l'envoi, l'écran de la Tribu reste affiché avec « Demande envoyée ! ». L'Accueil affiche la carte
+  « Demande envoyée » avec le bouton « Annuler la demande » (confirmation avec `ConfirmModal`).
 - La demande en attente est relue au démarrage et au retour sur l'app (`GET /families/join-requests/me`).
 - Acceptée : la Tribu est chargée. Refusée ou annulée : retour à « Rejoindre ou créer une Tribu ».
 
@@ -237,8 +250,8 @@ et le nombre de messages non lus, pour rattraper ce qui s'est passé pendant la 
 backend (`config/badges.ts`) : l'app les lit avec `GET /families/:id/badges`. Chaque badge a une
 progression (`progress / goal`) et, une fois obtenu, sa date (`unlockedAt`).
 
-- **Onglet Récompenses** : collection (x / 24), dernier badge gagné, les 3 prochains badges (les plus
-  avancés) et le bouton « Voir tous les badges ».
+- **Onglet Récompenses** : collection (x / 24), les 3 derniers badges obtenus, le prochain objectif (le badge
+  pas encore obtenu le plus avancé) et le bouton « Voir tous les badges ».
 - **Tous les badges** : rangés par niveau (Bronze, Argent, Or, Platine).
 - **Détail d'un badge** (une seule carte) :
   - obtenu : texte long, palier suivant (`nextBadge`) et date d'obtention (« Obtenu le 12 oct. ») ;
@@ -332,6 +345,7 @@ vide à chaque lancement) et l'app, puis lance les parcours. La vraie base n'est
 | `limites.spec.ts` | Écran protégé sans être connecté, email déjà utilisé, mauvais mot de passe, lien direct vers une activité, session expirée, Tribu introuvable |
 
 Rapport détaillé : `npx playwright show-report` (avec captures et traces en cas d'échec).
+La stratégie de tests complète (outils, scénarios, couverture, actions correctives) est détaillée dans [docs/tests.md](docs/tests.md).
 Ces tests se lancent en local (ils ont besoin du backend) ; la CI lance les tests unitaires et d'intégration.
 
 ## CI/CD
