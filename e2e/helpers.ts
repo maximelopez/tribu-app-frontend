@@ -5,17 +5,16 @@ export const PASSWORD = 'Motdepasse1!';
 // Email différent à chaque lancement (la base garde les comptes tant que le backend tourne)
 export const uniqueEmail = (name: string) => `${name.toLowerCase()}.${Date.now()}@test.fr`;
 
-// Inscription avec la case CGU
+// Inscription (les CGU sont acceptées à la fin de l'onboarding)
 export async function signup(page: Page, name: string, email: string) {
   await page.goto('/inscription');
   await page.getByPlaceholder('Ex : Camille', { exact: true }).fill(name);
   await page.getByPlaceholder('Ex : camille@email.fr', { exact: true }).fill(email);
   await page.getByPlaceholder('**********', { exact: true }).fill(PASSWORD);
-  await page.getByRole('checkbox', { name: /J'accepte les conditions/ }).click();
   await page.getByRole('button', { name: "S'inscrire" }).click();
 }
 
-// Onboarding : date de naissance, couleur, avatar, puis l'accueil
+// Onboarding : date de naissance, couleur, avatar, accord aux CGU, puis l'accueil
 export async function completeOnboarding(page: Page, name: string) {
   await page.getByPlaceholder('JJ', { exact: true }).fill('12');
   await page.getByPlaceholder('MM', { exact: true }).fill('05');
@@ -27,6 +26,9 @@ export async function completeOnboarding(page: Page, name: string) {
 
   await page.getByRole('button', { name: 'Avatar 2' }).click();
   await page.getByRole('button', { name: 'Suivant' }).click();
+
+  await page.getByRole('checkbox', { name: /J'accepte les conditions/ }).click();
+  await page.getByRole('button', { name: 'Accepter et continuer' }).click();
 
   await expect(page.getByRole('heading', { name: `Bonjour, ${name}` })).toBeVisible();
 }

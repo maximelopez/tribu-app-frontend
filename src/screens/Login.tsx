@@ -57,9 +57,11 @@ export default function Login() {
         theme: normalizeThemeColor(data.user.theme),
         points: data.user.points,
         birthdate: data.user.birthdate,
+        acceptedTermsAt: data.user.acceptedTermsAt,
       });
 
-      const isComplete = !!(data.user.theme && data.user.avatar);
+      // Onboarding terminé = CGU acceptées (l'accord est donné en même temps que les choix de l'onboarding)
+      const isComplete = !!data.user.acceptedTermsAt;
       useUserStore.getState().setOnboardingCompleted(isComplete);
     } catch (error) {
       console.error('Erreur login :', error);

@@ -1,5 +1,5 @@
-import { describe, expect, it, vi } from 'vitest';
-import { act, render, screen, waitFor } from '@testing-library/react';
+import { describe, expect, it } from 'vitest';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router';
 import App from '../../src/App';
@@ -33,12 +33,12 @@ describe('Onboarding', () => {
     expect(calls).toHaveLength(0);
   });
 
-  it('enregistre la date, la couleur et l\'avatar, puis ouvre l\'app', async () => {
+  it('garde la date, la couleur et l\'avatar, puis les envoie avec l\'accord aux CGU', async () => {
     newUser();
     const calls = mockApi({
-      'PATCH users/u1/birthdate': { body: { birthdate: '2010-03-05' } },
-      'PATCH users/u1/theme': { body: {} },
-      'PATCH users/u1/avatar': { body: {} },
+      'PATCH users/u1/onboarding': {
+        body: { birthdate: '2010-03-05T00:00:00.000Z', theme: 'orange', avatar: 3, acceptedTermsAt: '2026-10-16T10:00:00.000Z' },
+      },
     });
     renderApp('/bienvenue/naissance');
 
@@ -47,7 +47,6 @@ describe('Onboarding', () => {
     await userEvent.type(screen.getByPlaceholderText('MM'), '3');
     await userEvent.type(screen.getByPlaceholderText('AAAA'), '2010');
     await userEvent.click(screen.getByRole('button', { name: 'Suivant' }));
-    expect(calls[0].body).toEqual({ birthdate: '2010-03-05' });
 
     // 2 - Couleur
     await userEvent.click(await screen.findByRole('button', { name: 'Thème orange' }));
@@ -56,20 +55,45 @@ describe('Onboarding', () => {
 
     // 3 - Avatar
     await userEvent.click(await screen.findByRole('button', { name: 'Avatar 3' }));
-    await waitFor(() => expect(useUserStore.getState().user?.avatar).toBe(3));
+    await userEvent.click(screen.getByRole('button', { name: 'Suivant' }));
 
-    // 4 - Chargement (2 secondes), puis l'onboarding est terminé
-    vi.useFakeTimers();
-    try {
-      await act(async () => {
-        screen.getByRole('button', { name: 'Suivant' }).click();
-      });
-      act(() => vi.advanceTimersByTime(2000));
-      expect(useUserStore.getState().onboardingCompleted).toBe(true);
-    } finally {
-      vi.useRealTimers();
-    }
-    // Les 3 choix ont été enregistrés (ensuite, l'app charge ses données)
-    expect(calls.filter(c => c.method === 'PATCH').map(c => c.path)).toEqual(['users/u1/birthdate', 'users/u1/theme', 'users/u1/avatar']);
+    // Rien n'est encore envoyé au serveur
+    expect(calls).toHaveLength(0);
+
+    // 4 - Consentement : bouton actif seulement une fois la case cochée
+    expect(await screen.findByRole('heading', { name: 'Ta vie privée, on y tient' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Accepter et continuer' })).toBeDisabled();
+    await userEvent.click(screen.getByRole('checkbox', { name: /J'accepte les conditions/ }));
+    await userEvent.click(screen.getByRole('button', { name: 'Accepter et continuer' }));
+
+    // Un seul envoi : l'accord et les 3 choix
+    await screen.findByText('Parfait ! On prépare ton profil…');
+    expect(calls).toEqual([{
+      method: 'PATCH',
+      path: 'users/u1/onboarding',
+      body: { acceptTerms: true, birthdate: '2010-03-05', theme: 'orange', avatar: 3 },
+    }]);
+
+    // 5 - Chargement (2 secondes), puis l'onboarding est terminé
+    await waitFor(() => expect(useUserStore.getState().onboardingCompleted).toBe(true), { timeout: 3000 });
+  });
+
+  it('ouvre les CGU par-dessus l\'écran de consentement', async () => {
+    newUser();
+    mockApi({});
+    renderApp('/bienvenue/consentement');
+
+    await userEvent.click(screen.getByRole('button', { name: 'Conditions d’utilisation' }));
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
+    await userEvent.click(screen.getByRole('button', { name: 'Fermer' }));
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Ta vie privée, on y tient' })).toBeInTheDocument();
+  });
+
+  it('pas de chargement sans accord aux CGU : retour au consentement', () => {
+    newUser();
+    mockApi({});
+    renderApp('/bienvenue/chargement');
+    expect(screen.getByRole('heading', { name: 'Ta vie privée, on y tient' })).toBeInTheDocument();
   });
 });

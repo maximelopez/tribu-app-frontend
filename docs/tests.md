@@ -7,7 +7,7 @@ Ce document présente comment l'application Tribu (PWA React) est testée : ce q
 Les tests doivent garantir que :
 
 - chaque **écran affiche les bonnes informations** et réagit correctement aux actions de l'utilisateur (boutons, formulaires, listes) ;
-- les **règles de l'application** sont respectées côté interface : case CGU obligatoire, ville obligatoire, au moins un participant, seul celui qui a lancé une activité peut la terminer ;
+- les **règles de l'application** sont respectées côté interface : case CGU obligatoire sur l'écran de consentement, ville obligatoire, au moins un participant, seul celui qui a lancé une activité peut la terminer ;
 - l'application **gère les erreurs** du serveur : mauvais mot de passe, email déjà utilisé, Tribu introuvable, session expirée ;
 - le **temps réel** fonctionne : notifications, messages, activité lancée par un autre membre ;
 - les **parcours complets** fonctionnent avec le vrai backend ;
@@ -70,7 +70,7 @@ Quelques principes :
 
 ## 5. Scénarios testés
 
-**118 tests automatiques** au total : 30 tests unitaires, 80 tests d'intégration et 8 tests système.
+**120 tests automatiques** au total : 30 tests unitaires, 82 tests d'intégration et 8 tests système.
 
 ### Tests unitaires (30)
 
@@ -84,15 +84,15 @@ Quelques principes :
 | Objectif de la semaine | Début de semaine (lundi), activités comptées depuis lundi, textes selon le nombre restant | « Encore N activités », « Plus qu'une activité », « Objectif atteint » |
 | Appels au backend | Adresse, token, corps JSON, session expirée (401), mauvais mot de passe (401 sans être connecté) | Déconnexion et retour à la connexion seulement si la session a expiré |
 
-### Tests d'intégration (80)
+### Tests d'intégration (82)
 
 | Thème | Scénarios | Résultat attendu |
 |---|---|---|
 | Composants | Bouton (clic, désactivé, chargement), popup de confirmation (confirmer, retour, Échap), carte de badge (obtenu ou verrouillé) | Le bon affichage et les bonnes actions |
-| Connexion | Champs vides, mauvais mot de passe, connexion réussie | Message d'erreur, ou token et utilisateur enregistrés |
-| Inscription | Mot de passe faible, CGU non acceptées, inscription réussie, email déjà utilisé | Aucun appel au serveur tant que le formulaire n'est pas valide, accord aux CGU envoyé |
+| Connexion | Champs vides, mauvais mot de passe, connexion réussie, CGU pas encore acceptées | Message d'erreur, ou token et utilisateur enregistrés. Sans accord aux CGU, l'onboarding reprend |
+| Inscription | Mot de passe faible, inscription réussie, email déjà utilisé | Aucun appel au serveur tant que le formulaire n'est pas valide, puis l'onboarding commence |
 | Accès aux écrans | Écran protégé sans être connecté, onboarding pas terminé, pages légales | Inscription, onboarding, ou page légale accessible sans compte |
-| Onboarding | Date incomplète ou impossible, parcours complet (date, couleur, avatar, chargement) | Les 3 choix enregistrés, puis l'app s'ouvre |
+| Onboarding | Date incomplète ou impossible, parcours complet (date, couleur, avatar, consentement, chargement), CGU ouvertes par-dessus l'écran, chargement sans accord | Rien n'est envoyé avant l'accord, puis un seul envoi (accord et 3 choix) et l'app s'ouvre |
 | Accueil | Sans Tribu, demande en attente (annulation), avec Tribu (carte Tribu : niveau, objectif de la semaine, membres ; idées dans la ville), activité en cours (le bouton ouvre son détail, « Voir l'activité » pour les autres membres), activité déjà faite, notifications | Les bonnes cartes, les idées sans les activités en cours ou déjà faites, demande acceptée depuis la cloche |
 | Rechercher une Tribu | Filtre par ville dès l'arrivée, recherche dès 1 caractère, filtre par ville, aucun résultat, recherche effacée | Les bons résultats et les bons messages |
 | Détails d'une Tribu | Informations de la Tribu, envoi d'une demande, demande refusée par le serveur, Tribu introuvable | « Demande envoyée ! » en restant sur l'écran, ou le message d'erreur |
@@ -122,7 +122,7 @@ Chaque user story des spécifications (voir le `docs/specifications.md` du backe
 
 | User story | Tests automatiques | Recette |
 |---|---|---|
-| C1 Créer un compte | `integration/auth` (inscription), `e2e/parcours-activite`, `e2e/limites` (email déjà utilisé) | R1 |
+| C1 Créer un compte | `integration/auth` (inscription), `integration/onboarding` (consentement), `e2e/parcours-activite`, `e2e/limites` (email déjà utilisé) | R1 |
 | C2 Se connecter | `integration/auth` (connexion), `unit/api` (session expirée), `e2e/limites` (mot de passe, session expirée) | R2 |
 | C3 / C4 Personnaliser son profil | `integration/onboarding` (date, couleur, avatar) | R3 |
 | C5 Consulter les textes légaux | `integration/auth` (pages légales sans compte) | R1, R4 |

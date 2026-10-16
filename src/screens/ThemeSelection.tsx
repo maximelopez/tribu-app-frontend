@@ -6,7 +6,6 @@ import { backgroundMap } from '../assets';
 import Button from '../components/Button';
 import { ChevronRight } from 'lucide-react';
 import OnboardingLayout from '../components/OnboardingLayout';
-import { api } from '../api';
 
 // Ronds de couleur (Figma : color-green / color-orange / color-red)
 const CIRCLE_SIZE = 64;
@@ -16,24 +15,11 @@ export default function ThemeSelection() {
   const user = useUserStore(state => state.user);
   const navigate = useNavigate();
 
-  const changeTheme = async (color: ThemeColor) => {
-    // 1 - mise à jour immédiate de l'UI
+  // Couleur gardée dans l'app : envoyée au serveur seulement après l'accord (écran consentement)
+  const changeTheme = (color: ThemeColor) => {
     setThemeColor(color);
-
     if (!user?.id) return;
-
-    try {
-      // 2 - sauvegarde dans le backend
-      await api(`users/${user.id}/theme`, {
-        method: 'PATCH',
-        body: { theme: color },
-      });
-
-      // 3 - mise à jour dans le store
-      useUserStore.getState().setUser(prev => prev ? { ...prev, theme: color } : prev);
-    } catch (error) {
-      console.error('Erreur sauvegarde thème:', error);
-    }
+    useUserStore.getState().setUser(prev => prev ? { ...prev, theme: color } : prev);
   };
 
   return (

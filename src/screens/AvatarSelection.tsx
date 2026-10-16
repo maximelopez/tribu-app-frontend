@@ -6,7 +6,6 @@ import { AVATARS, backgroundMap, getAvatar } from '../assets';
 import Button from '../components/Button';
 import { ChevronRight } from 'lucide-react';
 import OnboardingLayout from '../components/OnboardingLayout';
-import { api } from '../api';
 
 // Ronds d'avatar (Figma : mascotte1..4)
 const AVATAR_SIZE = 64;
@@ -18,21 +17,11 @@ export default function AvatarSelection() {
 
   const [selectedAvatar, setSelectedAvatar] = useState<number | null>(user?.avatar ?? null);
 
-  const changeAvatar = async (avatar: number) => {
+  // Avatar gardé dans l'app : envoyé au serveur seulement après l'accord (écran consentement)
+  const changeAvatar = (avatar: number) => {
     setSelectedAvatar(avatar);
-
     if (!user?.id) return;
-
-    try {
-      await api(`users/${user.id}/avatar`, {
-        method: 'PATCH',
-        body: { avatar },
-      });
-
-      useUserStore.getState().setUser(prev => prev ? { ...prev, avatar } : prev);
-    } catch (error) {
-      console.error('Erreur sauvegarde avatar:', error);
-    }
+    useUserStore.getState().setUser(prev => prev ? { ...prev, avatar } : prev);
   };
 
   return (
@@ -73,7 +62,7 @@ export default function AvatarSelection() {
       <div style={{ marginTop: 91 }}>
         <Button
           title="Suivant"
-          onPress={() => navigate('/bienvenue/chargement')}
+          onPress={() => navigate('/bienvenue/consentement')}
           disabled={!selectedAvatar}
           color="#FFFFFF"
           textColor={theme.primary}

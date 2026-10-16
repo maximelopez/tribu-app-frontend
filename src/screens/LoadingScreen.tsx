@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { Navigate } from 'react-router';
 import { useTheme } from '../context/ThemeContext';
 import { useUserStore } from '../store/userStore';
 import { backgroundMap } from '../assets';
@@ -7,12 +8,17 @@ import Spinner from '../components/Spinner';
 export default function LoadingScreen() {
   const { theme, themeColor } = useTheme();
   const setOnboardingCompleted = useUserStore(state => state.setOnboardingCompleted);
+  const hasAccepted = useUserStore(state => !!state.user?.acceptedTermsAt);
 
   // Après 2 secondes : l'app s'ouvre (le routeur bascule sur l'accueil)
   useEffect(() => {
+    if (!hasAccepted) return;
     const timer = setTimeout(() => setOnboardingCompleted(true), 2000);
     return () => clearTimeout(timer);
-  }, [setOnboardingCompleted]);
+  }, [hasAccepted, setOnboardingCompleted]);
+
+  // Pas encore d'accord aux CGU : retour à l'écran de consentement
+  if (!hasAccepted) return <Navigate to="/bienvenue/consentement" replace />;
 
   return (
     <div

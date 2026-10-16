@@ -68,7 +68,7 @@ flowchart TD
     L -- non --> B{"Connecté ?<br/>(token et utilisateur)"}
     B -- non --> I["Inscription / Connexion"]
     B -- oui --> C{"Onboarding terminé ?"}
-    C -- non --> O["Onboarding<br/>date, couleur, avatar"]
+    C -- non --> O["Onboarding<br/>date, couleur, avatar, consentement"]
     C -- oui --> D["App : écrans principaux<br/>et écrans enfants"]
 ```
 

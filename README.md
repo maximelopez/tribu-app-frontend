@@ -121,6 +121,7 @@ e2e/                   Tests système (Playwright) : parcours complets avec le v
 | `ScreenHeader` | En-tête des écrans (titre, bouton retour rond, place à droite pour la cloche) |
 | `DecoBackground` | Courbe décorative en fond des écrans, à la couleur du thème |
 | `OnboardingLayout` | Fond à motifs et logo des écrans d'onboarding (date, couleur, avatar) |
+| `LegalOverlay` | Texte légal ouvert par-dessus un écran (écran de consentement) |
 | `TabBar` | Barre du bas (point rouge sur Chat s'il y a des messages non lus) |
 | `ActivityCard` | Carte d'activité avec sa photo (ou l'illustration de sa catégorie), option `points` |
 | `BadgeCard` | Carte d'un badge (grisée avec la progression s'il n'est pas obtenu) |
@@ -166,7 +167,7 @@ e2e/                   Tests système (Playwright) : parcours complets avec le v
 | Adresse | Écran |
 |---|---|
 | `/inscription`, `/connexion` | Inscription, connexion |
-| `/bienvenue/naissance`, `/couleur`, `/avatar`, `/chargement` | Onboarding |
+| `/bienvenue/naissance`, `/couleur`, `/avatar`, `/consentement`, `/chargement` | Onboarding (le consentement envoie tout au backend) |
 | `/` | Accueil |
 | `/recompenses` | Récompenses (collection de badges) |
 | `/recompenses/badges` | Tous les badges |
@@ -273,9 +274,14 @@ progression (`progress / goal`) et, une fois obtenu, sa date (`unlockedAt`).
 
 ### Données personnelles (RGPD)
 
-- **Inscription** : case obligatoire « J'accepte les conditions d'utilisation et la politique de
-  confidentialité. J'ai 15 ans ou plus, ou l'accord de mes parents. » Les deux textes s'ouvrent par-dessus
-  le formulaire, sans perdre ce qui a été saisi. L'app envoie `acceptTerms: true` au backend.
+- **Inscription** : seulement le prénom, l'email et le mot de passe.
+- **Écran de consentement** (`Consent.tsx`, dernier écran de l'onboarding) : « Ta vie privée, on y tient »
+  explique ce qu'on collecte, pourquoi, ce qu'on ne fera jamais et comment garder le contrôle. Case
+  obligatoire « J'accepte les Conditions d'utilisation et la Politique de confidentialité », les deux
+  textes s'ouvrent par-dessus l'écran. Rappel pour les moins de 15 ans (accord d'un parent).
+- **Rien avant l'accord** : la date de naissance, la couleur et l'avatar restent dans l'app pendant
+  l'onboarding. « Accepter et continuer » les envoie en une fois avec l'accord
+  (`PATCH /users/:id/onboarding`). Un compte sans accord qui se reconnecte reprend l'onboarding.
 - **Profil** : section « Mes données » avec les liens vers les deux textes et l'adresse de contact pour
   recevoir ou supprimer ses données (`CONTACT_EMAIL` dans `config.ts`).
 - **Textes** : dans `src/legal.ts`, écrits simplement pour être compris aussi par les enfants.

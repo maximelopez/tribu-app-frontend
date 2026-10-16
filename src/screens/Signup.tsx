@@ -1,12 +1,9 @@
 import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
-import { Check, X } from 'lucide-react';
 import { useUserStore } from '../store/userStore';
 import { themeMap } from '../context/ThemeContext';
 import Input from '../components/Input';
 import Button from '../components/Button';
-import LegalDocument from '../components/LegalDocument';
-import { PRIVACY_POLICY, TERMS } from '../legal';
 import { api } from '../api';
 
 // Avant l'onboarding, l'app est toujours en vert (couleurs de la maquette)
@@ -31,10 +28,6 @@ export default function Signup() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  // CGU et politique de confidentialité : case obligatoire (RGPD)
-  const [acceptTerms, setAcceptTerms] = useState(false);
-  // Texte légal ouvert par-dessus le formulaire (le formulaire reste rempli)
-  const [legalText, setLegalText] = useState<typeof TERMS | null>(null);
   const [errorMessage, setErrorMessage] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -64,18 +57,13 @@ export default function Signup() {
       return;
     }
 
-    if (!acceptTerms) {
-      setErrorMessage("Acceptez les conditions d'utilisation et la politique de confidentialité pour continuer.");
-      return;
-    }
-
     setLoading(true);
     setErrorMessage('');
 
     try {
       const response = await api('auth/register', {
         method: 'POST',
-        body: { name: name.trim(), email: email.trim(), password, acceptTerms },
+        body: { name: name.trim(), email: email.trim(), password }, // CGU acceptées à la fin de l'onboarding
       });
 
       const data = await response.json();
@@ -189,39 +177,6 @@ export default function Signup() {
           </label>
         </div>
 
-        {/* Acceptation des CGU et de la politique de confidentialité */}
-        <div className="flex items-start" style={{ gap: 10, marginBottom: 20 }}>
-          <button
-            type="button"
-            role="checkbox"
-            aria-checked={acceptTerms}
-            aria-label="J'accepte les conditions d'utilisation et la politique de confidentialité"
-            onClick={() => setAcceptTerms(value => !value)}
-            className="flex items-center justify-center shrink-0 p-0"
-            style={{
-              width: 24,
-              height: 24,
-              marginTop: 1,
-              borderRadius: 6,
-              border: `2px solid ${BRAND.primary}`,
-              backgroundColor: acceptTerms ? BRAND.primary : '#FFFFFF',
-            }}
-          >
-            {acceptTerms && <Check size={16} color="#FFFFFF" strokeWidth={3} />}
-          </button>
-          <p className="font-outfit m-0" style={{ fontSize: 14, lineHeight: 1.4, color: '#161616' }}>
-            J'accepte les{' '}
-            <button type="button" onClick={() => setLegalText(TERMS)} className="font-outfit-bold p-0" style={{ fontSize: 14, color: BRAND.primary, background: 'none', border: 'none', textDecoration: 'underline' }}>
-              conditions d'utilisation
-            </button>{' '}
-            et la{' '}
-            <button type="button" onClick={() => setLegalText(PRIVACY_POLICY)} className="font-outfit-bold p-0" style={{ fontSize: 14, color: BRAND.primary, background: 'none', border: 'none', textDecoration: 'underline' }}>
-              politique de confidentialité
-            </button>
-            . J'ai 15 ans ou plus, ou l'accord de mes parents.
-          </p>
-        </div>
-
         {errorMessage ? (
           <p className="font-outfit text-center m-0 mb-3" style={{ color: '#EA4A1F' }}>{errorMessage}</p>
         ) : null}
@@ -252,34 +207,6 @@ export default function Signup() {
         </button>
       </div>
 
-      {/* Texte légal (CGU ou politique de confidentialité) par-dessus le formulaire */}
-      {legalText && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          aria-label={legalText.title}
-          className="absolute inset-0 z-50 flex flex-col"
-          style={{ backgroundColor: '#F3F3F8', paddingTop: 'env(safe-area-inset-top)' }}
-        >
-          <div className="flex items-center justify-between shrink-0" style={{ padding: '12px 16px 8px 20px', gap: 12 }}>
-            <h2 className="font-outfit-bold font-normal m-0" style={{ fontSize: 20, color: '#161616' }}>{legalText.title}</h2>
-            <button
-              onClick={() => setLegalText(null)}
-              aria-label="Fermer"
-              className="flex items-center justify-center bg-white shrink-0"
-              style={{ width: 44, height: 44, borderRadius: 22, border: 'none', boxShadow: '0px 2px 4px rgba(13, 23, 18, 0.1)' }}
-            >
-              <X size={20} color="#161616" strokeWidth={2} />
-            </button>
-          </div>
-          <div
-            className="flex-1 overflow-y-auto no-scrollbar"
-            style={{ padding: '8px 20px 24px', paddingBottom: 'calc(24px + env(safe-area-inset-bottom))' }}
-          >
-            <LegalDocument text={legalText} />
-          </div>
-        </div>
-      )}
     </div>
   );
 }

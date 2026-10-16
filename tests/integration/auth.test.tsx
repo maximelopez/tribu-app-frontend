@@ -36,7 +36,7 @@ describe('Connexion', () => {
   it('connecte l\'utilisateur et garde son token', async () => {
     const calls = mockApi({
       'POST auth/login': {
-        body: { token: 'token-123', user: { id: 'u1', name: 'Maxime', email: 'maxime@test.fr', familyId: null, avatar: 2, theme: 'red', points: 0 } },
+        body: { token: 'token-123', user: { id: 'u1', name: 'Maxime', email: 'maxime@test.fr', familyId: null, avatar: 2, theme: 'red', points: 0, acceptedTermsAt: '2026-10-01T10:00:00.000Z' } },
       },
     });
     renderScreen(<Login />);
@@ -47,7 +47,20 @@ describe('Connexion', () => {
     const { token, user, onboardingCompleted } = useUserStore.getState();
     expect(token).toBe('token-123');
     expect(user?.theme).toBe('red');
-    expect(onboardingCompleted).toBe(true); // thème et avatar déjà choisis
+    expect(onboardingCompleted).toBe(true); // CGU déjà acceptées
+  });
+
+  it('reprend l\'onboarding si les CGU ne sont pas encore acceptées', async () => {
+    mockApi({
+      'POST auth/login': {
+        body: { token: 'token-123', user: { id: 'u1', name: 'Maxime', email: 'maxime@test.fr', familyId: null, avatar: null, theme: 'green', points: 0, acceptedTermsAt: null } },
+      },
+    });
+    renderScreen(<Login />);
+    await fillLogin('maxime@test.fr', PASSWORD);
+
+    await screen.findByRole('button', { name: 'Se connecter' });
+    expect(useUserStore.getState().onboardingCompleted).toBe(false);
   });
 });
 
@@ -57,39 +70,27 @@ describe('Inscription', () => {
     await userEvent.type(screen.getByPlaceholderText('Ex : camille@email.fr'), 'camille@test.fr');
     await userEvent.type(screen.getByPlaceholderText('**********'), password);
   };
-  const acceptTerms = () => userEvent.click(screen.getByRole('checkbox', { name: /J'accepte les conditions/ }));
   const submit = () => userEvent.click(screen.getByRole('button', { name: "S'inscrire" }));
 
   it('refuse un mot de passe trop faible', async () => {
     const calls = mockApi({});
     renderScreen(<Signup />);
     await fillSignup('motdepasse');
-    await acceptTerms();
     await submit();
     expect(screen.getByText(/au moins 10 caractères, une majuscule/)).toBeInTheDocument();
     expect(calls).toHaveLength(0);
   });
 
-  it('refuse l\'inscription sans accepter les CGU', async () => {
-    const calls = mockApi({});
-    renderScreen(<Signup />);
-    await fillSignup();
-    await submit();
-    expect(screen.getByText(/Acceptez les conditions d'utilisation/)).toBeInTheDocument();
-    expect(calls).toHaveLength(0);
-  });
-
-  it('envoie l\'accord aux CGU au serveur', async () => {
+  it('crée le compte, puis l\'onboarding commence (CGU acceptées à la fin)', async () => {
     const calls = mockApi({
       'POST auth/register': { status: 201, body: { token: 'token-new', user: { id: 'u2', name: 'Camille', email: 'camille@test.fr', familyId: null, avatar: null } } },
     });
     renderScreen(<Signup />);
     await fillSignup();
-    await acceptTerms();
     await submit();
 
     await screen.findByRole('button', { name: "S'inscrire" });
-    expect(calls[0].body).toEqual({ name: 'Camille', email: 'camille@test.fr', password: PASSWORD, acceptTerms: true });
+    expect(calls[0].body).toEqual({ name: 'Camille', email: 'camille@test.fr', password: PASSWORD });
     expect(useUserStore.getState().token).toBe('token-new');
     expect(useUserStore.getState().onboardingCompleted).toBe(false); // l'onboarding commence
   });
@@ -98,7 +99,6 @@ describe('Inscription', () => {
     mockApi({ 'POST auth/register': { status: 409, body: {} } });
     renderScreen(<Signup />);
     await fillSignup();
-    await acceptTerms();
     await submit();
     expect(await screen.findByText('Cet email est déjà utilisé.')).toBeInTheDocument();
   });

@@ -11,6 +11,7 @@ export interface User {
   avatar: number | null;
   theme?: ThemeColor;
   birthdate?: string | null;
+  acceptedTermsAt?: string | null; // accord aux CGU (fin de l'onboarding)
 }
 
 interface UserStore {

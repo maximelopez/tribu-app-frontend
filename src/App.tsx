@@ -12,6 +12,7 @@ import Login from './screens/Login';
 import Birthdate from './screens/Birthdate';
 import ThemeSelection from './screens/ThemeSelection';
 import AvatarSelection from './screens/AvatarSelection';
+import Consent from './screens/Consent';
 import LoadingScreen from './screens/LoadingScreen';
 import Home from './screens/Home';
 import Rewards from './screens/Rewards';
@@ -94,6 +95,7 @@ export default function App() {
             <Route path="/bienvenue/naissance" element={<Birthdate />} />
             <Route path="/bienvenue/couleur" element={<ThemeSelection />} />
             <Route path="/bienvenue/avatar" element={<AvatarSelection />} />
+            <Route path="/bienvenue/consentement" element={<Consent />} />
             <Route path="/bienvenue/chargement" element={<LoadingScreen />} />
             <Route path="*" element={<Navigate to="/bienvenue/naissance" replace />} />
           </>

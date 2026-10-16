@@ -2,15 +2,20 @@
 
 Ce document présente ce que fait l'application Tribu pour respecter le RGPD. Le reste (registre des traitements, durées de conservation, mineurs, hébergement, droits, IA Act, liste de contrôle pour l'audit) est dans le `docs/rgpd.md` du backend, car c'est l'API qui enregistre et protège les données.
 
-## 1. Consentement à l'inscription
+## 1. Consentement à la fin de l'onboarding
+
+L'inscription crée seulement le compte (prénom, email, mot de passe). Le consentement est demandé sur le dernier écran de l'onboarding, « Ta vie privée, on y tient », après la date de naissance, la couleur et l'avatar.
 
 | Mesure | Détail |
 |---|---|
-| **Case obligatoire** | « J'accepte les conditions d'utilisation et la politique de confidentialité. J'ai 15 ans ou plus, ou l'accord de mes parents. » |
+| **Information claire avant d'accepter** | L'écran explique en 4 points ce qu'on collecte, pourquoi, ce qu'on ne fera jamais (vendre les données, publicité) et comment garder le contrôle |
+| **Case obligatoire** | « J'accepte les Conditions d'utilisation et la Politique de confidentialité ». Le bouton « Accepter et continuer » reste inactif sans la case |
 | **Case non cochée par défaut** | L'utilisateur doit la cocher lui-même |
-| **Textes lisibles avant d'accepter** | Les deux textes s'ouvrent par-dessus le formulaire, sans perdre ce qui a été saisi |
-| **Vérification double** | L'app refuse l'inscription sans la case, et l'API aussi (`acceptTerms`). La date d'acceptation est enregistrée par l'API |
-| **Testé** | Test d'intégration « refuse l'inscription sans accepter les CGU » et test système d'inscription |
+| **Textes lisibles avant d'accepter** | Les deux textes s'ouvrent par-dessus l'écran, sans quitter l'onboarding |
+| **Mineurs** | Rappel sous la carte : avant 15 ans, il faut l'accord d'un parent |
+| **Rien avant l'accord** | La date de naissance, la couleur et l'avatar restent dans l'app pendant l'onboarding. Ils sont envoyés en une fois avec l'accord. L'API refuse aussi toute modification du profil et l'accès aux Tribus tant que l'accord n'est pas donné |
+| **Accord enregistré** | L'API enregistre la date d'accord (`acceptedTermsAt`). Un compte sans accord qui se reconnecte reprend l'onboarding |
+| **Testé** | Test d'intégration de l'onboarding (rien n'est envoyé avant l'accord, puis un seul envoi), tests de l'API (refus sans accord) et tests système |
 
 ## 2. Information des utilisateurs
 

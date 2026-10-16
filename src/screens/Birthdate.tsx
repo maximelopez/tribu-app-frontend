@@ -6,7 +6,6 @@ import { backgroundMap } from '../assets';
 import Button from '../components/Button';
 import { ChevronRight } from 'lucide-react';
 import OnboardingLayout from '../components/OnboardingLayout';
-import { api } from '../api';
 
 // Avant le choix du thème, l'onboarding est en vert (maquette)
 const BRAND = themeMap.green;
@@ -32,7 +31,6 @@ export default function Birthdate() {
   const [month, setMonth] = useState('');
   const [year, setYear] = useState('');
   const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
 
   const monthRef = useRef<HTMLInputElement>(null);
   const yearRef = useRef<HTMLInputElement>(null);
@@ -40,7 +38,7 @@ export default function Birthdate() {
   // Garde uniquement les chiffres
   const digits = (text: string, max: number) => text.replace(/\D/g, '').slice(0, max);
 
-  const handleNext = async () => {
+  const handleNext = () => {
     setError('');
 
     if (!day || !month || !year) {
@@ -66,29 +64,9 @@ export default function Birthdate() {
 
     if (!user?.id) return;
 
-    setLoading(true);
-
-    try {
-      const response = await api(`users/${user.id}/birthdate`, {
-        method: 'PATCH',
-        body: { birthdate },
-      });
-
-      if (!response.ok) {
-        setError('Erreur lors de la mise à jour');
-        return;
-      }
-
-      const updatedUser = await response.json();
-      useUserStore.getState().setUser(prev => prev ? { ...prev, birthdate: updatedUser.birthdate } : prev);
-
-      navigate('/bienvenue/couleur');
-    } catch (err) {
-      console.error('Erreur sauvegarde date de naissance :', err);
-      setError('Impossible de se connecter au serveur.');
-    } finally {
-      setLoading(false);
-    }
+    // Gardée dans l'app : envoyée au serveur seulement après l'accord (écran consentement)
+    useUserStore.getState().setUser(prev => prev ? { ...prev, birthdate } : prev);
+    navigate('/bienvenue/couleur');
   };
 
   return (
@@ -149,7 +127,6 @@ export default function Birthdate() {
         <Button
           title="Suivant"
           onPress={handleNext}
-          loading={loading}
           color="#FFFFFF"
           textColor={BRAND.primary}
           icon={<ChevronRight size={20} color={BRAND.primary} strokeWidth={2.5} />}
