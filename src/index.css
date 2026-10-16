@@ -16,18 +16,12 @@
   src: url('./assets/fonts/peachy-keen-jf.otf') format('opentype');
   font-display: swap;
 }
-@font-face {
-  font-family: 'montserrat-semibold';
-  src: url('./assets/fonts/Montserrat-SemiBold.ttf') format('truetype');
-  font-display: swap;
-}
 
 /* Mêmes noms de classes que NativeWind dans mobile : font-outfit, font-outfit-bold, font-peachy… */
 @theme {
   --font-outfit: 'outfit', system-ui, sans-serif;
   --font-outfit-bold: 'outfit-bold', system-ui, sans-serif;
   --font-peachy: 'peachy-keen', system-ui, sans-serif;
-  --font-montserrat-semibold: 'montserrat-semibold', system-ui, sans-serif;
 }
 
 html,

@@ -117,7 +117,7 @@ Le numérique consomme de l'énergie sur les serveurs, sur le réseau et sur les
 
 | Constat | Amélioration possible |
 |---|---|
-| La police **Montserrat (334 Ko)** n'est utilisée que pour les libellés de la barre du bas | La remplacer par Outfit, déjà chargée (environ 330 Ko en moins) |
+| ~~La police **Montserrat (334 Ko)** n'est utilisée que pour les libellés de la barre du bas~~ | ✅ Fait : la nouvelle barre du bas de la maquette utilise Outfit, déjà chargée. Montserrat n'est plus téléchargée (334 Ko en moins) |
 | Les polices sont au format **TTF / OTF** | Les convertir en **WOFF2**, environ 2 fois plus léger |
 | Les **images de démarrage iPhone** (environ 400 Ko) sont mises en cache sur tous les téléphones, Android compris | Les exclure du cache du service worker |
 | Les avatars et les fonds sont en **PNG** | Les convertir en **WebP**, plus léger à qualité égale |
