@@ -72,6 +72,10 @@ export default function useRealtime() {
         if (newFamilyId !== (familyId ?? null)) {
           setUser((prev) => (prev ? { ...prev, familyId: newFamilyId } : prev));
         }
+        // Premium activé ou résilié depuis un autre appareil
+        if (typeof me.isPremium === 'boolean') {
+          setUser((prev) => (prev && prev.isPremium !== me.isPremium ? { ...prev, isPremium: me.isPremium } : prev));
+        }
       } catch (error) {
         console.error('Erreur resynchronisation :', error);
       }

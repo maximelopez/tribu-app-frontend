@@ -35,7 +35,7 @@ L'application suit les règles **WCAG 2.1, niveau AA**, la norme internationale 
 | **Rôles des éléments** | Cases à cocher (`role="checkbox"`), listes déroulantes (`listbox`, `option`), popups (`dialog`), filtres sélectionnés (`aria-pressed`) |
 | **Champs avec un libellé** | Chaque champ de formulaire a un texte qui le décrit (« Votre adresse mail : ») |
 | **Images décoratives ignorées** | `alt=""` sur les illustrations, pour que les lecteurs d'écran ne les lisent pas |
-| **Navigation au clavier** | Tous les boutons sont de vrais boutons (`<button>`), atteignables avec Tab. Un contour noir bien visible montre l'élément sélectionné (`:focus-visible`, seulement au clavier). Échap ferme les popups et le panneau des notifications |
+| **Navigation au clavier** | Tous les boutons sont de vrais boutons (`<button>`), atteignables avec Tab. Un contour noir bien visible montre l'élément sélectionné (`:focus-visible`, seulement au clavier). Pour les champs de saisie, c'est la bordure qui passe en gris foncé, comme dans le Design System de la maquette. Échap ferme les popups et le panneau des notifications |
 | **Zoom** | Le zoom du téléphone n'est pas bloqué |
 | **Langue** | La page est déclarée en français (`lang="fr"`) : le lecteur d'écran prend la bonne voix |
 | **Réduire les animations** | Les animations (mascotte, confettis, compteur de points) sont désactivées si l'utilisateur l'a demandé dans les réglages de son téléphone |

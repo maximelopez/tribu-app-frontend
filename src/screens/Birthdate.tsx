@@ -89,7 +89,7 @@ export default function Birthdate() {
             placeholder="JJ"
             inputMode="numeric"
             enterKeyHint="next"
-            className="font-outfit text-base placeholder:text-[#969696]"
+            className="field font-outfit text-base placeholder:text-[#969696]"
             style={DATE_INPUT_STYLE}
           />
           <input
@@ -103,7 +103,7 @@ export default function Birthdate() {
             placeholder="MM"
             inputMode="numeric"
             enterKeyHint="next"
-            className="font-outfit text-base placeholder:text-[#969696]"
+            className="field font-outfit text-base placeholder:text-[#969696]"
             style={DATE_INPUT_STYLE}
           />
           <input
@@ -114,7 +114,7 @@ export default function Birthdate() {
             placeholder="AAAA"
             inputMode="numeric"
             enterKeyHint="done"
-            className="font-outfit text-base placeholder:text-[#969696]"
+            className="field font-outfit text-base placeholder:text-[#969696]"
             style={DATE_INPUT_STYLE}
           />
         </div>

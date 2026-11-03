@@ -70,9 +70,9 @@ Quelques principes :
 
 ## 5. Scénarios testés
 
-**123 tests automatiques** au total : 30 tests unitaires, 84 tests d'intégration et 9 tests système.
+**129 tests automatiques** au total : 32 tests unitaires, 88 tests d'intégration et 9 tests système.
 
-### Tests unitaires (30)
+### Tests unitaires (32)
 
 | Thème | Scénarios | Résultat attendu |
 |---|---|---|
@@ -84,7 +84,7 @@ Quelques principes :
 | Objectif de la semaine | Début de semaine (lundi), activités comptées depuis lundi, textes selon le nombre restant | « Encore N activités », « Plus qu'une activité », « Objectif atteint » |
 | Appels au backend | Adresse, token, corps JSON, session expirée (401), mauvais mot de passe (401 sans être connecté) | Déconnexion et retour à la connexion seulement si la session a expiré |
 
-### Tests d'intégration (84)
+### Tests d'intégration (88)
 
 | Thème | Scénarios | Résultat attendu |
 |---|---|---|
@@ -98,7 +98,7 @@ Quelques principes :
 | Détails d'une Tribu | Informations de la Tribu, envoi d'une demande, demande refusée par le serveur, Tribu introuvable | « Demande envoyée ! » en restant sur l'écran, ou le message d'erreur |
 | Créer une Tribu | Ville manquante, création avec la liste déroulante | Tribu créée avec la ville choisie, retour à l'accueil |
 | Catalogue | Ville de la Tribu, autre ville, catégorie, recherche, aucun résultat, « Tout voir » | Les bonnes activités |
-| Détail d'une activité | Infos, aucun participant, lancer, terminer, abandonner, lancée par un autre membre, déjà réalisée, sans Tribu, activité introuvable | Les bonnes actions selon l'état de l'activité, écran Récompense après « Terminer » |
+| Détail d'une activité | Infos (lieu, durée, participants, Tribus de la semaine), trop peu de participants, premium verrouillé ou débloqué, aucun participant, lancer, terminer, abandonner, lancée par un autre membre, déjà réalisée, sans Tribu, activité introuvable | Les bonnes actions selon l'état de l'activité, écran Récompense après « Terminer » |
 | Récompenses | Sans Tribu, collection, 3 derniers badges, prochain objectif, tous les badges, détail d'un badge, écran Récompense, historique | Les bons badges dans le bon ordre, points et niveau affichés |
 | Chat | Sans Tribu, historique, messages lus, envoi, message reçu, message vide, message d'un compte supprimé | Messages affichés en direct, rien n'est envoyé si le message est vide |
 | Temps réel | Connexion du socket, chargement de la Tribu, messages non lus (chat ouvert ou non), notifications, Tribu renommée, activité lancée puis terminée, nouveau membre, membre parti (compte supprimé), demande acceptée ou refusée, token refusé | L'app se met à jour sans recharger la page |

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router';
 import type { ReactNode } from 'react';
-import { Award, Check, ChevronLeft, CircleCheck, Flag, Image as ImageIcon, MapPin, X } from 'lucide-react';
+import { Award, Check, ChevronLeft, CircleCheck, Clock, Crown, Flag, Gift, Image as ImageIcon, Lock, MapPin, Users, X } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 import { useUserStore } from '../store/userStore';
 import { useFamilyStore } from '../store/familyStore';
@@ -10,6 +10,7 @@ import { getActivityImage, getAvatar } from '../assets';
 import Button from '../components/Button';
 import ScreenHeader from '../components/ScreenHeader';
 import { CATEGORY_LABELS } from '../categories';
+import { durationText, participantsText } from '../activityText';
 import Spinner from '../components/Spinner';
 import ConfirmModal from '../components/ConfirmModal';
 import useCompleteActivity from '../hooks/useCompleteActivity';
@@ -55,8 +56,9 @@ export default function ActivityDetail() {
   // L'activité arrive par la navigation ; si on ouvre l'adresse directement, on la charge
   const [activity, setActivity] = useState<Activity | null>(location.state?.activity ?? null);
 
+  // Toujours rechargée : le détail contient aussi le nombre de Tribus qui l'ont faite cette semaine
   useEffect(() => {
-    if (activity || !activityId) return;
+    if (!activityId) return;
     const fetchActivity = async () => {
       try {
         const response = await api(`activities/${activityId}`);
@@ -67,7 +69,7 @@ export default function ActivityDetail() {
       }
     };
     fetchActivity();
-  }, [activity, activityId, navigate]);
+  }, [activityId, navigate]);
 
   const hasFamily = !!user?.familyId;
   const members = family?.members ?? [];
@@ -99,6 +101,10 @@ export default function ActivityDetail() {
   }
 
   const points = activity.points ?? 0;
+  const minParticipants = activity.minParticipants ?? 1;
+  const maxParticipants = activity.maxParticipants ?? null;
+  // Activité premium et compte gratuit : verrouillée (Figma : details offre Premium verrouillée)
+  const locked = !!activity.isPremium && !user?.isPremium;
 
   // Cette activité est celle en cours dans la Tribu ?
   const ongoing = leavingActivity
@@ -124,6 +130,14 @@ export default function ActivityDetail() {
 
     if (participants.length === 0) {
       setErrorMessage('Choisis au moins un participant.');
+      return;
+    }
+    if (participants.length < minParticipants) {
+      setErrorMessage(`Il faut au moins ${minParticipants} participants pour cette activité.`);
+      return;
+    }
+    if (maxParticipants && participants.length > maxParticipants) {
+      setErrorMessage(`Cette activité accepte au maximum ${maxParticipants} participants.`);
       return;
     }
 
@@ -284,6 +298,17 @@ export default function ActivityDetail() {
   } else if (activity.isActive === false) {
     // Retirée du catalogue : on peut la consulter (historique), plus la choisir
     actions = infoText("Cette activité n'est plus proposée.");
+  } else if (locked) {
+    // Compte gratuit : le premium débloque l'activité (bouton du profil)
+    actions = (
+      <Button
+        title="Passer Premium pour en profiter"
+        onPress={() => navigate('/profil')}
+        color={theme.primary}
+        icon={<Crown size={20} color="#FFFFFF" strokeWidth={2} />}
+        iconPosition="left"
+      />
+    );
   } else if (hasFamily) {
     actions = <Button title="Choisir cette activité" onPress={handleChooseActivity} loading={loading} color={theme.primary} />;
   } else {
@@ -319,11 +344,25 @@ export default function ActivityDetail() {
         {/* Photo en grand (sinon l'illustration de la catégorie) */}
         <div className="relative w-full overflow-hidden" style={{ height: 340, backgroundColor: theme.transparent }}>
           {image ? (
-            <img src={image} alt="" className="w-full h-full block" style={{ objectFit: activity.imageUrl ? 'cover' : 'contain', padding: activity.imageUrl ? 0 : '60px 40px' }} />
+            <img
+              src={image}
+              alt=""
+              className="w-full h-full block"
+              style={{ objectFit: activity.imageUrl ? 'cover' : 'contain', padding: activity.imageUrl ? 0 : '60px 40px', filter: locked ? 'grayscale(1)' : undefined }}
+            />
           ) : (
             <div className="w-full h-full flex items-center justify-center">
               <ImageIcon size={48} color={theme.primary} strokeWidth={1.5} />
             </div>
+          )}
+          {/* Verrouillée : cadenas au centre de la photo */}
+          {locked && (
+            <span
+              className="absolute flex items-center justify-center"
+              style={{ left: '50%', top: '50%', width: 72, height: 72, marginLeft: -36, marginTop: -56, borderRadius: 36, backgroundColor: theme.primary, border: '4px solid #FFFFFF' }}
+            >
+              <Lock size={30} color="#FFFFFF" strokeWidth={2} />
+            </span>
           )}
         </div>
 
@@ -342,6 +381,11 @@ export default function ActivityDetail() {
               </Tag>
             ) : ongoing ? (
               <Tag color={theme.primary} background={theme.transparent}>En cours</Tag>
+            ) : activity.isPremium ? (
+              <Tag color="#FFFFFF" background={TEXT_DARK}>
+                <Crown size={16} color="#FFFFFF" strokeWidth={2} />
+                Premium
+              </Tag>
             ) : (
               <Tag color={theme.primary} background={theme.transparent}>
                 {activity.isPartner ? activity.offer || 'Partenariat' : 'Gratuite'}
@@ -375,23 +419,66 @@ export default function ActivityDetail() {
             </div>
           )}
 
-          {/* Infos pratiques : le lieu (seulement si l'activité a une ville) */}
-          {activity.city && (
-            <div className="bg-white flex flex-col" style={{ padding: 16, gap: 14, borderRadius: 20 }}>
+          {/* Infos pratiques : lieu, durée, participants (chaque ligne seulement si l'info existe) */}
+          {(() => {
+            const rows = [
+              { icon: MapPin, label: 'Lieu', value: activity.place || activity.city },
+              { icon: Clock, label: 'Durée', value: activity.duration ? durationText(activity.duration) : null },
+              { icon: Users, label: 'Participants', value: participantsText(minParticipants, maxParticipants) },
+            ].filter(row => row.value);
+            if (rows.length === 0) return null;
+            return (
+              <div className="bg-white flex flex-col" style={{ padding: 16, gap: 14, borderRadius: 20 }}>
+                {rows.map(({ icon: Icon, label, value }) => (
+                  <div key={label} className="flex items-center" style={{ gap: 12 }}>
+                    <span className="flex items-center justify-center shrink-0" style={{ width: 40, height: 40, borderRadius: 12, backgroundColor: theme.transparent }}>
+                      <Icon size={20} color={theme.primary} strokeWidth={2} />
+                    </span>
+                    <div className="flex flex-col min-w-0">
+                      <span className="font-outfit" style={{ fontSize: 14, color: TEXT_GREY }}>{label}</span>
+                      <span className="font-outfit-bold text-base" style={{ color: TEXT_DARK }}>{value}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            );
+          })()}
+
+          {/* Offre partenaire premium : verrouillée pour un compte gratuit (Figma : offre-premium) */}
+          {activity.isPremium && !completed && (
+            <div className="bg-white flex flex-col" style={{ padding: 16, gap: 14, borderRadius: 20, border: `1.5px solid ${TEXT_DARK}` }}>
               <div className="flex items-center" style={{ gap: 12 }}>
-                <span className="flex items-center justify-center shrink-0" style={{ width: 40, height: 40, borderRadius: 12, backgroundColor: theme.transparent }}>
-                  <MapPin size={20} color={theme.primary} strokeWidth={2} />
+                <span className="flex items-center justify-center shrink-0" style={{ width: 40, height: 40, borderRadius: 12, backgroundColor: TEXT_DARK }}>
+                  <Gift size={20} color="#FFFFFF" strokeWidth={2} />
                 </span>
                 <div className="flex flex-col min-w-0">
-                  <span className="font-outfit" style={{ fontSize: 14, color: TEXT_GREY }}>Lieu</span>
-                  <span className="font-outfit-bold text-base" style={{ color: TEXT_DARK }}>{activity.city}</span>
+                  <span className="font-outfit-bold text-base" style={{ color: TEXT_DARK }}>Offre partenaire Premium</span>
+                  {!!activity.familiesThisWeek && (
+                    <span className="font-outfit" style={{ fontSize: 14, color: TEXT_GREY }}>
+                      +{activity.familiesThisWeek} utilisation{activity.familiesThisWeek > 1 ? 's' : ''} cette semaine
+                    </span>
+                  )}
                 </div>
               </div>
+              <div className="flex flex-col items-center text-center" style={{ padding: 16, borderRadius: 16, backgroundColor: locked ? '#EEEEF2' : theme.transparent }}>
+                <span className="font-outfit-bold" style={{ fontSize: 20, color: locked ? '#969696' : theme.primary }}>
+                  {activity.offer || 'Offre partenaire'}
+                </span>
+              </div>
+              {locked && (
+                <span
+                  className="flex items-center justify-center font-outfit-bold text-base"
+                  style={{ height: 48, gap: 8, borderRadius: 999, backgroundColor: '#E3E3E8', color: '#FFFFFF' }}
+                >
+                  <Lock size={18} color="#FFFFFF" strokeWidth={2} />
+                  Réservé aux membres Premium
+                </span>
+              )}
             </div>
           )}
 
-          {/* Récompense (Figma : recompense) */}
-          {(() => {
+          {/* Récompense (Figma : recompense). Pas affichée tant que l'activité est verrouillée */}
+          {!locked && (() => {
             const color = completed ? SUCCESS : theme.primary;
             const light = completed ? SUCCESS_LIGHT : theme.transparent;
             return (
@@ -404,8 +491,12 @@ export default function ActivityDetail() {
                     <span className="font-outfit-bold text-base" style={{ color: TEXT_DARK }}>
                       {completed ? 'Récompense obtenue' : 'Récompense Tribu'}
                     </span>
-                    {completed && (
+                    {completed ? (
                       <span className="font-outfit" style={{ fontSize: 14, color }}>Ajoutée au niveau de votre Tribu</span>
+                    ) : !!activity.familiesThisWeek && (
+                      <span className="font-outfit" style={{ fontSize: 14, color }}>
+                        +{activity.familiesThisWeek} famille{activity.familiesThisWeek > 1 ? 's' : ''} l’{activity.familiesThisWeek > 1 ? 'ont' : 'a'} faite cette semaine
+                      </span>
                     )}
                   </div>
                 </div>
@@ -431,7 +522,9 @@ export default function ActivityDetail() {
               </span>
               {fixedParticipants
                 ? fixedParticipants.map(p => participantRow(p, true, participantsColor, undefined, !ongoing))
-                : members.map(member => participantRow(member, participants.includes(member.id), theme.primary, () => toggleParticipant(member.id)))}
+                : locked
+                  ? <div style={{ opacity: 0.5 }} className="flex flex-col gap-2">{members.map(member => participantRow(member, false, theme.primary))}</div>
+                  : members.map(member => participantRow(member, participants.includes(member.id), theme.primary, () => toggleParticipant(member.id)))}
               {/* Activité en cours : combien de membres y participent (Figma : details-activité en cours) */}
               {ongoing && (
                 <span className="font-outfit" style={{ fontSize: 14, color: TEXT_GREY }}>

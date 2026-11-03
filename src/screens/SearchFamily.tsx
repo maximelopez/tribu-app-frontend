@@ -90,7 +90,7 @@ export default function SearchFamily() {
       <div className="px-4 pt-2 flex flex-col gap-4 shrink-0">
         {/* Barre de recherche */}
         <div
-          className="flex items-center bg-white"
+          className="field-box flex items-center bg-white"
           style={{ height: 48, borderRadius: 18, border: '1px solid #CBD5E0', padding: '0 14px', gap: 10 }}
         >
           <Search size={18} color="#757575" />

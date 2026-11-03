@@ -59,7 +59,7 @@ export default function Input({
         placeholder={placeholder}
         rows={numberOfLines}
         onFocus={onFocus}
-        className="w-full font-outfit text-base placeholder:text-[#969696] resize-none"
+        className="field w-full font-outfit text-base placeholder:text-[#969696] resize-none"
         style={{ ...BASE_STYLE, minHeight: 100, padding: 12, caretColor: caret }}
       />
     );
@@ -87,7 +87,7 @@ export default function Input({
           onSubmitEditing();
         }
       }}
-      className="w-full font-outfit text-base placeholder:text-[#969696]"
+      className="field w-full font-outfit text-base placeholder:text-[#969696]"
       style={{ ...BASE_STYLE, height: 48, caretColor: caret }}
     />
   );

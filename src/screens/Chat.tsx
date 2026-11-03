@@ -111,7 +111,7 @@ export default function Chat() {
           }}
           placeholder="Écris un message..."
           rows={1}
-          className="font-outfit text-base placeholder:text-[#969696] resize-none"
+          className="field-soft font-outfit text-base placeholder:text-[#969696] resize-none"
           style={{
             flex: 1,
             backgroundColor: '#FFFFFF',

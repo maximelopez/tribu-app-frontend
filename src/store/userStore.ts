@@ -9,6 +9,7 @@ export interface User {
   familyId: string | null;
   avatar: number | null;
   theme?: ThemeColor;
+  isPremium?: boolean; // compte premium (débloque les activités premium)
   birthdate?: string | null;
   acceptedTermsAt?: string | null; // accord aux CGU (fin de l'onboarding)
 }

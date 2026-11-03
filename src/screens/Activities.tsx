@@ -138,7 +138,7 @@ export default function Activities() {
         {/* Recherche */}
         <div style={{ padding: '0 16px' }}>
           <div
-            className="flex items-center bg-white"
+            className="field-box flex items-center bg-white"
             style={{ height: 48, borderRadius: 16, border: `1px solid ${BORDER_GREY}`, padding: '0 12px', gap: 8 }}
           >
             <input

@@ -115,12 +115,13 @@ export default function CreateFamily() {
               aria-haspopup="listbox"
               aria-expanded={cityMenuOpen}
               aria-labelledby="city-label"
-              className="w-full flex items-center font-outfit text-base text-left"
+              className="field w-full flex items-center font-outfit text-base text-left"
               style={{
                 height: 48,
                 padding: '0 12px',
                 gap: 10,
-                border: `1px solid ${cityMenuOpen ? theme.primary : '#969696'}`,
+                // Liste ouverte : bordure gris foncé, comme un champ actif (Figma : champ-liste-deroulante)
+                border: `1px solid ${cityMenuOpen ? '#6B6B6B' : '#969696'}`,
                 borderRadius: 16,
                 backgroundColor: '#FAFAFA',
                 color: city ? '#161616' : '#969696',

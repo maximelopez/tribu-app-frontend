@@ -85,6 +85,7 @@ export default function Signup() {
         familyId: data.user.familyId,
         avatar: data.user.avatar,
         theme: data.user.theme,
+        isPremium: false,
       });
 
       useUserStore.getState().setOnboardingCompleted(false);

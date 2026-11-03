@@ -55,6 +55,7 @@ export default function Login() {
         familyId: data.user.familyId,
         avatar: data.user.avatar,
         theme: normalizeThemeColor(data.user.theme),
+        isPremium: !!data.user.isPremium,
         birthdate: data.user.birthdate,
         acceptedTermsAt: data.user.acceptedTermsAt,
       });

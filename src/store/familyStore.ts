@@ -40,6 +40,12 @@ export interface Activity {
   isActive?: boolean; // false = retirée du catalogue (consultable, mais plus possible de la choisir)
   points?: number;    // points gagnés par la Tribu pour chaque participant
   city?: string | null;      // ville (une activité libre n'en a pas forcément)
+  place?: string | null;     // lieu précis (ex : "Parc de l'Arboretum, Angers")
+  duration?: number | null;  // durée environ, en minutes
+  minParticipants?: number;  // "Dès 2 membres" (1 par défaut)
+  maxParticipants?: number | null; // "Jusqu'à 6 personnes" (null = pas de maximum)
+  isPremium?: boolean;       // réservée aux comptes premium
+  familiesThisWeek?: number; // Tribus qui l'ont terminée ces 7 derniers jours (détail seulement)
   createdAt?: string;        // date d'ajout au catalogue (section « Les nouveautés »)
 }
 

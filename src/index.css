@@ -146,6 +146,23 @@ textarea {
   outline-offset: 2px;
 }
 
+/* Champs de saisie (Figma Design System : champ-texte, état Focus) :
+   pas de contour noir, la bordure passe en gris foncé et s'épaissit un peu */
+.field:focus,
+.field-box:focus-within {
+  border-color: #6B6B6B !important;
+  box-shadow: 0 0 0 0.5px #6B6B6B;
+}
+.field:focus-visible,
+.field-box input:focus-visible,
+.field-soft:focus-visible {
+  outline: none !important;
+}
+/* Champ sans bordure (message du chat) : léger contour au focus */
+.field-soft:focus {
+  box-shadow: 0 0 0 1.5px #6B6B6B;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .floating-mascot,
   .floating-mascot-shadow,

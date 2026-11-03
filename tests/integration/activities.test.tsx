@@ -78,6 +78,48 @@ describe('Détail d\'une activité', () => {
     expect(screen.getByText('+ 80 points par participant')).toBeInTheDocument();
   });
 
+  it('infos pratiques : lieu, durée, participants, et Tribus de la semaine', async () => {
+    withFamily();
+    mockApi({ 'GET activities/a1': { body: { ...picnic, place: "Parc de l'Arboretum, Angers", duration: 120, minParticipants: 2, familiesThisWeek: 4 } } });
+    renderDetail();
+    expect(await screen.findByText("Parc de l'Arboretum, Angers")).toBeInTheDocument();
+    expect(screen.getByText('Environ 2 h')).toBeInTheDocument();
+    expect(screen.getByText('Dès 2 membres de la Tribu')).toBeInTheDocument();
+    expect(screen.getByText('+4 familles l’ont faite cette semaine')).toBeInTheDocument();
+  });
+
+  it('refuse trop peu de participants', async () => {
+    withFamily();
+    const calls = mockApi({ 'GET activities/a1': { body: { ...picnic, minParticipants: 2 } } });
+    renderDetail();
+    await userEvent.click(await screen.findByRole('checkbox', { name: /Maxime/ }));
+    await userEvent.click(screen.getByRole('button', { name: 'Choisir cette activité' }));
+    expect(screen.getByText('Il faut au moins 2 participants pour cette activité.')).toBeInTheDocument();
+    expect(calls.some(c => c.method === 'POST')).toBe(false);
+  });
+
+  it('activité premium verrouillée pour un compte gratuit', async () => {
+    withFamily();
+    mockApi({ 'GET activities/a2': { body: { ...bowling, isPremium: true } } });
+    renderDetail('a2');
+    expect(await screen.findByText('Offre partenaire Premium')).toBeInTheDocument();
+    expect(screen.getByText('Réservé aux membres Premium')).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Choisir cette activité' })).not.toBeInTheDocument();
+
+    await userEvent.click(screen.getByRole('button', { name: 'Passer Premium pour en profiter' }));
+    expect(screen.getByTestId('path')).toHaveTextContent('/profil');
+  });
+
+  it('activité premium débloquée pour un compte premium', async () => {
+    loginAs({ familyId: 'f1', isPremium: true });
+    useFamilyStore.getState().setFamily(family);
+    mockApi({ 'GET activities/a2': { body: { ...bowling, isPremium: true } } });
+    renderDetail('a2');
+    expect(await screen.findByText('Offre partenaire Premium')).toBeInTheDocument();
+    expect(screen.queryByText('Réservé aux membres Premium')).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Choisir cette activité' })).toBeInTheDocument();
+  });
+
   it('demande au moins un participant, puis lance l\'activité', async () => {
     withFamily();
     const calls = mockApi({
