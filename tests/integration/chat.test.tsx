@@ -52,6 +52,20 @@ describe('Chat', () => {
     expect(fakeSocket.emit).toHaveBeenCalledWith('markChatRead');
   });
 
+  it("affiche « Compte supprimé » pour le message d'un compte supprimé", () => {
+    loginAs({ familyId: 'f1' });
+    useFamilyStore.getState().setFamily(family);
+    mockApi({});
+    renderScreen(<Chat />);
+
+    act(() => fakeSocket.receive('chatHistory', [{
+      _id: 'm1', familyId: 'f1', sender: { _id: null, name: 'Compte supprimé', avatar: null },
+      content: 'Bonjour à tous', createdAt: '2026-10-14T18:00:00.000Z',
+    }]));
+    expect(screen.getByText('Bonjour à tous')).toBeInTheDocument();
+    expect(screen.getByText('Compte supprimé')).toBeInTheDocument();
+  });
+
   it('envoie un message et affiche ceux qui arrivent en direct', async () => {
     loginAs({ familyId: 'f1' });
     useFamilyStore.getState().setFamily(family);

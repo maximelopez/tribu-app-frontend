@@ -8,8 +8,8 @@ export const family: Family = {
   levelInfo: { level: 4, isMax: false, remaining: 380, progress: 0.62 },
   creatorId: 'u1', joinRequests: [],
   members: [
-    { id: 'u1', name: 'Maxime', avatar: 2, points: 120 },
-    { id: 'u5', name: 'Thomas', avatar: 1, points: 300 },
+    { id: 'u1', name: 'Maxime', avatar: 2, activitiesCount: 1 },
+    { id: 'u5', name: 'Thomas', avatar: 1, activitiesCount: 1 },
   ],
 };
 

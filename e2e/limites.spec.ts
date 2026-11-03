@@ -38,7 +38,7 @@ test('un lien direct vers une activité fonctionne (page rechargée)', async ({ 
   // Recharger la page = ouvrir le lien directement
   await page.reload();
   await expect(page.getByRole('heading', { name: 'Bowling' })).toBeVisible();
-  await expect(page.getByText('+ 80 points par membre')).toBeVisible();
+  await expect(page.getByText('+ 80 points par participant')).toBeVisible();
 });
 
 test('une session expirée renvoie vers la connexion', async ({ page }) => {

@@ -134,6 +134,17 @@ describe('Événements en temps réel', () => {
     expect(calls.filter(c => c.path === 'users?familyId=f1').length).toBe(before + 1);
   });
 
+  it('recharge la Tribu et les membres quand un membre supprime son compte', async () => {
+    const calls = await setup();
+    const before = (path: string) => calls.filter(c => c.path === path).length;
+    const [members, families] = [before('users?familyId=f1'), before('families/f1')];
+
+    await act(async () => fakeSocket.receive('memberLeft', { userId: 'u5', creatorId: 'u1' }));
+
+    expect(before('users?familyId=f1')).toBe(members + 1);
+    expect(before('families/f1')).toBe(families + 1);
+  });
+
   it('déconnecte si le serveur refuse le token', async () => {
     await setup();
     const replace = vi.fn();

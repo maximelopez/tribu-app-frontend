@@ -9,8 +9,8 @@ const user: User = { id: 'u1', name: 'Maxime', email: 'm@test.fr', familyId: nul
 describe('Store utilisateur', () => {
   it('met à jour l\'utilisateur à partir de sa valeur précédente', () => {
     useUserStore.getState().setUser(user);
-    useUserStore.getState().setUser(prev => (prev ? { ...prev, points: 50 } : prev));
-    expect(useUserStore.getState().user).toEqual({ ...user, points: 50 });
+    useUserStore.getState().setUser(prev => (prev ? { ...prev, avatar: 3 } : prev));
+    expect(useUserStore.getState().user).toEqual({ ...user, avatar: 3 });
   });
 
   it('garde la session dans le localStorage', () => {

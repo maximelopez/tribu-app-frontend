@@ -38,13 +38,13 @@ L'application ne demande que ce qui est utile :
 
 L'application ne demande **ni nom de famille, ni photo, ni adresse, ni numéro de téléphone, ni position**. Les avatars sont proposés par l'app : aucune photo n'est envoyée.
 
-Les autres membres de la Tribu ne voient que le **profil public** (prénom, avatar, points) : l'API ne leur envoie ni l'email ni la date de naissance.
+Les autres membres de la Tribu ne voient que le **profil public** (prénom, avatar, nombre d'activités terminées) : l'API ne leur envoie ni l'email ni la date de naissance.
 
 ## 4. Données gardées sur le téléphone
 
 | Où | Quoi | Pourquoi | Quand c'est effacé |
 |---|---|---|---|
-| `localStorage` (`tribu:auth:user`) | Token de connexion, profil de l'utilisateur (prénom, email, thème, avatar, Tribu, points, date de naissance), onboarding terminé | Rester connecté après la fermeture de l'app | À la déconnexion, ou si la session expire |
+| `localStorage` (`tribu:auth:user`) | Token de connexion, profil de l'utilisateur (prénom, email, thème, avatar, Tribu, date de naissance), onboarding terminé | Rester connecté après la fermeture de l'app | À la déconnexion, ou si la session expire |
 | Mémoire de l'app | Tribu, activités, messages, notifications | Affichage | À la fermeture de l'app |
 | Cache du service worker (PWA) | Fichiers de l'application (code, polices, images) | Ouvrir l'app rapidement, même sans réseau | À chaque nouvelle version, ou en désinstallant l'app |
 

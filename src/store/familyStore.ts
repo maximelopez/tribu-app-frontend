@@ -1,10 +1,11 @@
 import { create } from 'zustand';
 
+// Membre de la Tribu (profil public). Seule la Tribu a des points
 export interface Member {
   id: string;
   name: string;
   avatar: number;
-  points: number;
+  activitiesCount?: number; // activités terminées par ce membre
 }
 
 export interface LevelInfo {
@@ -37,7 +38,7 @@ export interface Activity {
   isPartner: boolean; // true = offre partenaire, false = activité libre
   offer?: string | null; // offre partenaire (ex : "1 partie offerte"), seulement si isPartner
   isActive?: boolean; // false = retirée du catalogue (consultable, mais plus possible de la choisir)
-  points?: number;    // points gagnés par chaque membre inscrit
+  points?: number;    // points gagnés par la Tribu pour chaque participant
   city?: string | null;      // ville (une activité libre n'en a pas forcément)
   createdAt?: string;        // date d'ajout au catalogue (section « Les nouveautés »)
 }

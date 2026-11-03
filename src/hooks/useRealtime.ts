@@ -3,7 +3,7 @@ import { useLocation } from 'react-router';
 import { socket } from '../socket';
 import { useUserStore } from '../store/userStore';
 import { useFamilyStore } from '../store/familyStore';
-import type { AppNotification, Family, FamilyActivity, Member } from '../store/familyStore';
+import type { AppNotification, Family, FamilyActivity } from '../store/familyStore';
 import { api, expireSession } from '../api';
 
 // Temps réel de l'app connectée :
@@ -215,6 +215,27 @@ export default function useRealtime() {
       }
     };
 
+    // Un membre a supprimé son compte : on recharge la Tribu (créateur, demandes) et les membres
+    const handleMemberLeft = async () => {
+      if (!familyId) return;
+      try {
+        const [resFamily, resMembers] = await Promise.all([
+          api(`families/${familyId}`),
+          api(`users?familyId=${familyId}`),
+        ]);
+        const [dataFamily, dataMembers] = await Promise.all([resFamily.json(), resMembers.json()]);
+        if (!resFamily.ok || !resMembers.ok) return;
+        setFamily((prev) => (prev ? {
+          ...prev,
+          creatorId: dataFamily.family.creatorId,
+          joinRequests: dataFamily.family.joinRequests,
+          members: dataMembers.users,
+        } : prev));
+      } catch (error) {
+        console.error('Erreur mise à jour après départ d\'un membre :', error);
+      }
+    };
+
     // Activité de la Tribu lancée, terminée ou annulée par un membre
     const handleFamilyActivityUpdated = async (data: FamilyActivity) => {
       if (data.status === 'ongoing') {
@@ -247,9 +268,6 @@ export default function useRealtime() {
             members: dataMembers.users ?? prev.members,
           } : prev);
 
-          // Les points de l'utilisateur connecté aussi
-          const me = dataMembers.users?.find((m: Member) => m.id === userId);
-          if (me) setUser((prev) => (prev ? { ...prev, points: me.points } : prev));
         } catch (error) {
           console.error('Erreur mise à jour après activité terminée :', error);
         }
@@ -267,6 +285,7 @@ export default function useRealtime() {
     socket.on('notification', handleNotification);
     socket.on('joinRequestRemoved', handleJoinRequestRemoved);
     socket.on('memberJoined', handleMemberJoined);
+    socket.on('memberLeft', handleMemberLeft);
     socket.on('familyActivityUpdated', handleFamilyActivityUpdated);
 
     // Nettoyage
@@ -281,6 +300,7 @@ export default function useRealtime() {
       socket.off('notification', handleNotification);
       socket.off('joinRequestRemoved', handleJoinRequestRemoved);
       socket.off('memberJoined', handleMemberJoined);
+      socket.off('memberLeft', handleMemberLeft);
       socket.off('familyActivityUpdated', handleFamilyActivityUpdated);
     };
   }, [userId, familyId, setUser, setFamily, setCurrentActivity, setCompletedActivities, setUnreadCount, setPendingRequest, setNotifications, setUnreadNotifications]);

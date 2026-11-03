@@ -215,6 +215,7 @@ e2e/                   Tests système (Playwright) : parcours complets avec le v
 | `familyAccepted` | Demande acceptée : la Tribu est chargée |
 | `familyRejected` | Demande refusée : l'Accueil revient à « Rejoindre ou créer une Tribu » |
 | `memberJoined` | Liste des membres rechargée |
+| `memberLeft` | Un membre a supprimé son compte : Tribu (créateur, demandes) et membres rechargés |
 | `familyUpdated` | Nom ou ville de la Tribu mis à jour |
 | `familyActivityUpdated` | Activité en cours, historique et points mis à jour |
 
@@ -225,8 +226,8 @@ et le nombre de messages non lus, pour rattraper ce qui s'est passé pendant la 
 
 ### Points et niveaux
 
-- Chaque participant d'une activité terminée gagne ses points, et la Tribu gagne les points de tous
-  les participants.
+- Seule la Tribu a des points : quand une activité est terminée, elle gagne les points de l'activité
+  pour chaque participant. Les membres, eux, n'ont pas de points.
 - Le niveau de la Tribu (1 à 10) et sa progression sont calculés par le backend (`levelInfo`).
 - `TribeCard` affiche le niveau, la barre de progression, « X pts avant le niveau N »
   et les membres classés par nombre d'activités.

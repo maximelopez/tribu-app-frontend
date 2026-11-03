@@ -153,7 +153,7 @@ export default function ActivityDetail() {
     }
   };
 
-  // Terminer : chaque participant gagne les points (seulement celui qui l'a lancée)
+  // Terminer : la Tribu gagne les points pour chaque participant (seulement celui qui l'a lancée)
   const handleCompleteActivity = () => {
     if (!ongoing || loading) return;
     setErrorMessage('');
@@ -411,7 +411,7 @@ export default function ActivityDetail() {
                 </div>
                 <div className="flex flex-col items-center text-center" style={{ padding: 16, gap: 4, borderRadius: 16, backgroundColor: light }}>
                   <span className="font-outfit-bold" style={{ fontSize: 20, color }}>
-                    {completed ? `+ ${pointsEarned} points gagnés` : `+ ${points} points par membre`}
+                    {completed ? `+ ${pointsEarned} points gagnés` : `+ ${points} points par participant`}
                   </span>
                   <span className="font-outfit" style={{ fontSize: 14, color: TEXT_GREY }}>
                     {completed

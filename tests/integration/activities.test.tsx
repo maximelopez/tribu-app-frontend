@@ -75,7 +75,7 @@ describe('Détail d\'une activité', () => {
     expect(await screen.findByText('Bowling')).toBeInTheDocument();
     expect(screen.getByText('Sport')).toBeInTheDocument();
     expect(screen.getByText('1 partie offerte')).toBeInTheDocument();
-    expect(screen.getByText('+ 80 points par membre')).toBeInTheDocument();
+    expect(screen.getByText('+ 80 points par participant')).toBeInTheDocument();
   });
 
   it('demande au moins un participant, puis lance l\'activité', async () => {

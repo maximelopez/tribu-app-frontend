@@ -41,7 +41,7 @@ export const PRIVACY_POLICY: LegalText = {
     {
       title: 'Qui peut les voir',
       paragraphs: [
-        "Les membres de votre Tribu voient seulement votre prénom, votre avatar et vos points. Votre email et votre date de naissance ne sont visibles que par vous.",
+        "Les membres de votre Tribu voient seulement votre prénom, votre avatar et le nombre d'activités que vous avez faites. Votre email et votre date de naissance ne sont visibles que par vous.",
         "Les personnes qui cherchent une Tribu voient son nom, sa ville et le prénom et l'avatar de ses membres.",
       ],
     },

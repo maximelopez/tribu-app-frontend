@@ -14,7 +14,7 @@ test('inscription, création de Tribu, activité terminée et récompense', asyn
   await page.getByRole('link', { name: 'Activités' }).click();
   await expect(page.getByRole('heading', { name: 'À faire à Angers' })).toBeVisible();
   await page.getByRole('button', { name: /Pique-nique au parc/ }).first().click();
-  await expect(page.getByText('+ 50 points par membre')).toBeVisible();
+  await expect(page.getByText('+ 50 points par participant')).toBeVisible();
   await page.getByRole('checkbox', { name: /Camille/ }).click();
   await page.getByRole('button', { name: 'Choisir cette activité' }).click();
 

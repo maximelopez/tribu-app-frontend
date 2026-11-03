@@ -6,8 +6,9 @@ import { useFamilyStore } from '../store/familyStore';
 export interface Message {
   _id: string;
   familyId: string;
+  // Compte supprimé : _id à null et name « Compte supprimé » (le message reste dans le chat)
   sender: {
-    _id: string;
+    _id: string | null;
     name: string;
     avatar?: number | null;
   };

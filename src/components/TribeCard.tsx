@@ -13,7 +13,7 @@ interface TribeCardProps {
   completedActivities: FamilyActivity[];
 }
 
-// Carte de la Tribu sur l'Accueil : niveau, points, objectif de la semaine, membres (Figma : carte-tribu)
+// Carte de la Tribu sur l'Accueil : niveau, points de la Tribu, objectif de la semaine, membres (Figma : carte-tribu)
 export default function TribeCard({ family, currentUserId, completedActivities }: TribeCardProps) {
   const { theme } = useTheme();
   const { levelInfo } = family;
@@ -22,7 +22,7 @@ export default function TribeCard({ family, currentUserId, completedActivities }
   // Nombre d'activités terminées par membre
   const counts: Record<string, number> = {};
   completedActivities.forEach(fa => fa.participants.forEach(p => { counts[p.id] = (counts[p.id] ?? 0) + 1; }));
-  const ranked = [...members].sort((a, b) => (counts[b.id] ?? 0) - (counts[a.id] ?? 0) || b.points - a.points);
+  const ranked = [...members].sort((a, b) => (counts[b.id] ?? 0) - (counts[a.id] ?? 0));
 
   const doneThisWeek = Math.min(countThisWeek(completedActivities), WEEKLY_GOAL);
   const nextLevelPoints = family.points + levelInfo.remaining;
