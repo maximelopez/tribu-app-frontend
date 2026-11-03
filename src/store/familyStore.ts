@@ -19,6 +19,7 @@ export interface Family {
   id: string;
   name: string;
   city: string;
+  slogan?: string | null; // facultatif, choisi à la création
   points: number;
   levelInfo: LevelInfo;
   creatorId: string;

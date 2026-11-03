@@ -7,8 +7,8 @@ interface ButtonProps {
   onPress: () => void;
   loading?: boolean;
   disabled?: boolean;
-  color?: string;              // couleur unie (sinon : dégradé)
-  gradient?: [string, string]; // dégradé personnalisé (par défaut : celui du thème)
+  color?: string;              // couleur du fond (par défaut : celle du thème)
+  pressedColor?: string;       // couleur quand on appuie (par défaut : Color-Gradient du thème)
   textColor?: string;
   icon?: ReactNode;
   borderColor?: string;
@@ -17,7 +17,8 @@ interface ButtonProps {
   iconPosition?: 'left' | 'right';
 }
 
-// Bouton principal (Figma : "Sign in" — dégradé Color → Color-Gradient, 48px, coins 16)
+// Bouton principal (Figma Design System : button-general). Couleur unie, 48px, coins 16, légère ombre.
+// Appuyé : couleur plus foncée (Color-Gradient). Désactivé : gris clair, texte blanc
 // shrink-0 : garde ses 48px dans une zone qui défile (sinon flex peut l'écraser)
 export default function Button({
   title,
@@ -25,7 +26,7 @@ export default function Button({
   loading = false,
   disabled = false,
   color,
-  gradient,
+  pressedColor,
   textColor,
   icon,
   borderColor,
@@ -34,7 +35,10 @@ export default function Button({
 }: ButtonProps) {
   const { theme } = useTheme();
   const isDisabled = loading || disabled;
-  const [from, to] = gradient ?? [theme.primary, theme.gradient];
+  const background = color ?? theme.primary;
+  // Bouton blanc sur fond de couleur (Figma : button-on-fond-fonce) : gris très clair quand on appuie
+  const pressed = pressedColor ?? (!color ? theme.gradient : color.toLowerCase() === '#ffffff' ? '#f3f3f8' : color);
+  const showDisabled = disabled && !loading;
 
   const handleClick = () => {
     if (isDisabled) return;
@@ -48,12 +52,13 @@ export default function Button({
       type={type}
       onClick={handleClick}
       disabled={isDisabled}
-      className="w-full shrink-0 flex items-center justify-center gap-2 rounded-2xl transition-opacity active:opacity-80"
+      className="btn w-full shrink-0 flex items-center justify-center gap-2 rounded-2xl"
       style={{
         height: 48,
         border: borderColor ? `0.5px solid ${borderColor}` : 'none',
-        background: color ?? `linear-gradient(90deg, ${from}, ${to})`,
-        opacity: disabled && !loading ? 0.5 : 1,
+        backgroundColor: showDisabled ? '#E3E3E3' : background,
+        boxShadow: showDisabled ? 'none' : '0px 4px 2px rgba(0, 0, 0, 0.08)',
+        ['--btn-pressed' as string]: pressed,
       }}
     >
       {loading ? (
@@ -61,7 +66,7 @@ export default function Button({
       ) : (
         <>
           {iconPosition === 'left' && icon}
-          <span className="font-outfit-bold text-base" style={{ color: textColor || '#FFFFFF' }}>
+          <span className="font-outfit-bold text-base" style={{ color: showDisabled ? '#FFFFFF' : textColor || '#FFFFFF' }}>
             {title}
           </span>
           {iconPosition === 'right' && icon}

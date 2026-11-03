@@ -3,14 +3,11 @@ import avatar1 from './images/avatar1.png';
 import avatar2 from './images/avatar2.png';
 import avatar3 from './images/avatar3.png';
 import avatar4 from './images/avatar4.png';
-import bgGreen from './images/bg-green.png';
-import bgOrange from './images/bg-orange.png';
-import bgRed from './images/bg-red.png';
+import motifOnboarding from './images/motif-onboarding.png';
 import activiteNature from './images/activite-nature.png';
 import activiteCulture from './images/activite-culture.png';
 import activiteSport from './images/activite-sport.png';
 import activiteMaison from './images/activite-maison.png';
-import type { ThemeColor } from '../context/ThemeContext';
 import type { Category } from '../store/familyStore';
 
 export { default as logoTribu } from './images/logo-tribu.png';
@@ -52,9 +49,6 @@ export const getBadgeImage = (id: string) => badgeImages[`./badges/${id}.svg`] ?
 export const getActivityImage = (activity?: { imageUrl?: string | null; category?: string | null } | null) =>
   activity?.imageUrl || getActivityIllustration(activity?.category);
 
-// Fond à motifs de l'onboarding selon la couleur du thème
-export const backgroundMap: Record<ThemeColor, string> = {
-  green: bgGreen,
-  orange: bgOrange,
-  red: bgRed,
-};
+// Motifs blancs transparents de l'onboarding, posés sur la couleur du thème (Figma : fond vert transparent).
+// Une seule image pour les 3 thèmes : la couleur vient du thème
+export const onboardingPattern = motifOnboarding;

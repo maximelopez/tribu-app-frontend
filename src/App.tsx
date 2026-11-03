@@ -2,7 +2,7 @@ import { Navigate, Outlet, Route, Routes, useLocation } from 'react-router';
 import { useUserStore } from './store/userStore';
 import { useFamilyStore } from './store/familyStore';
 import DecoBackground from './components/DecoBackground';
-import { decoForRoute } from './decoForRoute';
+import { backgroundForRoute, decoForRoute } from './decoForRoute';
 import useFamilyData from './hooks/useFamilyData';
 import useRealtime from './hooks/useRealtime';
 import TabBar from './components/TabBar';
@@ -40,9 +40,9 @@ function PhoneFrame() {
     <div className="h-full flex justify-center">
       <div
         className="relative w-full h-full flex flex-col overflow-hidden"
-        style={{ maxWidth: 430, backgroundColor: '#F3F3F8', boxShadow: '0 0 24px rgba(0,0,0,0.06)' }}
+        style={{ maxWidth: 430, backgroundColor: backgroundForRoute(pathname), boxShadow: '0 0 24px rgba(0,0,0,0.06)' }}
       >
-        {deco && <DecoBackground variant={deco.variant} flipped={deco.flipped} />}
+        {deco && <DecoBackground variant={deco.variant} mirrored={deco.mirrored} />}
         {/* Zone principale de chaque écran (lecteurs d'écran : « aller au contenu principal ») */}
         <main className="relative flex-1 min-h-0 flex flex-col">
           <Outlet />

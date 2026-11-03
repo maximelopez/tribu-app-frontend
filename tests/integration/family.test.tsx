@@ -131,4 +131,19 @@ describe('Créer une Tribu', () => {
     expect(calls[0]).toEqual({ method: 'POST', path: 'families', body: { name: 'Champions', city: 'Nantes' } });
     expect(useUserStore.getState().user?.familyId).toBe('f9');
   });
+
+  it('envoie le slogan quand il est rempli', async () => {
+    loginAs();
+    const calls = mockApi({ 'POST families': { status: 201, body: { family: { id: 'f9' } } } });
+    renderScreen(<CreateFamily />, { path: '/tribu/creer' });
+
+    await userEvent.type(screen.getByPlaceholderText('Ex : DreamTeam'), 'Champions');
+    await userEvent.click(screen.getByRole('button', { name: /Ville/ }));
+    await userEvent.click(screen.getByRole('option', { name: 'Angers' }));
+    await userEvent.type(screen.getByPlaceholderText('Votre slogan'), 'Toujours ensemble');
+    await userEvent.click(screen.getByRole('button', { name: 'Créer ma Tribu' }));
+
+    await waitFor(() => expect(calls).toHaveLength(1));
+    expect(calls[0].body).toEqual({ name: 'Champions', city: 'Angers', slogan: 'Toujours ensemble' });
+  });
 });

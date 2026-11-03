@@ -16,10 +16,16 @@ describe('Thème', () => {
     expect(normalizeThemeColor(42)).toBeUndefined();
   });
 
-  it('a les 3 couleurs de la maquette, chacune avec ses 4 teintes', () => {
+  it('a les 3 couleurs de la maquette, chacune avec ses 5 teintes', () => {
     expect(THEME_COLORS).toEqual(['green', 'orange', 'red']);
     for (const color of THEME_COLORS) {
-      expect(Object.keys(themeMap[color])).toEqual(['primary', 'gradient', 'transparent', 'secondary']);
+      expect(Object.keys(themeMap[color])).toEqual(['primary', 'gradient', 'text', 'transparent', 'secondary']);
     }
+  });
+
+  it('reprend les couleurs du Design System Figma', () => {
+    expect(themeMap.green.primary).toBe('#00865b');
+    expect(themeMap.red.primary).toBe('#d63d14');
+    expect(themeMap.orange.primary).toBe('#ff9d00');
   });
 });

@@ -100,11 +100,12 @@ export default function Signup() {
   return (
     <div
       className="flex-1 overflow-y-auto no-scrollbar"
-      style={{ padding: '90px 16px 24px', paddingTop: 'calc(90px + env(safe-area-inset-top))' }}
+      // Position du titre comme sur la maquette (155 px depuis le haut, barre d'état comprise)
+      style={{ padding: '96px 16px 24px', paddingTop: 'calc(96px + env(safe-area-inset-top))' }}
     >
       {/* Titre */}
       <div className="flex flex-col items-center" style={{ gap: 21, marginBottom: 26 }}>
-        <h1 className="font-peachy text-center font-normal m-0" style={{ fontSize: 32, color: BRAND.primary }}>
+        <h1 className="font-peachy text-center font-normal m-0" style={{ fontSize: 32, color: BRAND.text }}>
           Inscription
         </h1>
         <p className="font-outfit text-base text-center m-0" style={{ color: '#161616' }}>
@@ -114,7 +115,7 @@ export default function Signup() {
 
       <form onSubmit={e => e.preventDefault()} className="flex flex-col">
         {/* Champs */}
-        <div className="flex flex-col" style={{ gap: 16, marginBottom: 26 }}>
+        <div className="flex flex-col" style={{ gap: 25, marginBottom: 21 }}>
           <label className="flex flex-col" style={{ gap: 9 }}>
             <span className="font-outfit text-base" style={{ color: '#000' }}>Prénom :</span>
             <Input
@@ -170,7 +171,7 @@ export default function Signup() {
                     width: 16,
                     height: 3,
                     borderRadius: 999,
-                    backgroundColor: index < passedChecks ? '#35CF94' : '#E5E5E5',
+                    backgroundColor: index < passedChecks ? '#35CF94' : '#E3E3E3',
                   }}
                 />
               ))}
@@ -186,7 +187,7 @@ export default function Signup() {
           title="S'inscrire"
           onPress={handleSignup}
           loading={loading}
-          gradient={[BRAND.primary, BRAND.gradient]}
+          color={BRAND.primary}
         />
       </form>
 
@@ -195,13 +196,15 @@ export default function Signup() {
         <span className="font-outfit text-base" style={{ color: '#161616' }}>Déjà inscrit(e) ?</span>
         <button
           onClick={() => navigate('/connexion')}
-          className="font-outfit-bold text-base text-white flex items-center"
+          // Figma Design System : lien-connexion (44 px, coins 16, texte en gras)
+          className="btn font-outfit-bold text-base text-white flex items-center justify-center"
           style={{
-            height: 30,
+            height: 44,
             borderRadius: 16,
-            padding: '0 10px',
+            padding: 10,
             border: 'none',
-            background: `linear-gradient(90deg, ${BRAND.primary}, ${BRAND.gradient})`,
+            backgroundColor: BRAND.primary,
+            ['--btn-pressed' as string]: BRAND.gradient,
           }}
         >
           Connectez-vous

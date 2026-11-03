@@ -74,11 +74,12 @@ export default function Login() {
   return (
     <div
       className="flex-1 overflow-y-auto no-scrollbar"
-      style={{ padding: '100px 16px 24px', paddingTop: 'calc(100px + env(safe-area-inset-top))' }}
+      // Position du titre comme sur la maquette (195 px depuis le haut, barre d'état comprise)
+      style={{ padding: '136px 16px 24px', paddingTop: 'calc(136px + env(safe-area-inset-top))' }}
     >
       {/* Titre */}
       <div className="flex flex-col items-center" style={{ gap: 16, marginBottom: 27 }}>
-        <h1 className="font-peachy text-center font-normal m-0" style={{ fontSize: 32, color: BRAND.primary }}>
+        <h1 className="font-peachy text-center font-normal m-0" style={{ fontSize: 32, color: BRAND.text }}>
           Bon retour
         </h1>
         <p className="font-outfit text-base text-center m-0" style={{ color: '#161616' }}>
@@ -91,7 +92,7 @@ export default function Login() {
         className="flex flex-col"
       >
         {/* Champs */}
-        <div className="flex flex-col" style={{ gap: 16, marginBottom: 26 }}>
+        <div className="flex flex-col" style={{ gap: 8, marginBottom: 25 }}>
           <label className="flex flex-col" style={{ gap: 9 }}>
             <span className="font-outfit text-base" style={{ color: '#000' }}>Votre adresse mail :</span>
             <Input
@@ -130,7 +131,7 @@ export default function Login() {
           title="Se connecter"
           onPress={handleLogin}
           loading={loading}
-          gradient={[BRAND.primary, BRAND.gradient]}
+          color={BRAND.primary}
         />
       </form>
 
@@ -139,13 +140,15 @@ export default function Login() {
         <span className="font-outfit text-base" style={{ color: '#161616' }}>Pas encore de compte ?</span>
         <button
           onClick={() => navigate('/inscription', { replace: true })}
-          className="font-outfit-bold text-base text-white flex items-center"
+          // Maquette « login » : 30 px de haut, coins 16, texte en gras
+          className="btn font-outfit-bold text-base text-white flex items-center justify-center"
           style={{
             height: 30,
             borderRadius: 16,
-            padding: '0 10px',
+            padding: 10,
             border: 'none',
-            background: `linear-gradient(90deg, ${BRAND.primary}, ${BRAND.gradient})`,
+            backgroundColor: BRAND.primary,
+            ['--btn-pressed' as string]: BRAND.gradient,
           }}
         >
           Inscrivez-vous

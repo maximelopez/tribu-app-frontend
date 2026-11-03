@@ -23,7 +23,7 @@ export default function ActivityCarousel({ title, activities, onSeeAll, titleSiz
         <button
           onClick={onSeeAll}
           className="font-outfit shrink-0 p-0"
-          style={{ fontSize: 14, color: theme.primary, background: 'none', border: 'none' }}
+          style={{ fontSize: 14, color: theme.text, background: 'none', border: 'none' }}
         >
           Tout voir
         </button>

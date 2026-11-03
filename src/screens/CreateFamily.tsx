@@ -30,6 +30,7 @@ export default function CreateFamily() {
 
   const [name, setName] = useState('');
   const [city, setCity] = useState('');
+  const [slogan, setSlogan] = useState('');
   const [cityMenuOpen, setCityMenuOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [loading, setLoading] = useState(false);
@@ -54,7 +55,8 @@ export default function CreateFamily() {
       // 1 - Créer la famille
       const response = await api('families', {
         method: 'POST',
-        body: { name: name.trim(), city: city.trim() },
+        // Slogan facultatif : envoyé seulement s'il est rempli
+        body: { name: name.trim(), city: city.trim(), ...(slogan.trim() ? { slogan: slogan.trim() } : {}) },
       });
       const data = await response.json();
 
@@ -168,6 +170,12 @@ export default function CreateFamily() {
             )}
           </div>
         </div>
+
+        {/* Slogan facultatif (Figma : champ-slogan) */}
+        <label className="flex flex-col" style={{ gap: 9 }}>
+          <span className="font-outfit text-base" style={{ color: '#000000' }}>Slogan de votre Tribu (optionnel) :</span>
+          <Input value={slogan} onChangeText={text => setSlogan(text.slice(0, 150))} placeholder="Votre slogan" multiline numberOfLines={5} color={theme.primary} />
+        </label>
 
         {/* Ce qui attend votre Tribu (informatif) */}
         <div

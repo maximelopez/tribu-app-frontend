@@ -1,4 +1,6 @@
+import { Crown, Lock } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
+import { useUserStore } from '../store/userStore';
 import { getActivityImage } from '../assets';
 import type { Activity } from '../store/familyStore';
 import { CATEGORY_LABELS } from '../categories';
@@ -14,9 +16,12 @@ interface ActivityTileProps {
   fullWidth?: boolean;
 }
 
-// Carte d'activité en carrousel (Figma : carte-activite-klub) - Activités et Accueil
+// Carte d'activité en carrousel (Figma : carte-activite-klub) - Activités et Accueil.
+// Premium pour un compte gratuit : image désaturée et voilée, cadenas, textes et étiquettes en gris
 export default function ActivityTile({ activity, onPress, fullWidth = false }: ActivityTileProps) {
   const { theme } = useTheme();
+  const isPremiumUser = useUserStore(state => !!state.user?.isPremium);
+  const locked = !!activity.isPremium && !isPremiumUser;
   const image = getActivityImage(activity);
   const category = CATEGORY_LABELS[activity.category] ?? '';
 
@@ -37,13 +42,40 @@ export default function ActivityTile({ activity, onPress, fullWidth = false }: A
       }}
     >
       {/* Photo de l'activité, ou illustration de sa catégorie */}
-      <div className="w-full overflow-hidden shrink-0" style={{ height: 150, borderRadius: 18, backgroundColor: theme.transparent }}>
-        {image && <img src={image} alt="" className="w-full h-full block" style={{ objectFit: activity.imageUrl ? 'cover' : 'contain' }} />}
+      <div className="relative w-full overflow-hidden shrink-0" style={{ height: 150, borderRadius: 18, backgroundColor: theme.transparent }}>
+        {image && (
+          <img
+            src={image}
+            alt=""
+            className="w-full h-full block"
+            style={{ objectFit: activity.imageUrl ? 'cover' : 'contain', filter: locked ? 'grayscale(1)' : undefined }}
+          />
+        )}
+        {locked && <span className="absolute inset-0" style={{ backgroundColor: 'rgba(22, 22, 22, 0.35)' }} />}
+        {/* Étiquette « Premium » dans le coin (Figma : etiquette) */}
+        {activity.isPremium && (
+          <span
+            className="absolute flex items-center font-outfit"
+            style={{ top: 0, left: 0, gap: 6, padding: '6px 14px 6px 12px', fontSize: 14, color: '#FFFFFF', backgroundColor: TEXT_DARK, borderRadius: '18px 0 18px 0' }}
+          >
+            <Crown size={16} color="#FFFFFF" strokeWidth={2} />
+            Premium
+          </span>
+        )}
+        {/* Cadenas au centre (Figma : cadenas) */}
+        {locked && (
+          <span
+            className="absolute flex items-center justify-center"
+            style={{ left: '50%', top: '50%', width: 56, height: 56, marginLeft: -28, marginTop: -28, borderRadius: 28, border: '3px solid #FFFFFF', backgroundColor: theme.primary }}
+          >
+            <Lock size={24} color="#FFFFFF" strokeWidth={2} />
+          </span>
+        )}
       </div>
 
       {/* Nom et catégorie */}
       <div className="flex flex-col w-full min-w-0" style={{ gap: 2 }}>
-        <span className="font-outfit-bold text-base truncate" style={{ color: TEXT_DARK }}>{activity.name}</span>
+        <span className="font-outfit-bold text-base truncate" style={{ color: locked ? TEXT_GREY : TEXT_DARK }}>{activity.name}</span>
         <span className="font-outfit truncate" style={{ fontSize: 14, color: TEXT_GREY }}>{subtitle}</span>
       </div>
 
@@ -51,12 +83,12 @@ export default function ActivityTile({ activity, onPress, fullWidth = false }: A
       <div className="flex flex-wrap" style={{ gap: 6 }}>
         <span
           className="font-outfit rounded-full"
-          style={{ fontSize: 14, padding: '2px 10px', backgroundColor: theme.transparent, color: theme.primary }}
+          style={{ fontSize: 14, padding: '2px 10px', backgroundColor: locked ? TAG_GREY : theme.transparent, color: locked ? TEXT_GREY : theme.text }}
         >
           {activity.isPartner ? activity.offer || 'Partenariat' : 'Activité gratuite'}
         </span>
         {activity.points !== undefined && (
-          <span className="font-outfit rounded-full" style={{ fontSize: 14, padding: '2px 10px', backgroundColor: TAG_GREY, color: TEXT_DARK }}>
+          <span className="font-outfit rounded-full" style={{ fontSize: 14, padding: '2px 10px', backgroundColor: TAG_GREY, color: locked ? TEXT_GREY : TEXT_DARK }}>
             +{activity.points} pts
           </span>
         )}

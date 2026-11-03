@@ -2,11 +2,11 @@ import { useEffect } from 'react';
 import { Navigate } from 'react-router';
 import { useTheme } from '../context/ThemeContext';
 import { useUserStore } from '../store/userStore';
-import { backgroundMap } from '../assets';
+import { onboardingPattern } from '../assets';
 import Spinner from '../components/Spinner';
 
 export default function LoadingScreen() {
-  const { theme, themeColor } = useTheme();
+  const { theme } = useTheme();
   const setOnboardingCompleted = useUserStore(state => state.setOnboardingCompleted);
   const hasAccepted = useUserStore(state => !!state.user?.acceptedTermsAt);
 
@@ -25,7 +25,7 @@ export default function LoadingScreen() {
       className="flex-1 flex flex-col justify-center items-center"
       style={{
         backgroundColor: theme.primary,
-        backgroundImage: `url(${backgroundMap[themeColor]})`,
+        backgroundImage: `url(${onboardingPattern})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         padding: '0 29px',

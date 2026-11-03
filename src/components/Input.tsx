@@ -22,7 +22,7 @@ interface InputProps {
 }
 
 const BASE_STYLE = {
-  border: '1px solid #969696',
+  border: '1px solid #7D7D7D', // Figma : Gris-500
   borderRadius: 16,
   backgroundColor: '#FAFAFA',
   padding: '0 12px',
@@ -59,7 +59,7 @@ export default function Input({
         placeholder={placeholder}
         rows={numberOfLines}
         onFocus={onFocus}
-        className="field w-full font-outfit text-base placeholder:text-[#969696] resize-none"
+        className="field w-full font-outfit text-base placeholder:text-[#6B6B6B] resize-none"
         style={{ ...BASE_STYLE, minHeight: 100, padding: 12, caretColor: caret }}
       />
     );
@@ -87,7 +87,7 @@ export default function Input({
           onSubmitEditing();
         }
       }}
-      className="field w-full font-outfit text-base placeholder:text-[#969696]"
+      className="field w-full font-outfit text-base placeholder:text-[#6B6B6B]"
       style={{ ...BASE_STYLE, height: 48, caretColor: caret }}
     />
   );

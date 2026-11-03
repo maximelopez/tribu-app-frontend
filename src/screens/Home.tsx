@@ -67,15 +67,16 @@ export default function Home() {
   return (
     <div className="flex-1 overflow-y-auto no-scrollbar" style={{ paddingTop: 'env(safe-area-inset-top)', paddingBottom: 24 }}>
       {/* Bonjour, Prénom + cloche des notifications */}
-      <div className="w-full px-4 pt-4 flex items-center justify-between" style={{ gap: 12 }}>
-        <h1 className="font-outfit-bold text-2xl font-normal m-0 min-w-0 truncate" style={{ color: '#161616' }}>
-          Bonjour, <span style={{ color: theme.primary }}>{user.name}</span>
+      {/* Positions de la maquette : cloche à 23 px sous la barre d'état avec une Tribu, 13 px sans */}
+      <div className="w-full px-4 flex items-center justify-between" style={{ gap: 12, paddingTop: family ? 23 : 13 }}>
+        <h1 className="font-outfit-bold font-normal m-0 min-w-0 truncate" style={{ fontSize: 20, color: '#161616', paddingLeft: 2 }}>
+          Bonjour, <span style={{ color: theme.text }}>{user.name}</span>
         </h1>
         <NotificationBell onPress={() => setShowNotifications(true)} />
       </div>
       {showNotifications && <NotificationPanel onClose={() => setShowNotifications(false)} />}
 
-      <div className="px-4 mt-4">
+      <div className="px-4" style={{ marginTop: family ? 8 : 6 }}>
         {isLoadingFamily && !family ? (
           <div className="mt-6 flex justify-center">
             <Spinner size={36} color={theme.primary} />
@@ -97,7 +98,7 @@ export default function Home() {
 
             {/* Idées d'activités (Figma : homepage-tribu) */}
             {suggestions.length > 0 && (
-              <div className="flex flex-col" style={{ margin: '6px -16px 0', gap: 12 }}>
+              <div className="flex flex-col" style={{ margin: '-4px -16px 0', gap: 12 }}>
                 <ActivityCarousel
                   title="Où sortir avec ta Tribu ?"
                   titleSize={16}
@@ -137,8 +138,8 @@ export default function Home() {
                   padding: '0 21px',
                   border: 'none',
                   boxShadow: CARD_SHADOW,
-                  // Dégradé Figma : Color -> Color-Gradient, de gauche à droite
-                  background: `linear-gradient(90deg, ${theme.primary}, ${theme.gradient})`,
+                  // Figma Design System : Rejoindre (couleur unie du thème)
+                  backgroundColor: theme.primary,
                 }}
               >
                 <span
@@ -159,7 +160,7 @@ export default function Home() {
               <button
                 onClick={() => navigate('/tribu/creer')}
                 className="flex items-center gap-4 bg-white text-left"
-                style={{ boxShadow: CARD_SHADOW, borderRadius: 20, height: 101, padding: '0 20px', border: 'none' }}
+                style={{ boxShadow: CARD_SHADOW, borderRadius: 16, height: 101, padding: '0 20px', border: 'none' }}
               >
                 <span
                   className="flex items-center justify-center shrink-0"
@@ -168,8 +169,8 @@ export default function Home() {
                   ＋
                 </span>
                 <span className="flex-1 flex flex-col gap-0.5">
-                  <span className="font-outfit-bold text-base" style={{ color: '#111' }}>Créer une Tribu</span>
-                  <span className="font-outfit text-sm" style={{ color: '#888' }}>Lance ton groupe et invite tes proches</span>
+                  <span className="font-outfit-bold text-base" style={{ color: '#161616' }}>Créer une Tribu</span>
+                  <span className="font-outfit text-sm" style={{ color: '#6B6B6B' }}>Lance ton groupe et invite tes proches</span>
                 </span>
                 <img src={chevronRightGrey} alt="" width={24} height={24} />
               </button>

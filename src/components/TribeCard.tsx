@@ -19,9 +19,10 @@ export default function TribeCard({ family, currentUserId, completedActivities }
   const { levelInfo } = family;
   const members = family.members ?? [];
 
-  // Nombre d'activités terminées par membre
+  // Nombre d'activités terminées par membre : celui du serveur, sinon calculé avec l'historique
   const counts: Record<string, number> = {};
   completedActivities.forEach(fa => fa.participants.forEach(p => { counts[p.id] = (counts[p.id] ?? 0) + 1; }));
+  members.forEach(m => { if (m.activitiesCount !== undefined) counts[m.id] = Math.max(counts[m.id] ?? 0, m.activitiesCount); });
   const ranked = [...members].sort((a, b) => (counts[b.id] ?? 0) - (counts[a.id] ?? 0));
 
   const doneThisWeek = Math.min(countThisWeek(completedActivities), WEEKLY_GOAL);

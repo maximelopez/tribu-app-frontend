@@ -2,7 +2,7 @@ import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { useUserStore } from '../store/userStore';
 import { themeMap } from '../context/ThemeContext';
-import { backgroundMap } from '../assets';
+import { onboardingPattern } from '../assets';
 import Button from '../components/Button';
 import { ChevronRight } from 'lucide-react';
 import OnboardingLayout from '../components/OnboardingLayout';
@@ -70,9 +70,9 @@ export default function Birthdate() {
   };
 
   return (
-    <OnboardingLayout background={backgroundMap.green} backgroundColor={BRAND.primary}>
+    <OnboardingLayout background={onboardingPattern} backgroundColor={BRAND.primary}>
       {/* Date de naissance */}
-      <div className="flex flex-col" style={{ marginTop: 100, gap: 8 }}>
+      <div className="flex flex-col" style={{ marginTop: 109, gap: 8 }}>
         <label className="font-outfit text-base text-white" htmlFor="birth-day">
           Quelle est ta date de naissance ?
         </label>
@@ -123,13 +123,13 @@ export default function Birthdate() {
       </div>
 
       {/* Suivant */}
-      <div style={{ marginTop: 90 }}>
+      <div style={{ marginTop: 110 }}>
         <Button
           title="Suivant"
           onPress={handleNext}
           color="#FFFFFF"
-          textColor={BRAND.primary}
-          icon={<ChevronRight size={20} color={BRAND.primary} strokeWidth={2.5} />}
+          textColor={BRAND.text}
+          icon={<ChevronRight size={20} color={BRAND.text} strokeWidth={2.5} />}
         />
       </div>
     </OnboardingLayout>

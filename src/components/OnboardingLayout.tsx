@@ -22,8 +22,9 @@ export default function OnboardingLayout({ background, backgroundColor, showBack
         backgroundImage: `url(${background})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
-        padding: '22px 16px 24px',
-        paddingTop: 'calc(22px + env(safe-area-inset-top))',
+        // Positions de la maquette : logo à 17 px sous la barre d'état
+        padding: '17px 16px 24px',
+        paddingTop: 'calc(17px + env(safe-area-inset-top))',
       }}
     >
       {showBack && (
@@ -32,7 +33,7 @@ export default function OnboardingLayout({ background, backgroundColor, showBack
           aria-label="Retour"
           className="absolute flex items-center justify-center bg-white active:opacity-80"
           style={{
-            top: 'calc(16px + env(safe-area-inset-top))',
+            top: 'calc(5px + env(safe-area-inset-top))',
             left: 16,
             width: 44,
             height: 44,

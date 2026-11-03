@@ -118,9 +118,10 @@ Le numérique consomme de l'énergie sur les serveurs, sur le réseau et sur les
 | Constat | Amélioration possible |
 |---|---|
 | ~~La police **Montserrat (334 Ko)** n'est utilisée que pour les libellés de la barre du bas~~ | ✅ Fait : la nouvelle barre du bas de la maquette utilise Outfit, déjà chargée. Montserrat n'est plus téléchargée (334 Ko en moins) |
-| Les polices sont au format **TTF / OTF** | Les convertir en **WOFF2**, environ 2 fois plus léger |
+| ~~Les polices sont au format **TTF / OTF**~~ | ✅ Fait : polices en **WOFF2**. Outfit passe de 2 fichiers (110 Ko) à 3 épaisseurs (42 Ko), Peachy Keen de 40 à 23 Ko |
+| ~~Les fonds de l'onboarding sont **3 images PNG** (une par thème, 180 Ko)~~ | ✅ Fait : une seule image de motifs transparents (27 Ko), posée sur la couleur du thème |
 | Les **images de démarrage iPhone** (environ 400 Ko) sont mises en cache sur tous les téléphones, Android compris | Les exclure du cache du service worker |
-| Les avatars et les fonds sont en **PNG** | Les convertir en **WebP**, plus léger à qualité égale |
+| Les avatars sont en **PNG** | Les convertir en **WebP**, plus léger à qualité égale |
 
 Ces améliorations seront traitées avec l'audit d'accessibilité et d'éco-conception.
 

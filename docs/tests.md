@@ -70,13 +70,13 @@ Quelques principes :
 
 ## 5. Scénarios testés
 
-**129 tests automatiques** au total : 32 tests unitaires, 88 tests d'intégration et 9 tests système.
+**131 tests automatiques** au total : 33 tests unitaires, 89 tests d'intégration et 9 tests système.
 
-### Tests unitaires (32)
+### Tests unitaires (33)
 
 | Thème | Scénarios | Résultat attendu |
 |---|---|---|
-| Thème | Couleurs valides, couleur inconnue ou vide, les 3 thèmes de la maquette | Seules les 3 couleurs sont acceptées, chacune avec ses 4 teintes |
+| Thème | Couleurs valides, couleur inconnue ou vide, les 3 thèmes de la maquette, couleurs du Design System | Seules les 3 couleurs sont acceptées, chacune avec ses 4 teintes |
 | Badges | Date d'obtention, ombre selon le niveau, niveau inconnu | « 12 oct. », la bonne ombre, bronze par défaut |
 | Activités | Tri par nouveauté (activités sans date à la fin), conversion d'une activité de la Tribu, libellés des catégories | Ordre correct, liste de départ non modifiée |
 | Images | Photo de l'activité, illustration de la catégorie, catégorie inconnue, avatar par défaut | La bonne image, ou rien |
@@ -84,7 +84,7 @@ Quelques principes :
 | Objectif de la semaine | Début de semaine (lundi), activités comptées depuis lundi, textes selon le nombre restant | « Encore N activités », « Plus qu'une activité », « Objectif atteint » |
 | Appels au backend | Adresse, token, corps JSON, session expirée (401), mauvais mot de passe (401 sans être connecté) | Déconnexion et retour à la connexion seulement si la session a expiré |
 
-### Tests d'intégration (88)
+### Tests d'intégration (89)
 
 | Thème | Scénarios | Résultat attendu |
 |---|---|---|
@@ -96,7 +96,7 @@ Quelques principes :
 | Accueil | Sans Tribu, demande en attente (annulation), avec Tribu (carte Tribu : niveau, objectif de la semaine, membres ; idées dans la ville), activité en cours (le bouton ouvre son détail, « Voir l'activité » pour les autres membres), activité déjà faite, notifications | Les bonnes cartes, les idées sans les activités en cours ou déjà faites, demande acceptée depuis la cloche |
 | Rechercher une Tribu | Filtre par ville dès l'arrivée, recherche dès 1 caractère, filtre par ville, aucun résultat, recherche effacée | Les bons résultats et les bons messages |
 | Détails d'une Tribu | Informations de la Tribu, envoi d'une demande, demande refusée par le serveur, Tribu introuvable | « Demande envoyée ! » en restant sur l'écran, ou le message d'erreur |
-| Créer une Tribu | Ville manquante, création avec la liste déroulante | Tribu créée avec la ville choisie, retour à l'accueil |
+| Créer une Tribu | Ville manquante, création avec la liste déroulante, slogan facultatif | Tribu créée avec la ville choisie, retour à l'accueil |
 | Catalogue | Ville de la Tribu, autre ville, catégorie, recherche, aucun résultat, « Tout voir » | Les bonnes activités |
 | Détail d'une activité | Infos (lieu, durée, participants, Tribus de la semaine), trop peu de participants, premium verrouillé ou débloqué, aucun participant, lancer, terminer, abandonner, lancée par un autre membre, déjà réalisée, sans Tribu, activité introuvable | Les bonnes actions selon l'état de l'activité, écran Récompense après « Terminer » |
 | Récompenses | Sans Tribu, collection, 3 derniers badges, prochain objectif, tous les badges, détail d'un badge, écran Récompense, historique | Les bons badges dans le bon ordre, points et niveau affichés |

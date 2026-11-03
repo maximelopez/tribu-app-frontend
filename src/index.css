@@ -1,25 +1,32 @@
 @import "tailwindcss";
 
-/* Polices de l'app (mêmes fichiers que mobile) */
+/* Polices de l'app (Design System Figma : Outfit Regular, SemiBold et Bold).
+   WOFF2 : format compressé, 3 fois plus léger que le TTF (licence libre OFL, voir Outfit-OFL.txt) */
 @font-face {
   font-family: 'outfit';
-  src: url('./assets/fonts/Outfit-Regular.ttf') format('truetype');
+  src: url('./assets/fonts/Outfit-Regular.woff2') format('woff2');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'outfit-semibold';
+  src: url('./assets/fonts/Outfit-SemiBold.woff2') format('woff2');
   font-display: swap;
 }
 @font-face {
   font-family: 'outfit-bold';
-  src: url('./assets/fonts/Outfit-SemiBold.ttf') format('truetype');
+  src: url('./assets/fonts/Outfit-Bold.woff2') format('woff2');
   font-display: swap;
 }
 @font-face {
   font-family: 'peachy-keen';
-  src: url('./assets/fonts/peachy-keen-jf.otf') format('opentype');
+  src: url('./assets/fonts/peachy-keen-jf.woff2') format('woff2');
   font-display: swap;
 }
 
 /* Mêmes noms de classes que NativeWind dans mobile : font-outfit, font-outfit-bold, font-peachy… */
 @theme {
   --font-outfit: 'outfit', system-ui, sans-serif;
+  --font-outfit-semibold: 'outfit-semibold', system-ui, sans-serif;
   --font-outfit-bold: 'outfit-bold', system-ui, sans-serif;
   --font-peachy: 'peachy-keen', system-ui, sans-serif;
 }
@@ -40,23 +47,27 @@ body {
   overscroll-behavior: none;
 }
 
-button {
-  cursor: pointer;
-  font: inherit;
-}
-button:disabled {
-  cursor: default;
-}
+/* Styles de base dans le calque « base » : les classes (font-outfit-bold, text-base…) passent devant.
+   Hors calque, « font: inherit » écrasait la police en gras des boutons */
+@layer base {
+  button {
+    cursor: pointer;
+    font: inherit;
+  }
+  button:disabled {
+    cursor: default;
+  }
 
-input,
-textarea {
-  font: inherit;
-}
+  input,
+  textarea {
+    font: inherit;
+  }
 
-/* Les champs de 16px évitent le zoom automatique de Safari iOS */
-input,
-textarea {
-  font-size: 16px;
+  /* Les champs de 16px évitent le zoom automatique de Safari iOS */
+  input,
+  textarea {
+    font-size: 16px;
+  }
 }
 
 /* Scroll interne sans barre visible, comme sur mobile */
@@ -144,6 +155,16 @@ textarea {
 :focus-visible {
   outline: 3px solid #161616 !important;
   outline-offset: 2px;
+}
+
+/* Boutons (Figma : button-general, état Hover) : couleur plus foncée quand on appuie */
+.btn:not(:disabled):active {
+  background-color: var(--btn-pressed) !important;
+}
+@media (hover: hover) {
+  .btn:not(:disabled):hover {
+    background-color: var(--btn-pressed) !important;
+  }
 }
 
 /* Champs de saisie (Figma Design System : champ-texte, état Focus) :

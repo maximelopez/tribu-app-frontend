@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router';
 import { Check, ChevronLeft, ClipboardList, Info, ShieldCheck, SlidersHorizontal, Target } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 import { useUserStore } from '../store/userStore';
-import { backgroundMap } from '../assets';
+import { onboardingPattern } from '../assets';
 import Button from '../components/Button';
 import LegalOverlay from '../components/LegalOverlay';
 import { PRIVACY_POLICY, TERMS } from '../legal';
@@ -96,7 +96,7 @@ export default function Consent() {
         className="flex-1 overflow-y-auto no-scrollbar flex flex-col"
         style={{
           backgroundColor: theme.primary,
-          backgroundImage: `url(${backgroundMap[themeColor]})`,
+          backgroundImage: `url(${onboardingPattern})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           padding: '16px 16px 24px',

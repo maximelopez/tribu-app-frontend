@@ -295,7 +295,7 @@ Le détail (registre des traitements, durées, mineurs, IA Act) est dans la docu
 
 - **3 thèmes** au choix de l'utilisateur (vert, orange, rouge) : `context/ThemeContext.tsx`.
   Utiliser `theme.primary`, `theme.gradient` et `theme.transparent` plutôt que des couleurs fixes.
-- **Polices** : Outfit (`font-outfit`, `font-outfit-bold`) et Montserrat pour la barre du bas.
+- **Polices** : Outfit Regular, SemiBold et Bold (`font-outfit`, `font-outfit-semibold`, `font-outfit-bold`) et Peachy Keen JF pour les titres de marque (`font-peachy`), au format WOFF2.
 - **Fond** des écrans : `#F3F3F8`. Cartes blanches arrondies avec une ombre légère.
 - **Images des activités** : la photo de l'activité (`imageUrl`, hébergée sur Cloudinary et ajoutée
   depuis l'app admin). Sans photo, l'illustration de sa catégorie. Fonction `getActivityImage` dans

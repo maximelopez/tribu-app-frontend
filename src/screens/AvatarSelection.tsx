@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { useTheme } from '../context/ThemeContext';
 import { useUserStore } from '../store/userStore';
-import { AVATARS, backgroundMap, getAvatar } from '../assets';
+import { AVATARS, getAvatar, onboardingPattern } from '../assets';
 import Button from '../components/Button';
 import { ChevronRight } from 'lucide-react';
 import OnboardingLayout from '../components/OnboardingLayout';
@@ -11,7 +11,7 @@ import OnboardingLayout from '../components/OnboardingLayout';
 const AVATAR_SIZE = 64;
 
 export default function AvatarSelection() {
-  const { theme, themeColor } = useTheme();
+  const { theme } = useTheme();
   const user = useUserStore(state => state.user);
   const navigate = useNavigate();
 
@@ -25,7 +25,7 @@ export default function AvatarSelection() {
   };
 
   return (
-    <OnboardingLayout background={backgroundMap[themeColor]} backgroundColor={theme.primary} showBack>
+    <OnboardingLayout background={onboardingPattern} backgroundColor={theme.primary} showBack>
       {/* Choix de l'avatar */}
       <div className="flex flex-col" style={{ marginTop: 82, gap: 26 }}>
         <span className="font-outfit text-base text-white">Choisissez votre avatar :</span>
@@ -44,9 +44,8 @@ export default function AvatarSelection() {
                   width: AVATAR_SIZE,
                   height: AVATAR_SIZE,
                   borderRadius: AVATAR_SIZE / 2,
-                  // Non sélectionné : bordure blanche. Sélectionné : anneau blanc semi-transparent (Figma)
-                  border: isSelected ? 'none' : '3px solid #FFFFFF',
-                  outline: isSelected ? '5px solid rgba(255, 255, 255, 0.5)' : 'none',
+                  // Non sélectionné : bordure blanche. Sélectionné : bordure blanche semi-transparente plus épaisse (Figma)
+                  border: isSelected ? '5px solid rgba(255, 255, 255, 0.5)' : '3px solid #FFFFFF',
                   boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.09)',
                   background: '#FFFFFF',
                 }}
@@ -59,14 +58,14 @@ export default function AvatarSelection() {
       </div>
 
       {/* Suivant (actif une fois un avatar choisi) */}
-      <div style={{ marginTop: 91 }}>
+      <div style={{ marginTop: 96 }}>
         <Button
           title="Suivant"
           onPress={() => navigate('/bienvenue/consentement')}
           disabled={!selectedAvatar}
           color="#FFFFFF"
-          textColor={theme.primary}
-          icon={<ChevronRight size={20} color={theme.primary} strokeWidth={2.5} />}
+          textColor={theme.text}
+          icon={<ChevronRight size={20} color={theme.text} strokeWidth={2.5} />}
         />
       </div>
     </OnboardingLayout>
