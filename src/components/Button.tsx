@@ -57,7 +57,7 @@ export default function Button({
         height: 48,
         border: borderColor ? `0.5px solid ${borderColor}` : 'none',
         backgroundColor: showDisabled ? '#E3E3E3' : background,
-        boxShadow: showDisabled ? 'none' : '0px 4px 2px rgba(0, 0, 0, 0.08)',
+        boxShadow: showDisabled ? 'none' : '0px 4px 4px rgba(0, 0, 0, 0.08)',
         ['--btn-pressed' as string]: pressed,
       }}
     >

@@ -57,7 +57,7 @@ export default function BadgeCard({ badge, onPress }: BadgeCardProps) {
         <span className="font-outfit-bold text-base" style={{ lineHeight: 'normal', color: unlocked ? '#161616' : '#9AA19D' }}>
           {badge.name}
         </span>
-        <span className="font-outfit" style={{ fontSize: 14, lineHeight: 'normal', color: unlocked ? '#6B746F' : '#9AA19D' }}>
+        <span className="font-outfit" style={{ fontSize: 14, lineHeight: 'normal', color: unlocked ? '#6B6B6B' : '#9AA19D' }}>
           {badge.description}
         </span>
       </div>
@@ -69,7 +69,7 @@ export default function BadgeCard({ badge, onPress }: BadgeCardProps) {
           </span>
         )
       ) : (
-        <span className="font-outfit shrink-0 flex items-center" style={{ fontSize: 14, gap: 4, color: '#6B746F' }}>
+        <span className="font-outfit shrink-0 flex items-center" style={{ fontSize: 14, gap: 4, color: '#6B6B6B' }}>
           <Lock size={12} color="#6B746F" strokeWidth={2.5} />
           {badge.progress} / {badge.goal}
         </span>

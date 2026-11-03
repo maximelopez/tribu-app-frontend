@@ -125,10 +125,10 @@ export default function SearchFamily() {
                       clearIfEmpty(search, value);
                     }}
                     aria-pressed={isActive}
-                    className="rounded-full flex items-center justify-center shrink-0 font-outfit"
+                    className="chip rounded-full flex items-center justify-center shrink-0 font-outfit"
                     style={{
                       fontSize: 14,
-                      height: 36,
+                      height: 44,
                       padding: isActive ? '0 16px 0 12px' : '0 16px',
                       gap: 6,
                       backgroundColor: isActive ? theme.primary : '#FFFFFF',
@@ -136,7 +136,7 @@ export default function SearchFamily() {
                       color: isActive ? '#FFFFFF' : '#0F1A14',
                     }}
                   >
-                    {isActive && <Check size={16} color="#FFFFFF" strokeWidth={3} />}
+                    {isActive && <Check className="chip-check" size={16} color="#FFFFFF" strokeWidth={3} />}
                     {value ?? 'Toutes'}
                   </button>
                 );
@@ -155,7 +155,7 @@ export default function SearchFamily() {
         <div className="flex-1 flex flex-col items-center justify-center" style={{ gap: 20, padding: '0 50px 120px' }}>
           <FloatingMascot image={mascotteLunettes} circleColor="rgba(255, 157, 0, 0.1)" />
           <span className="font-outfit text-base" style={{ color: '#111' }}>Trouve ta Tribu</span>
-          <p className="font-outfit text-center m-0" style={{ fontSize: 14, lineHeight: 1.4, color: '#777777' }}>
+          <p className="font-outfit text-center m-0" style={{ fontSize: 14, lineHeight: 1.4, color: '#6B6B6B' }}>
             Tape le nom de la Tribu que tu veux rejoindre, puis envoie ta demande. Un membre de ta famille peut te le donner.
           </p>
         </div>
@@ -164,7 +164,7 @@ export default function SearchFamily() {
         <div className="flex-1 flex flex-col items-center justify-center" style={{ gap: 20, padding: '0 50px 80px' }}>
           <FloatingMascot image={mascotteNoResults} circleColor="rgba(234, 74, 31, 0.1)" />
           <span className="font-outfit text-base" style={{ color: '#111' }}>Aucune Tribu trouvée :(</span>
-          <p className="font-outfit text-center m-0" style={{ fontSize: 14, lineHeight: 1.4, color: '#777777' }}>
+          <p className="font-outfit text-center m-0" style={{ fontSize: 14, lineHeight: 1.4, color: '#6B6B6B' }}>
             Vérifie l’orthographe ou demande le nom exact de la Tribu à un membre de ta famille.
           </p>
         </div>
@@ -204,12 +204,12 @@ export default function SearchFamily() {
 
                     <div className="flex-1 min-w-0 flex flex-col">
                       <span className="font-outfit-bold text-base truncate" style={{ color: '#161616' }}>{item.name}</span>
-                      <span className="font-outfit text-sm" style={{ color: '#969696' }}>
+                      <span className="font-outfit text-sm" style={{ color: '#6B6B6B' }}>
                         {item.membersCount} membre{item.membersCount > 1 ? 's' : ''}
                       </span>
                     </div>
 
-                    <ChevronRight size={24} color="#969696" />
+                    <ChevronRight size={24} color="#6B6B6B" />
                   </div>
 
                   {/* Niveau + ville */}

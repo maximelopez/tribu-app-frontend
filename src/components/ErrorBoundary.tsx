@@ -26,7 +26,7 @@ export default class ErrorBoundary extends Component<{ children: ReactNode }, Er
         style={{ padding: '0 28px', gap: 16, backgroundColor: '#F3F3F8' }}
       >
         <p className="font-outfit-bold m-0" style={{ fontSize: 20, color: '#161616' }}>Oups, un problème est survenu</p>
-        <p className="font-outfit m-0" style={{ fontSize: 16, color: '#777777' }}>
+        <p className="font-outfit m-0" style={{ fontSize: 16, color: '#6B6B6B' }}>
           Recharge l'app pour continuer. Si le problème revient, préviens-nous.
         </p>
         <button

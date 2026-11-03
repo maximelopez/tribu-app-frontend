@@ -12,7 +12,7 @@ import { CITIES } from '../config';
 
 // Couleurs Figma (creer-tribu)
 const TEXT_TITLE = '#1C1F1C';
-const TEXT_MUTED = '#6B7570';
+const TEXT_MUTED = '#6B6B6B';
 const CARD_BORDER = '#E0E7E4';
 const CARD_SHADOW = '0px 4px 6px rgba(0, 0, 0, 0.1)';
 
@@ -123,10 +123,10 @@ export default function CreateFamily() {
                 padding: '0 12px',
                 gap: 10,
                 // Liste ouverte : bordure gris foncé, comme un champ actif (Figma : champ-liste-deroulante)
-                border: `1px solid ${cityMenuOpen ? '#6B6B6B' : '#969696'}`,
+                border: `1px solid ${cityMenuOpen ? '#6B6B6B' : '#7D7D7D'}`,
                 borderRadius: 16,
                 backgroundColor: '#FAFAFA',
-                color: city ? '#161616' : '#969696',
+                color: city ? '#161616' : '#6B6B6B',
               }}
             >
               <span className="flex-1">{city || 'Choisis ta ville'}</span>

@@ -16,8 +16,8 @@ import HeaderBell from '../components/HeaderBell';
 // Couleurs Figma
 const TEXT_STRONG = '#161616';
 const TEXT_DARK = '#111111';
-const TEXT_GREY = '#969696';
-const BORDER_GREY = '#969696';
+const TEXT_GREY = '#6B6B6B';
+const BORDER_GREY = '#7D7D7D';
 const CHIP_BORDER = '#CBD5E0';
 const CHIP_TEXT = '#0F1A14';
 
@@ -148,7 +148,7 @@ export default function Activities() {
               aria-label="Rechercher une activité"
               type="search"
               enterKeyHint="search"
-              className="flex-1 min-w-0 font-outfit text-base placeholder:text-[#969696]"
+              className="flex-1 min-w-0 font-outfit text-base placeholder:text-[#6B6B6B]"
               style={{ color: TEXT_STRONG, border: 'none', outline: 'none', background: 'transparent', caretColor: theme.primary }}
             />
             <Search size={24} color={TEXT_GREY} strokeWidth={2} />
@@ -164,10 +164,10 @@ export default function Activities() {
                 key={value}
                 onClick={() => setSelectedCategory(value)}
                 aria-pressed={isActive}
-                className="rounded-full flex items-center justify-center shrink-0 font-outfit"
+                className="chip rounded-full flex items-center justify-center shrink-0 font-outfit"
                 style={{
                   fontSize: 14,
-                  height: 36,
+                  height: 44,
                   padding: isActive ? '0 16px 0 12px' : '0 16px',
                   gap: 6,
                   backgroundColor: isActive ? theme.primary : '#FFFFFF',
@@ -176,7 +176,7 @@ export default function Activities() {
                 }}
               >
                 {/* Coche sur le filtre sélectionné (Figma : chip-filtre) */}
-                {isActive && <Check size={16} color="#FFFFFF" strokeWidth={3} />}
+                {isActive && <Check className="chip-check" size={16} color="#FFFFFF" strokeWidth={3} />}
                 {label}
               </button>
             );

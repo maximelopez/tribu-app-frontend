@@ -12,7 +12,7 @@ import { sendIcon } from '../assets';
 // Couleurs Figma (écran chat)
 // Fond transparent : la courbe décorative reste visible derrière les messages
 const CHAT_BG = 'transparent';
-const TEXT_GREY = '#969696';
+const TEXT_GREY = '#6B6B6B';
 const INPUT_TEXT = '#0D1217';
 
 export default function Chat() {
@@ -111,7 +111,7 @@ export default function Chat() {
           }}
           placeholder="Écris un message..."
           rows={1}
-          className="field-soft font-outfit text-base placeholder:text-[#969696] resize-none"
+          className="field-soft font-outfit text-base placeholder:text-[#6B6B6B] resize-none"
           style={{
             flex: 1,
             backgroundColor: '#FFFFFF',

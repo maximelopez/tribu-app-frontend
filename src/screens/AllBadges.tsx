@@ -47,7 +47,7 @@ export default function AllBadges() {
               <div key={tier} className="flex flex-col shrink-0" style={{ gap: 12, marginTop: 8 }}>
                 <div className="flex items-center justify-between text-base">
                   <span className="font-outfit-bold" style={{ color: '#161616' }}>{TIER_LABELS[tier]}</span>
-                  <span className="font-outfit" style={{ color: '#969696' }}>{unlocked} / {badges.length}</span>
+                  <span className="font-outfit" style={{ color: '#6B6B6B' }}>{unlocked} / {badges.length}</span>
                 </div>
                 {badges.map(badge => (
                   <BadgeCard key={badge.id} badge={badge} onPress={() => navigate(`/recompenses/badges/${badge.id}`)} />
@@ -57,7 +57,7 @@ export default function AllBadges() {
           })}
 
           {!data && (
-            <p className="font-outfit text-base text-center m-0" style={{ color: '#969696', paddingTop: 12 }}>
+            <p className="font-outfit text-base text-center m-0" style={{ color: '#6B6B6B', paddingTop: 12 }}>
               Impossible de charger les badges. Réessaie plus tard.
             </p>
           )}

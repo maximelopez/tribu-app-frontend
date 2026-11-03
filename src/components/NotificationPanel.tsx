@@ -135,7 +135,7 @@ export default function NotificationPanel({ onClose }: NotificationPanelProps) {
 
         <div className="overflow-y-auto no-scrollbar flex flex-col" style={{ gap: 4 }}>
           {notifications.length === 0 && (
-            <p className="font-outfit m-0" style={{ fontSize: 14, color: '#99A19E', padding: '8px 0 12px' }}>
+            <p className="font-outfit m-0" style={{ fontSize: 14, color: '#6B6B6B', padding: '8px 0 12px' }}>
               Aucune notification pour le moment.
             </p>
           )}
@@ -170,8 +170,8 @@ export default function NotificationPanel({ onClose }: NotificationPanelProps) {
 
                 <div className="flex-1 min-w-0 flex flex-col items-start" style={{ gap: 2, lineHeight: 1.4 }}>
                   <span className="font-outfit-bold" style={{ fontSize: 14, color: '#161616' }}>{content.title}</span>
-                  <span className="font-outfit" style={{ fontSize: 13, color: '#6B7570' }}>{content.text(notification.data)}</span>
-                  <span className="font-outfit" style={{ fontSize: 12, color: '#99A19E' }}>{timeAgo(notification.createdAt)}</span>
+                  <span className="font-outfit" style={{ fontSize: 13, color: '#6B6B6B' }}>{content.text(notification.data)}</span>
+                  <span className="font-outfit" style={{ fontSize: 12, color: '#6B6B6B' }}>{timeAgo(notification.createdAt)}</span>
 
                   {/* Demande en attente : réponse directement depuis la notification */}
                   {isPendingRequest ? (
@@ -180,7 +180,8 @@ export default function NotificationPanel({ onClose }: NotificationPanelProps) {
                         onClick={() => respond(notification, false)}
                         disabled={respondingId === notification.id}
                         className="font-outfit-bold text-white"
-                        style={{ fontSize: 13, padding: '7px 14px', borderRadius: 10, border: 'none', backgroundColor: REFUSE_RED }}
+                        // 44 px de haut minimum (zone tactile)
+                        style={{ fontSize: 13, height: 44, padding: '0 16px', borderRadius: 12, border: 'none', backgroundColor: REFUSE_RED }}
                       >
                         Refuser
                       </button>
@@ -188,7 +189,7 @@ export default function NotificationPanel({ onClose }: NotificationPanelProps) {
                         onClick={() => respond(notification, true)}
                         disabled={respondingId === notification.id}
                         className="font-outfit-bold text-white"
-                        style={{ fontSize: 13, padding: '7px 14px', borderRadius: 10, border: 'none', backgroundColor: theme.primary }}
+                        style={{ fontSize: 13, height: 44, padding: '0 16px', borderRadius: 12, border: 'none', backgroundColor: theme.primary }}
                       >
                         Accepter
                       </button>
@@ -196,7 +197,7 @@ export default function NotificationPanel({ onClose }: NotificationPanelProps) {
                   ) : notification.type === 'join_request' && status && status !== 'pending' ? (
                     <span
                       className="font-outfit-bold"
-                      style={{ fontSize: 13, paddingTop: 4, color: status === 'accepted' ? theme.primary : '#99A19E' }}
+                      style={{ fontSize: 13, paddingTop: 4, color: status === 'accepted' ? theme.primary : '#6B6B6B' }}
                     >
                       {STATUS_LABELS[status]}
                     </span>

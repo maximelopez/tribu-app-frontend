@@ -4,7 +4,7 @@ import { getAvatar } from '../assets';
 // Couleurs Figma (écran chat)
 const SENDER_NAME = '#7D7D7D';
 const TEXT_OTHER = '#2C2D3A';
-const TIME_OTHER = '#D0D1DB';
+const TIME_OTHER = '#6B6B6B';
 const TIME_ME = '#F0F0F3';
 
 const AVATAR_SIZE = 40;

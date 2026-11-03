@@ -61,7 +61,7 @@ export default function ConfirmModal({
             {title}
           </h2>
           {message && (
-            <p className="font-outfit m-0" style={{ fontSize: 16, lineHeight: 'normal', color: '#777777' }}>{message}</p>
+            <p className="font-outfit m-0" style={{ fontSize: 16, lineHeight: 'normal', color: '#6B6B6B' }}>{message}</p>
           )}
         </div>
 

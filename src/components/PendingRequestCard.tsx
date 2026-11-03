@@ -51,7 +51,7 @@ export default function PendingRequestCard() {
         <span className="font-outfit-bold text-center" style={{ fontSize: 19, lineHeight: 'normal', color: '#1C1F1C' }}>
           Demande envoyée
         </span>
-        <p className="font-outfit m-0 w-full" style={{ fontSize: 14, lineHeight: 1.5, color: '#6B7570' }}>
+        <p className="font-outfit m-0 w-full" style={{ fontSize: 14, lineHeight: 1.5, color: '#6B6B6B' }}>
           Ta demande pour rejoindre « {pendingRequest.name} » a bien été envoyée. En attente de l’approbation de
           l’administrateur - une fois accepté, tu gagneras tes premiers points et badges.
         </p>

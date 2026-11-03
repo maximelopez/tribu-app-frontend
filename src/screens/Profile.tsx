@@ -212,11 +212,11 @@ export default function Profile() {
                 }}
               >
                 {link.label}
-                <ChevronRight size={20} color="#969696" strokeWidth={2} />
+                <ChevronRight size={20} color="#6B6B6B" strokeWidth={2} />
               </button>
             ))}
           </div>
-          <p className="font-outfit m-0" style={{ fontSize: 14, lineHeight: 1.4, color: '#777777' }}>
+          <p className="font-outfit m-0" style={{ fontSize: 14, lineHeight: 1.4, color: '#6B6B6B' }}>
             Pour recevoir ou supprimer vos données, écrivez à{' '}
             <a href={`mailto:${CONTACT_EMAIL}`} style={{ color: theme.primary }}>{CONTACT_EMAIL}</a>.
           </p>

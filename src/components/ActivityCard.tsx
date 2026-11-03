@@ -63,7 +63,7 @@ export default function ActivityCard({ name, description, isPartner, offer, imag
             {offer || 'Partenariat'}
           </span>
         )}
-        <span className="font-outfit text-sm line-clamp-2" style={{ color: '#969696' }}>
+        <span className="font-outfit text-sm line-clamp-2" style={{ color: '#6B6B6B' }}>
           {description}
         </span>
       </div>

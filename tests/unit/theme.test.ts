@@ -26,6 +26,8 @@ describe('Thème', () => {
   it('reprend les couleurs du Design System Figma', () => {
     expect(themeMap.green.primary).toBe('#00865b');
     expect(themeMap.red.primary).toBe('#d63d14');
-    expect(themeMap.orange.primary).toBe('#ff9d00');
+    expect(themeMap.orange.primary).toBe('#e07b00');
+    // Les textes de couleur prennent la couleur des boutons
+    for (const color of THEME_COLORS) expect(themeMap[color].text).toBe(themeMap[color].primary);
   });
 });

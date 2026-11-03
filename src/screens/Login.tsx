@@ -140,12 +140,12 @@ export default function Login() {
         <span className="font-outfit text-base" style={{ color: '#161616' }}>Pas encore de compte ?</span>
         <button
           onClick={() => navigate('/inscription', { replace: true })}
-          // Maquette « login » : 30 px de haut, coins 16, texte en gras
+          // Maquette « login » : 44 px de haut (zone tactile), coins 16, texte en gras
           className="btn font-outfit-bold text-base text-white flex items-center justify-center"
           style={{
-            height: 30,
+            height: 44,
             borderRadius: 16,
-            padding: 10,
+            padding: 12,
             border: 'none',
             backgroundColor: BRAND.primary,
             ['--btn-pressed' as string]: BRAND.gradient,

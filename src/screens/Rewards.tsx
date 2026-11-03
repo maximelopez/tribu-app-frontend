@@ -59,7 +59,7 @@ export default function Rewards() {
           <div className="flex flex-col shrink-0" style={{ gap: 10 }}>
             <div className="flex items-center justify-between text-base">
               <span className="font-outfit-bold" style={{ color: '#161616' }}>Ta collection</span>
-              <span className="font-outfit" style={{ color: '#969696' }}>
+              <span className="font-outfit" style={{ color: '#6B6B6B' }}>
                 {data.unlockedCount} / {data.total} débloqué{data.unlockedCount > 1 ? 's' : ''}
               </span>
             </div>
@@ -91,7 +91,7 @@ export default function Rewards() {
         </div>
       ) : (
         <div className="flex-1 flex items-center justify-center" style={{ padding: '0 28px' }}>
-          <p className="font-outfit text-base text-center m-0" style={{ color: '#969696' }}>
+          <p className="font-outfit text-base text-center m-0" style={{ color: '#6B6B6B' }}>
             Impossible de charger les badges. Réessaie plus tard.
           </p>
         </div>

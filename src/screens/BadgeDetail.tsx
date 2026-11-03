@@ -25,7 +25,7 @@ export default function BadgeDetail() {
           {loading ? (
             <Spinner size={36} color={theme.primary} />
           ) : (
-            <p className="font-outfit text-base text-center m-0" style={{ color: '#969696' }}>Badge introuvable.</p>
+            <p className="font-outfit text-base text-center m-0" style={{ color: '#6B6B6B' }}>Badge introuvable.</p>
           )}
         </div>
       </div>
@@ -58,11 +58,11 @@ export default function BadgeDetail() {
             <h1 className="font-outfit-bold font-normal text-center m-0" style={{ fontSize: 32, lineHeight: 'normal', color: '#161616' }}>
               {badge.name}
             </h1>
-            <p className="font-outfit text-base m-0 w-full" style={{ lineHeight: 'normal', color: '#777777' }}>
+            <p className="font-outfit text-base m-0 w-full" style={{ lineHeight: 'normal', color: '#6B6B6B' }}>
               {badge.details}
             </p>
             {badge.unlocked && badge.nextBadge && (
-              <p className="font-outfit text-base m-0 w-full" style={{ lineHeight: 'normal', color: '#777777', marginTop: 18 }}>
+              <p className="font-outfit text-base m-0 w-full" style={{ lineHeight: 'normal', color: '#6B6B6B', marginTop: 18 }}>
                 Prochain palier : {badge.nextBadge.name}, avec {badge.nextBadge.goalText}.
               </p>
             )}
@@ -87,7 +87,7 @@ export default function BadgeDetail() {
                   <Lock size={16} color="#161616" strokeWidth={2} />
                   Pas encore obtenu
                 </span>
-                <span className="font-outfit" style={{ color: '#777777' }}>
+                <span className="font-outfit" style={{ color: '#6B6B6B' }}>
                   {badge.progress} / {badge.goal}
                 </span>
               </div>
@@ -95,7 +95,7 @@ export default function BadgeDetail() {
                 <div className="progress-fill" style={{ width: `${progressPercent}%`, height: '100%', borderRadius: 9999, backgroundColor: theme.primary }} />
               </div>
               {badge.remainingText && (
-                <p className="font-outfit m-0" style={{ fontSize: 14, lineHeight: 'normal', color: '#777777' }}>
+                <p className="font-outfit m-0" style={{ fontSize: 14, lineHeight: 'normal', color: '#6B6B6B' }}>
                   {badge.remainingText}
                 </p>
               )}

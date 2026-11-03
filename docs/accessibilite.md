@@ -22,9 +22,11 @@ L'application suit les règles **WCAG 2.1, niveau AA**, la norme internationale 
 | **Pas de zone principale** (`<main>`) : un lecteur d'écran ne peut pas aller directement au contenu | Connexion, inscription, onboarding, écrans sans barre du bas | Chaque écran est dans une balise `<main>` (`App.tsx`) |
 | **Zones qui défilent impossibles à atteindre au clavier** : on ne peut pas lire la suite avec les flèches | CGU, détail d'une activité, écran Récompense | Les zones qui défilent peuvent recevoir le focus (`tabIndex={0}`) |
 | **Pas de titre principal** (`<h1>`) | Chat, écrans « pas encore de Tribu » | Le nom de la Tribu du chat est un `<h1>`. Les écrans vides ont un `<h1>` lu par les lecteurs d'écran mais invisible (la maquette n'en a pas) |
-| **Contraste des couleurs du thème** | Tous | Corrigé pour le vert et le rouge avec les nouvelles couleurs du Design System, pas pour l'orange : voir la partie 4 |
+| **Contraste des couleurs du thème** | Tous | Couleurs plus foncées dans le Design System (audit de la designer). Vert et rouge corrigés, orange amélioré : voir la partie 4 |
+| **Gris trop clairs** | Dates, compteurs, textes d'aide, heures | Textes secondaires en `#6B6B6B` (5,3) et bordures des champs en `#7D7D7D` |
+| **Zones tactiles trop petites** | Filtres, notifications, connexion | Chips de filtre, boutons Accepter / Refuser et liens « Inscrivez-vous » / « Connectez-vous » à 44 px de haut |
 
-**Après correction** : il ne reste plus que le contraste des couleurs du thème. Toutes les autres règles sont respectées sur les 26 écrans.
+**Après correction** : il ne reste plus que le contraste de l'orange pour les textes normaux. Toutes les autres règles sont respectées sur les 26 écrans.
 
 ## 3. Mesures en place
 
@@ -42,17 +44,17 @@ L'application suit les règles **WCAG 2.1, niveau AA**, la norme internationale 
 
 ## 4. Contraste des couleurs du thème
 
-Dans la dernière version du Design System Figma, la designer a ajouté pour chaque thème une couleur plus foncée, utilisée pour les boutons et les textes de couleur (« Color » et « Color-texte »). Les couleurs vives de la charte restent pour les fonds clairs, les pastilles du choix de thème et les décorations. L'app reprend ces valeurs (`ThemeContext.tsx`). Le contraste est mesuré entre le texte blanc et la couleur des boutons. Le minimum est de 4,5 pour un texte normal et de 3 pour un gros texte (24 px, ou 18,7 px en gras).
+Après son audit d'accessibilité, la designer a mis dans le Design System Figma une couleur plus foncée pour chaque thème. Elle sert pour les boutons, les textes de couleur, les éléments actifs et les icônes de couleur (« Color », et « Color-texte » qui prend la même valeur). Les couleurs vives de la charte restent pour les fonds clairs, les pastilles du choix de thème et les décorations. L'app reprend ces valeurs (`ThemeContext.tsx`). Le contraste est mesuré entre le texte blanc et la couleur des boutons. Le minimum est de 4,5 pour un texte normal et de 3 pour un gros texte (24 px, ou 18,7 px en gras).
 
 | Thème | Couleur des boutons | Contraste | Texte normal (4,5) | Gros texte (3) |
 |---|---|---|---|---|
 | Vert | `#00865B` (avant `#00A16D` : 3,3) | 4,6 | ✅ | ✅ |
 | Rouge | `#D63D14` (avant `#EA4A1F` : 3,8) | 4,6 | ✅ | ✅ |
-| Orange | `#FF9D00` | 2,1 | ❌ | ❌ |
+| Orange | `#E07B00` (avant `#FF9D00` : 2,1) | 3,0 | ❌ | ✅ |
 
-- Le vert et le rouge respectent maintenant le minimum. Les textes de couleur sur fond clair (`#007E56` et `#CA3A13`) sont à 5,1.
-- L'orange reste sous le minimum. Une personne qui voit mal peut choisir le thème vert ou rouge, dans l'onboarding ou dans le profil. Une version plus foncée de l'orange (par exemple `#A85F00`, 4,9) reste à valider avec la designer.
-- Quelques gris de la maquette (dates des badges, badges verrouillés, barre du bas) sont aussi sous le minimum (2,5 à 3).
+- Le vert et le rouge respectent maintenant le minimum.
+- L'orange est meilleur, mais il ne passe que pour les gros textes. Une personne qui voit mal peut choisir le thème vert ou rouge, dans l'onboarding ou dans le profil.
+- Les textes des badges verrouillés restent en gris clair : ce sont des éléments désactivés, que les règles ne comptent pas.
 
 Les liens « Conditions d'utilisation » et « Politique de confidentialité » de l'écran de consentement sont plus petits que 24 px de haut. C'est accepté par les règles, car ce sont des liens dans une phrase.
 

@@ -4,7 +4,7 @@ import type { LegalText } from '../legal';
 export default function LegalDocument({ text }: { text: LegalText }) {
   return (
     <article className="flex flex-col" style={{ gap: 20 }}>
-      <p className="font-outfit m-0" style={{ fontSize: 14, color: '#777777' }}>
+      <p className="font-outfit m-0" style={{ fontSize: 14, color: '#6B6B6B' }}>
         Mis à jour le {text.updatedAt}
       </p>
 

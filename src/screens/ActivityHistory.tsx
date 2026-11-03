@@ -38,14 +38,14 @@ export default function ActivityHistory() {
         </p>
 
         {list.length === 0 ? (
-          <p className="font-outfit text-base text-center" style={{ color: '#969696', marginTop: 24 }}>
+          <p className="font-outfit text-base text-center" style={{ color: '#6B6B6B', marginTop: 24 }}>
             Aucune activité terminée pour l'instant
           </p>
         ) : (
           <div className="flex flex-col" style={{ gap: 16 }}>
             {list.map(item => (
               <div key={item.id} className="flex flex-col" style={{ gap: 6 }}>
-                <span className="font-outfit" style={{ fontSize: 14, color: '#969696' }}>{formatDate(item.completedAt)}</span>
+                <span className="font-outfit" style={{ fontSize: 14, color: '#6B6B6B' }}>{formatDate(item.completedAt)}</span>
                 <ActivityCard
                   name={item.activity.name}
                   description={item.activity.description}

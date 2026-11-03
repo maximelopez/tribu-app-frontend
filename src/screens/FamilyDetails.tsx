@@ -101,7 +101,7 @@ export default function FamilyDetails() {
       {!family ? (
         <div className="flex-1 flex items-center justify-center" style={{ padding: 24 }}>
           {loadError ? (
-            <p className="font-outfit text-center m-0" style={{ fontSize: 14, color: '#969696' }}>
+            <p className="font-outfit text-center m-0" style={{ fontSize: 14, color: '#6B6B6B' }}>
               Impossible de charger cette Tribu.
             </p>
           ) : (

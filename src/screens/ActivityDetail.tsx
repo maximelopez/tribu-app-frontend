@@ -263,7 +263,7 @@ export default function ActivityDetail() {
   );
 
   const infoText = (text: string) => (
-    <p className="font-outfit text-center m-0" style={{ fontSize: 14, color: '#969696' }}>{text}</p>
+    <p className="font-outfit text-center m-0" style={{ fontSize: 14, color: '#6B6B6B' }}>{text}</p>
   );
 
   // Boutons selon l'état de l'activité
