@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router';
 import type { ReactNode } from 'react';
-import { Award, Check, ChevronLeft, CircleCheck, Clock, Crown, Flag, Gift, Image as ImageIcon, Lock, MapPin, Users, X } from 'lucide-react';
+import { Award, CalendarCheck, Check, ChevronLeft, CircleCheck, Clock, Crown, Flag, Gift, Image as ImageIcon, Lock, MapPin, Users, X } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 import { useUserStore } from '../store/userStore';
 import { useFamilyStore } from '../store/familyStore';
@@ -310,7 +310,16 @@ export default function ActivityDetail() {
       />
     );
   } else if (hasFamily) {
-    actions = <Button title="Choisir cette activité" onPress={handleChooseActivity} loading={loading} color={theme.primary} />;
+    actions = (
+      <Button
+        title="Choisir cette activité"
+        onPress={handleChooseActivity}
+        loading={loading}
+        color={theme.primary}
+        icon={<CalendarCheck size={20} color="#FFFFFF" strokeWidth={2} />}
+        iconPosition="left"
+      />
+    );
   } else {
     // Sans Tribu : on invite à en rejoindre une
     actions = (

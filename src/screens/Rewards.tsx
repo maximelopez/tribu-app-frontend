@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router';
+import { Award } from 'lucide-react';
 import { useUserStore } from '../store/userStore';
 import { useTheme } from '../context/ThemeContext';
 import useFamilyBadges from '../hooks/useFamilyBadges';
@@ -86,7 +87,13 @@ export default function Rewards() {
           )}
 
           <div className="shrink-0" style={{ marginTop: 'auto', paddingTop: 24 }}>
-            <Button title="Voir tous les badges" onPress={() => navigate('/recompenses/badges')} color={theme.primary} />
+            <Button
+              title="Voir tous les badges"
+              onPress={() => navigate('/recompenses/badges')}
+              color={theme.primary}
+              icon={<Award size={20} color="#FFFFFF" strokeWidth={2} />}
+              iconPosition="left"
+            />
           </div>
         </div>
       ) : (

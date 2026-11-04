@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
-import { House } from 'lucide-react';
+import { Check, House, UserPlus } from 'lucide-react';
 import { useUserStore } from '../store/userStore';
 import { useFamilyStore } from '../store/familyStore';
 import type { LevelInfo } from '../store/familyStore';
@@ -203,12 +203,20 @@ export default function FamilyDetails() {
             <div
               role="status"
               className="flex items-center justify-center font-outfit-bold text-base"
-              style={{ height: 48, borderRadius: 15, backgroundColor: theme.transparent, color: theme.primary }}
+              style={{ height: 48, gap: 8, borderRadius: 15, backgroundColor: theme.transparent, color: theme.primary }}
             >
+              <Check size={20} color={theme.primary} strokeWidth={2} />
               Demande envoyée !
             </div>
           ) : (
-            <Button title="Envoyer une demande" onPress={handleJoinFamily} loading={loading} color={theme.primary} />
+            <Button
+              title="Envoyer une demande"
+              onPress={handleJoinFamily}
+              loading={loading}
+              color={theme.primary}
+              icon={<UserPlus size={20} color="#FFFFFF" strokeWidth={2} />}
+              iconPosition="left"
+            />
           )}
           {/* Figma : btn-retour-accueil */}
           <button

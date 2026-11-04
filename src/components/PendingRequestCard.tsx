@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { X } from 'lucide-react';
 import { useFamilyStore } from '../store/familyStore';
 import ConfirmModal from './ConfirmModal';
 import { api } from '../api';
@@ -61,8 +62,9 @@ export default function PendingRequestCard() {
         <button
           onClick={() => setShowCancelModal(true)}
           className="w-full flex items-center justify-center font-outfit-bold"
-          style={{ fontSize: 15, color: '#161616', backgroundColor: '#F3F3F8', borderRadius: 12, padding: '14px 0', border: 'none' }}
+          style={{ fontSize: 15, gap: 8, color: '#161616', backgroundColor: '#F3F3F8', borderRadius: 12, padding: '14px 0', border: 'none' }}
         >
+          <X size={20} color="#161616" strokeWidth={2} />
           Annuler la demande
         </button>
       </div>

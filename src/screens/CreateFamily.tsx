@@ -211,7 +211,14 @@ export default function CreateFamily() {
           {errorMessage ? (
             <p className="font-outfit text-center m-0 mb-2" style={{ color: '#EA4A1F' }}>{errorMessage}</p>
           ) : null}
-          <Button title="Créer ma Tribu" onPress={handleCreateFamily} loading={loading} color={theme.primary} />
+          <Button
+            title="Créer ma Tribu"
+            onPress={handleCreateFamily}
+            loading={loading}
+            color={theme.primary}
+            icon={<Users size={20} color="#FFFFFF" strokeWidth={2} />}
+            iconPosition="left"
+          />
         </div>
       </div>
     </div>
