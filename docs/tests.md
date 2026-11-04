@@ -70,7 +70,7 @@ Quelques principes :
 
 ## 5. Scénarios testés
 
-**138 tests automatiques** au total : 33 tests unitaires, 96 tests d'intégration et 9 tests système.
+**139 tests automatiques** au total : 33 tests unitaires, 97 tests d'intégration et 9 tests système.
 
 ### Tests unitaires (33)
 
@@ -84,7 +84,7 @@ Quelques principes :
 | Objectif de la semaine | Début de semaine (lundi), activités comptées depuis lundi, textes selon le nombre restant | « Encore N activités », « Plus qu'une activité », « Objectif atteint » |
 | Appels au backend | Adresse, token, corps JSON, session expirée (401), mauvais mot de passe (401 sans être connecté) | Déconnexion et retour à la connexion seulement si la session a expiré |
 
-### Tests d'intégration (96)
+### Tests d'intégration (97)
 
 | Thème | Scénarios | Résultat attendu |
 |---|---|---|
@@ -97,7 +97,7 @@ Quelques principes :
 | Rechercher une Tribu | Filtre par ville dès l'arrivée, recherche dès 1 caractère, filtre par ville, aucun résultat, recherche effacée | Les bons résultats et les bons messages |
 | Détails d'une Tribu | Informations de la Tribu, envoi d'une demande, demande refusée par le serveur, Tribu introuvable | « Demande envoyée ! » en restant sur l'écran, ou le message d'erreur |
 | Créer une Tribu | Ville manquante, création avec la liste déroulante, slogan facultatif | Tribu créée avec la ville choisie, retour à l'accueil |
-| Catalogue | Ville de la Tribu, autre ville, catégorie, recherche, aucun résultat, « Tout voir » | Les bonnes activités |
+| Catalogue | Ville de la Tribu, autre ville, une ou plusieurs catégories (retour à « Tout »), recherche, aucun résultat, « Tout voir » | Les bonnes activités |
 | Détail d'une activité | Infos (lieu, durée, participants, Tribus de la semaine), trop peu de participants, premium verrouillé ou débloqué, aucun participant, lancer, terminer, abandonner, lancée par un autre membre, déjà réalisée, sans Tribu, activité introuvable | Les bonnes actions selon l'état de l'activité, écran Récompense après « Terminer » |
 | Récompenses | Sans Tribu, collection, 3 derniers badges, prochain objectif, tous les badges, détail d'un badge, écran Récompense, historique | Les bons badges dans le bon ordre, points et niveau affichés |
 | Profil | Passer Premium, arrêter Premium (popup), échec du serveur, supprimer le compte, annuler la suppression | Carte du plan à jour, message d'erreur, ou compte supprimé puis retour à la connexion |
@@ -191,7 +191,7 @@ Depuis le dossier `frontend` :
 
 ```bash
 npm run lint             # vérifie la qualité du code (ESLint)
-npm test                 # lance les tests unitaires et d'intégration (129 tests)
+npm test                 # lance les tests unitaires et d'intégration (130 tests)
 npm run test:coverage    # lance les tests et affiche la couverture
 npm run test:e2e         # lance les tests système (8 tests)
 ```

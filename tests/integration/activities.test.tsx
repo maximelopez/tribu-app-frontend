@@ -35,6 +35,27 @@ describe('Catalogue des activités', () => {
     expect(screen.queryByText('Jeux de société')).not.toBeInTheDocument();
   });
 
+  it('filtre sur plusieurs catégories, puis revient à « Tout »', async () => {
+    renderCatalog();
+    await screen.findByText('À faire à Angers');
+    await userEvent.click(screen.getByRole('button', { name: 'Nature' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Maison' }));
+    expect(screen.getByRole('button', { name: 'Nature' })).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.getByRole('button', { name: 'Maison' })).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.getByRole('button', { name: 'Tout' })).toHaveAttribute('aria-pressed', 'false');
+    expect(screen.getAllByText('Pique-nique').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('Jeux de société').length).toBeGreaterThan(0);
+
+    // Retirer Nature : il ne reste que Maison
+    await userEvent.click(screen.getByRole('button', { name: 'Nature' }));
+    expect(screen.queryByText('Pique-nique')).not.toBeInTheDocument();
+
+    // « Tout » enlève tous les filtres
+    await userEvent.click(screen.getByRole('button', { name: 'Tout' }));
+    expect(screen.getAllByText('Pique-nique').length).toBeGreaterThan(0);
+    expect(screen.getByRole('button', { name: 'Maison' })).toHaveAttribute('aria-pressed', 'false');
+  });
+
   it('cherche une activité par son nom ou sa description', async () => {
     renderCatalog();
     await screen.findByText('À faire à Angers');

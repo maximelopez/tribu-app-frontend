@@ -102,14 +102,16 @@ export default function TabBar() {
             to="/activites"
             end
             replace
-            className="flex-1 flex flex-col items-center justify-end no-underline"
+            // relative : le rond se place par rapport au lien. Sans ça, l'effet d'appui (filter) changeait
+            // son point de repère et le rond sautait de 18 px vers le bas au moment de l'appui
+            className="relative flex-1 flex flex-col items-center justify-end no-underline"
             style={{ minWidth: 0, paddingBottom: 10 }}
           >
             {({ isActive }) => (
               <>
                 <span
                   className="absolute flex items-center justify-center"
-                  style={{ top: 0, left: '50%', transform: 'translateX(-50%)', width: 64, height: 64 }}
+                  style={{ top: -CENTER_OVERFLOW, left: '50%', transform: 'translateX(-50%)', width: 64, height: 64 }}
                 >
                   {/* Halo quand l'onglet est ouvert (Figma : halo) */}
                   {isActive && (

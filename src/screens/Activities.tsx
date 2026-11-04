@@ -40,7 +40,8 @@ export default function Activities() {
 
   const { activities, isLoading } = useCatalog();
   const [search, setSearch] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState<Category | 'all'>('all');
+  // Catégories choisies (plusieurs possibles). Liste vide = « Tout »
+  const [selectedCategories, setSelectedCategories] = useState<Category[]>([]);
   // Ville choisie par l'utilisateur (undefined : pas encore choisie, on prend celle de la Tribu). null = toutes les villes
   const [chosenCity, setChosenCity] = useState<string | null | undefined>(undefined);
   const city = chosenCity === undefined ? familyCity : chosenCity;
@@ -55,16 +56,22 @@ export default function Activities() {
     return [...all].sort((a, b) => a.localeCompare(b, 'fr'));
   }, [activities, familyCity]);
 
+  // « Tout » vide la sélection. Une catégorie s'ajoute ou se retire (si on retire la dernière : retour à « Tout »)
+  const toggleCategory = (value: Category | 'all') => {
+    if (value === 'all') return setSelectedCategories([]);
+    setSelectedCategories(prev => prev.includes(value) ? prev.filter(c => c !== value) : [...prev, value]);
+  };
+
   // Recherche, catégorie et ville (une activité sans ville se fait partout)
   const filtered = useMemo(() => {
     const query = search.trim().toLowerCase();
     return activities.filter(activity => {
       if (query && !`${activity.name} ${activity.description}`.toLowerCase().includes(query)) return false;
-      if (selectedCategory !== 'all' && activity.category !== selectedCategory) return false;
+      if (selectedCategories.length > 0 && !selectedCategories.includes(activity.category)) return false;
       if (city && activity.city && activity.city !== city) return false;
       return true;
     });
-  }, [activities, search, selectedCategory, city]);
+  }, [activities, search, selectedCategories, city]);
 
   // Les plus récentes d'abord
   const newest = useMemo(() => sortByNewest(filtered).slice(0, NEW_COUNT), [filtered]);
@@ -158,11 +165,11 @@ export default function Activities() {
         {/* Filtres par catégorie */}
         <div className="flex overflow-x-auto no-scrollbar" style={{ padding: '0 16px', gap: 8 }}>
           {CATEGORY_FILTERS.map(({ value, label }) => {
-            const isActive = value === selectedCategory;
+            const isActive = value === 'all' ? selectedCategories.length === 0 : selectedCategories.includes(value);
             return (
               <button
                 key={value}
-                onClick={() => setSelectedCategory(value)}
+                onClick={() => toggleCategory(value)}
                 aria-pressed={isActive}
                 className="chip rounded-full flex items-center justify-center shrink-0 font-outfit"
                 style={{
