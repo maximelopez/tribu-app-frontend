@@ -21,7 +21,8 @@ export { default as chevronRightWhite } from './icons/chevron-right-white.svg';
 export { default as chevronRightGrey } from './icons/chevron-right-grey.svg';
 export { default as sendIcon } from './icons/sendBtn.svg';
 
-export const AVATARS = [1, 2, 3, 4];
+// Ordre d'affichage de la maquette (le numéro enregistré ne change pas)
+export const AVATARS = [3, 4, 2, 1];
 
 const avatarMap: Record<number, string> = { 1: avatar1, 2: avatar2, 3: avatar3, 4: avatar4 };
 

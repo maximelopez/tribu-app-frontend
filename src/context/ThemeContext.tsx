@@ -20,6 +20,9 @@ export const themeMap: Record<ThemeColor, Theme> = {
 
 export const THEME_COLORS = Object.keys(themeMap) as ThemeColor[];
 
+// Pastilles du choix de couleur (onboarding et profil) : couleurs vives de la charte
+export const THEME_SWATCHES: Record<ThemeColor, string> = { green: '#00A16D', orange: '#FF9D00', red: '#EA4A1F' };
+
 const isThemeColor = (value: unknown): value is ThemeColor =>
   THEME_COLORS.includes(value as ThemeColor);
 

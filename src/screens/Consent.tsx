@@ -35,7 +35,7 @@ const INFOS: { icon: ReactNode; title: string; text: string }[] = [
   {
     icon: <SlidersHorizontal size={18} strokeWidth={2} />,
     title: 'Tu gardes le contrôle',
-    text: 'Tu peux modifier ton profil à tout moment, et demander la suppression de ton compte depuis ton profil.',
+    text: 'Tu peux modifier ou supprimer ton compte à tout moment depuis ton profil.',
   },
 ];
 

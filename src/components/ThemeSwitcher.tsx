@@ -1,4 +1,4 @@
-import { useTheme, THEME_COLORS, themeMap } from '../context/ThemeContext';
+import { useTheme, THEME_COLORS, THEME_SWATCHES } from '../context/ThemeContext';
 import type { ThemeColor } from '../context/ThemeContext';
 import { useUserStore } from '../store/userStore';
 import { api } from '../api';
@@ -51,7 +51,7 @@ export default function ThemeSwitcher() {
                 width: CIRCLE_SIZE,
                 height: CIRCLE_SIZE,
                 borderRadius: CIRCLE_SIZE / 2,
-                backgroundColor: themeMap[color].primary,
+                backgroundColor: THEME_SWATCHES[color],
                 // Sélection : bordure gris clair (Figma)
                 border: isSelected ? '3px solid #CBD5E0' : 'none',
               }}

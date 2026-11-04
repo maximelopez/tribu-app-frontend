@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router';
-import { useTheme, THEME_COLORS } from '../context/ThemeContext';
+import { useTheme, THEME_COLORS, THEME_SWATCHES } from '../context/ThemeContext';
 import type { ThemeColor } from '../context/ThemeContext';
 import { useUserStore } from '../store/userStore';
 import { onboardingPattern } from '../assets';
@@ -9,9 +9,6 @@ import OnboardingLayout from '../components/OnboardingLayout';
 
 // Ronds de couleur (Figma : color-green / color-orange / color-red)
 const CIRCLE_SIZE = 64;
-
-// Pastilles du choix de couleur : couleurs vives de la charte (Vert, Jaune, Orange)
-const SWATCHES: Record<ThemeColor, string> = { green: '#00A16D', orange: '#FF9D00', red: '#EA4A1F' };
 
 export default function ThemeSelection() {
   const { theme, themeColor, setThemeColor } = useTheme();
@@ -45,7 +42,7 @@ export default function ThemeSelection() {
                   height: CIRCLE_SIZE,
                   borderRadius: CIRCLE_SIZE / 2,
                   // Couleurs de la charte (Figma : Couleurs > Palette)
-                  backgroundColor: SWATCHES[color],
+                  backgroundColor: THEME_SWATCHES[color],
                   border: '3px solid #FFFFFF',
                   // Sélection : anneau blanc semi-transparent autour (Figma : color-selected)
                   outline: isSelected ? '5px solid rgba(255, 255, 255, 0.5)' : 'none',
