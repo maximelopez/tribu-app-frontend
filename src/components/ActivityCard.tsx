@@ -26,7 +26,7 @@ export default function ActivityCard({ name, description, isPartner, offer, imag
   return (
     <button
       onClick={onPress}
-      className="w-full flex items-center bg-white text-left active:opacity-85"
+      className="w-full flex items-center bg-white text-left"
       style={{ boxShadow: CARD_SHADOW, borderRadius: 20, minHeight: 101, padding: 20, gap: 16, border: 'none' }}
     >
       {/* Photo de l'activité ou illustration de sa catégorie (Figma : photo) */}

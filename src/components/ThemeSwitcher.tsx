@@ -46,6 +46,7 @@ export default function ThemeSwitcher() {
               onClick={() => changeTheme(color)}
               aria-label={`Thème ${color}`}
               aria-pressed={isSelected}
+              className="hit"
               style={{
                 width: CIRCLE_SIZE,
                 height: CIRCLE_SIZE,

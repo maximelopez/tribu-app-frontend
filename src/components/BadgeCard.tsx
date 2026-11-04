@@ -42,7 +42,7 @@ export default function BadgeCard({ badge, onPress, showDate = true }: BadgeCard
       type="button"
       onClick={onPress}
       disabled={!onPress}
-      className="w-full shrink-0 flex items-center text-left active:opacity-85"
+      className="w-full shrink-0 flex items-center text-left"
       style={{
         padding: '14px 16px',
         gap: 14,

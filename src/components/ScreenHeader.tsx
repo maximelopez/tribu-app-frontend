@@ -38,7 +38,7 @@ export default function ScreenHeader({
         <button
           onClick={goBack}
           aria-label="Retour"
-          className="absolute flex items-center justify-center bg-white active:opacity-80"
+          className="absolute flex items-center justify-center bg-white"
           style={{
             left: 16,
             bottom: 8,

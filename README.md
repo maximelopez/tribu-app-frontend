@@ -302,7 +302,9 @@ Le détail (registre des traitements, durées, mineurs, IA Act) est dans la docu
 ## Thème et design
 
 - **3 thèmes** au choix de l'utilisateur (vert, orange, rouge) : `context/ThemeContext.tsx`.
-  Utiliser `theme.primary`, `theme.gradient` et `theme.transparent` plutôt que des couleurs fixes.
+  Utiliser `theme.primary`, `theme.text` et `theme.transparent` plutôt que des couleurs fixes.
+  Pas d'effet au survol : au clic, tout ce qui se touche s'assombrit légèrement (`index.css`).
+  Un petit lien ou une petite icône prend la classe `hit` : zone tactile de 44 px sans changer le dessin.
 - **Polices** : Outfit Regular, SemiBold et Bold (`font-outfit`, `font-outfit-semibold`, `font-outfit-bold`) et Peachy Keen JF pour les titres de marque (`font-peachy`), au format WOFF2.
 - **Fond** des écrans : `#F3F3F8`. Cartes blanches arrondies avec une ombre légère.
 - **Images des activités** : la photo de l'activité (`imageUrl`, hébergée sur Cloudinary et ajoutée

@@ -197,14 +197,13 @@ export default function Signup() {
         <button
           onClick={() => navigate('/connexion')}
           // Figma Design System : lien-connexion (44 px, coins 16, texte en gras)
-          className="btn font-outfit-bold text-base text-white flex items-center justify-center"
+          className="font-outfit-bold text-base text-white flex items-center justify-center"
           style={{
             height: 44,
             borderRadius: 16,
             padding: 10,
             border: 'none',
             backgroundColor: BRAND.primary,
-            ['--btn-pressed' as string]: BRAND.gradient,
           }}
         >
           Connectez-vous

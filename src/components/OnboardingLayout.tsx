@@ -31,7 +31,7 @@ export default function OnboardingLayout({ background, backgroundColor, showBack
         <button
           onClick={() => navigate(-1)}
           aria-label="Retour"
-          className="absolute flex items-center justify-center bg-white active:opacity-80"
+          className="absolute flex items-center justify-center bg-white"
           style={{
             top: 'calc(5px + env(safe-area-inset-top))',
             left: 16,

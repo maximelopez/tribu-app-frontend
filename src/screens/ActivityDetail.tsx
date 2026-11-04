@@ -283,8 +283,8 @@ export default function ActivityDetail() {
         <button
           onClick={() => setShowCancelConfirm(true)}
           disabled={loading}
-          className="flex items-center justify-center font-outfit-bold text-base active:opacity-70"
-          style={{ height: 40, gap: 8, border: 'none', background: 'none', color: TEXT_GREY }}
+          className="flex items-center justify-center font-outfit-bold text-base"
+          style={{ height: 44, gap: 8, border: 'none', background: 'none', color: TEXT_GREY }}
         >
           <X size={18} color={TEXT_GREY} strokeWidth={2} />
           Abandonner l'activité
@@ -342,7 +342,7 @@ export default function ActivityDetail() {
       <button
         onClick={goBack}
         aria-label="Retour"
-        className="absolute z-10 flex items-center justify-center bg-white active:opacity-80"
+        className="absolute z-10 flex items-center justify-center bg-white"
         style={{ left: 16, top: 'calc(12px + env(safe-area-inset-top))', width: 44, height: 44, borderRadius: 22, border: 'none', boxShadow: '0px 2px 4px rgba(13, 23, 18, 0.1)' }}
       >
         <ChevronLeft size={24} color={TEXT_DARK} strokeWidth={2} />

@@ -221,7 +221,7 @@ export default function FamilyDetails() {
           {/* Figma : btn-retour-accueil */}
           <button
             onClick={() => navigate('/', { replace: true })}
-            className="flex items-center justify-center bg-white font-outfit-bold text-base active:opacity-80"
+            className="flex items-center justify-center bg-white font-outfit-bold text-base"
             style={{ height: 48, gap: 8, borderRadius: 15, border: '1.5px solid #D9DEDB', color: TEXT_DARK }}
           >
             <House size={18} color={TEXT_DARK} strokeWidth={2} />

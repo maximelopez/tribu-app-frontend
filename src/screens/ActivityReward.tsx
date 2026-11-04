@@ -61,13 +61,13 @@ function RewardContent({ familyName, pointsEarned, familyPoints, previousLevel, 
 
   return (
     <div className="flex-1 min-h-0 flex flex-col relative">
-      <Confetti colors={[theme.primary, theme.gradient, ...CONFETTI_EXTRA_COLORS]} />
+      <Confetti colors={[theme.primary, ...CONFETTI_EXTRA_COLORS]} />
 
       {/* Retour : à l'accueil (pas vers l'activité terminée) */}
       <button
         onClick={goHome}
         aria-label="Retour à l'accueil"
-        className="absolute z-10 flex items-center justify-center bg-white active:opacity-80"
+        className="absolute z-10 flex items-center justify-center bg-white"
         style={{ left: 16, top: 'calc(12px + env(safe-area-inset-top))', width: 44, height: 44, borderRadius: 22, border: 'none', boxShadow: '0px 2px 4px rgba(13, 23, 18, 0.1)' }}
       >
         <ChevronLeft size={24} color={TEXT_DARK} strokeWidth={2} />

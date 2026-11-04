@@ -24,7 +24,7 @@ L'application suit les règles **WCAG 2.1, niveau AA**, la norme internationale 
 | **Pas de titre principal** (`<h1>`) | Chat, écrans « pas encore de Tribu » | Le nom de la Tribu du chat est un `<h1>`. Les écrans vides ont un `<h1>` lu par les lecteurs d'écran mais invisible (la maquette n'en a pas) |
 | **Contraste des couleurs du thème** | Tous | Couleurs plus foncées dans le Design System (audit de la designer). Vert et rouge corrigés, orange amélioré : voir la partie 4 |
 | **Gris trop clairs** | Dates, compteurs, textes d'aide, heures | Textes secondaires en `#6B6B6B` (5,3) et bordures des champs en `#7D7D7D` |
-| **Zones tactiles trop petites** | Filtres, notifications, connexion | Chips de filtre, boutons Accepter / Refuser et liens « Inscrivez-vous » / « Connectez-vous » à 44 px de haut |
+| **Zones tactiles trop petites** | Filtres, notifications, connexion, liens et icônes | Chips de filtre, boutons Accepter / Refuser, « Inscrivez-vous » / « Connectez-vous », « Abandonner l'activité » et bouton d'envoi du chat à 44 px. Les petits liens et icônes (« Tout voir », « Voir plus », ville, croix, pastilles du thème, case à cocher) gardent leur dessin mais ont une zone tactile invisible de 44 px (classe `hit`). Seuls les liens dans une phrase restent plus petits, ce que les règles acceptent |
 
 **Après correction** : il ne reste plus que le contraste de l'orange pour les textes normaux. Toutes les autres règles sont respectées sur les 26 écrans.
 

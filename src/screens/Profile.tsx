@@ -207,7 +207,7 @@ export default function Profile() {
               <span className="font-outfit-bold text-base" style={{ color: '#111' }}>Dernier badge obtenu</span>
               <button
                 onClick={() => navigate('/recompenses/badges')}
-                className="font-outfit"
+                className="hit font-outfit"
                 style={{ fontSize: 14, color: theme.primary, background: 'none', border: 'none', borderBottom: `1px solid ${theme.primary}`, padding: 0 }}
               >
                 Voir plus →
@@ -226,7 +226,7 @@ export default function Profile() {
               {myActivities.length > myLatestActivities.length && (
                 <button
                   onClick={() => navigate('/historique?mode=me')}
-                  className="font-outfit"
+                  className="hit font-outfit"
                   style={{ fontSize: 14, color: theme.primary, background: 'none', border: 'none', borderBottom: `1px solid ${theme.primary}`, padding: 0 }}
                 >
                   Voir plus →
@@ -285,7 +285,7 @@ export default function Profile() {
         {/* Suppression du compte (Figma : btn-supprimer-compte) */}
         <button
           onClick={() => setConfirm('delete')}
-          className="btn shrink-0 flex items-center justify-center font-outfit-bold text-base"
+          className="shrink-0 flex items-center justify-center font-outfit-bold text-base"
           style={{
             height: 51,
             gap: 8,
@@ -294,7 +294,6 @@ export default function Profile() {
             backgroundColor: '#FFFFFF',
             border: '1.5px solid #D9DEDB',
             color: '#E5392A',
-            ['--btn-pressed' as string]: '#F3F3F8',
           }}
         >
           <Trash2 size={18} color="#E5392A" strokeWidth={2} />
@@ -344,7 +343,7 @@ export default function Profile() {
               <button
                 onClick={closeModal}
                 aria-label="Fermer"
-                className="flex items-center justify-center"
+                className="hit flex items-center justify-center"
                 style={{ width: 32, height: 32, borderRadius: 16, backgroundColor: '#F3F3F8', border: 'none' }}
               >
                 <X size={16} color="#161616" strokeWidth={2} />

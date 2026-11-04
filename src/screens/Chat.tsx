@@ -133,9 +133,9 @@ export default function Chat() {
           className="flex items-center justify-center shrink-0"
           style={{
             backgroundColor: theme.primary,
-            borderRadius: 21,
-            width: 42,
-            height: 42,
+            borderRadius: 22,
+            width: 44,
+            height: 44,
             border: 'none',
             boxShadow: '0px 4px 6px rgba(13, 10, 44, 0.06)',
           }}

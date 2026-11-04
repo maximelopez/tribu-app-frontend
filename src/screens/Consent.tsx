@@ -108,7 +108,7 @@ export default function Consent() {
         <button
           onClick={() => navigate(-1)}
           aria-label="Retour"
-          className="flex items-center justify-center bg-white shrink-0 active:opacity-80"
+          className="flex items-center justify-center bg-white shrink-0"
           style={{ width: 44, height: 44, borderRadius: 22, border: 'none', boxShadow: '0px 2px 4px rgba(13, 23, 18, 0.1)' }}
         >
           <ChevronLeft size={24} color={TEXT_DARK} strokeWidth={2} />
@@ -151,7 +151,7 @@ export default function Consent() {
                 aria-checked={accepted}
                 aria-label="J'accepte les conditions d'utilisation et la politique de confidentialité"
                 onClick={() => setAccepted(value => !value)}
-                className="flex items-center justify-center shrink-0 p-0"
+                className="hit flex items-center justify-center shrink-0 p-0"
                 style={{
                   width: 24,
                   height: 24,

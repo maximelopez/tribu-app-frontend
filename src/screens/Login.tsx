@@ -141,14 +141,13 @@ export default function Login() {
         <button
           onClick={() => navigate('/inscription', { replace: true })}
           // Maquette « login » : 44 px de haut (zone tactile), coins 16, texte en gras
-          className="btn font-outfit-bold text-base text-white flex items-center justify-center"
+          className="font-outfit-bold text-base text-white flex items-center justify-center"
           style={{
             height: 44,
             borderRadius: 16,
             padding: 12,
             border: 'none',
             backgroundColor: BRAND.primary,
-            ['--btn-pressed' as string]: BRAND.gradient,
           }}
         >
           Inscrivez-vous

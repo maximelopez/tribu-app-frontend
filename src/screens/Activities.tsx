@@ -95,7 +95,7 @@ export default function Activities() {
           onClick={() => setCityMenuOpen(open => !open)}
           aria-haspopup="listbox"
           aria-expanded={cityMenuOpen}
-          className="flex items-center font-outfit-bold text-base p-0"
+          className="hit flex items-center font-outfit-bold text-base p-0"
           style={{ gap: 4, marginTop: 2, color: theme.primary, background: 'none', border: 'none', textTransform: 'uppercase' }}
         >
           {city ?? 'Toutes les villes'}

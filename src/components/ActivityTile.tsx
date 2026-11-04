@@ -31,7 +31,7 @@ export default function ActivityTile({ activity, onPress, fullWidth = false }: A
   return (
     <button
       onClick={onPress}
-      className="flex flex-col items-start bg-white text-left shrink-0 active:opacity-85"
+      className="flex flex-col items-start bg-white text-left shrink-0"
       style={{
         width: fullWidth ? '100%' : 280,
         padding: 12,

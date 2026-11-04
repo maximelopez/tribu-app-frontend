@@ -136,10 +136,7 @@ body {
 
 /* Chips de filtre : changement de couleur doux (Figma : Smart Animate 150 ms) */
 .chip {
-  transition: background-color 0.15s ease-out, border-color 0.15s ease-out, color 0.15s ease-out, transform 0.15s ease-out;
-}
-.chip:active {
-  transform: scale(0.96);
+  transition: background-color 0.15s ease-out, border-color 0.15s ease-out, color 0.15s ease-out, filter 0.1s ease-out;
 }
 @keyframes chip-check {
   from {
@@ -174,14 +171,32 @@ body {
   outline-offset: 2px;
 }
 
-/* Boutons (Figma : button-general, état Hover) : couleur plus foncée quand on appuie */
-.btn:not(:disabled):active {
-  background-color: var(--btn-pressed) !important;
+/* Appui (Design System : pas de survol sur mobile, seulement au clic) :
+   léger assombrissement de tout ce qui se touche, en 100 ms */
+button,
+a,
+[role='button'] {
+  transition: filter 0.1s ease-out;
 }
-@media (hover: hover) {
-  .btn:not(:disabled):hover {
-    background-color: var(--btn-pressed) !important;
-  }
+button:not(:disabled):active,
+a:active,
+[role='button']:active {
+  filter: brightness(0.92);
+}
+
+/* Zone tactile de 44 px minimum (accessibilité) sans changer le dessin :
+   une zone invisible centrée sur l'élément, pour les petits liens et icônes */
+.hit {
+  position: relative;
+}
+.hit::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: max(100%, 44px);
+  height: max(100%, 44px);
+  transform: translate(-50%, -50%);
 }
 
 /* Champs de saisie (Figma Design System : champ-texte, état Focus) :

@@ -8,7 +8,6 @@ interface ButtonProps {
   loading?: boolean;
   disabled?: boolean;
   color?: string;              // couleur du fond (par défaut : celle du thème)
-  pressedColor?: string;       // couleur quand on appuie (par défaut : Color-Gradient du thème)
   textColor?: string;
   icon?: ReactNode;
   borderColor?: string;
@@ -20,7 +19,7 @@ interface ButtonProps {
 }
 
 // Bouton principal (Figma Design System : button-general). Couleur unie, 48px, coins 16, légère ombre.
-// Appuyé : couleur plus foncée (Color-Gradient). Désactivé : gris clair, texte blanc
+// Appuyé : léger assombrissement (index.css). Désactivé : gris clair, texte blanc
 // shrink-0 : garde ses 48px dans une zone qui défile (sinon flex peut l'écraser)
 export default function Button({
   title,
@@ -28,7 +27,6 @@ export default function Button({
   loading = false,
   disabled = false,
   color,
-  pressedColor,
   textColor,
   icon,
   borderColor,
@@ -39,8 +37,6 @@ export default function Button({
   const { theme } = useTheme();
   const isDisabled = loading || disabled;
   const background = color ?? theme.primary;
-  // Bouton blanc sur fond de couleur (Figma : button-on-fond-fonce) : gris très clair quand on appuie
-  const pressed = pressedColor ?? (!color ? theme.gradient : color.toLowerCase() === '#ffffff' ? '#f3f3f8' : color);
   const showDisabled = disabled && !loading;
 
   const handleClick = () => {
@@ -55,13 +51,12 @@ export default function Button({
       type={type}
       onClick={handleClick}
       disabled={isDisabled}
-      className="btn w-full shrink-0 flex items-center justify-center gap-2 rounded-2xl"
+      className="w-full shrink-0 flex items-center justify-center gap-2 rounded-2xl"
       style={{
         height: 48,
         border: borderColor ? `0.5px solid ${borderColor}` : 'none',
         backgroundColor: showDisabled ? '#E3E3E3' : background,
         boxShadow: showDisabled || !shadow ? 'none' : '0px 4px 4px rgba(0, 0, 0, 0.08)',
-        ['--btn-pressed' as string]: pressed,
       }}
     >
       {loading ? (
