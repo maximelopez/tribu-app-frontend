@@ -15,6 +15,8 @@ interface ButtonProps {
   type?: 'button' | 'submit';
   // Place de l'icône : avant ou après le texte
   iconPosition?: 'left' | 'right';
+  // Légère ombre sous le bouton (pas dans les popups, comme sur la maquette)
+  shadow?: boolean;
 }
 
 // Bouton principal (Figma Design System : button-general). Couleur unie, 48px, coins 16, légère ombre.
@@ -32,6 +34,7 @@ export default function Button({
   borderColor,
   type = 'button',
   iconPosition = 'right',
+  shadow = true,
 }: ButtonProps) {
   const { theme } = useTheme();
   const isDisabled = loading || disabled;
@@ -57,7 +60,7 @@ export default function Button({
         height: 48,
         border: borderColor ? `0.5px solid ${borderColor}` : 'none',
         backgroundColor: showDisabled ? '#E3E3E3' : background,
-        boxShadow: showDisabled ? 'none' : '0px 4px 4px rgba(0, 0, 0, 0.08)',
+        boxShadow: showDisabled || !shadow ? 'none' : '0px 4px 4px rgba(0, 0, 0, 0.08)',
         ['--btn-pressed' as string]: pressed,
       }}
     >

@@ -1,10 +1,30 @@
 import { describe, expect, it, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import Button from '../../src/components/Button';
 import ConfirmModal from '../../src/components/ConfirmModal';
 import BadgeCard from '../../src/components/BadgeCard';
 import type { Badge } from '../../src/hooks/useFamilyBadges';
+import { ThemeProvider } from '../../src/components/ThemeProvider';
+import { useTheme } from '../../src/context/ThemeContext';
+import { useUserStore } from '../../src/store/userStore';
+import { loginAs } from '../helpers';
+
+// Affiche le nom du thème en cours
+function CurrentTheme() {
+  return <p>{useTheme().themeColor}</p>;
+}
+
+describe('ThemeProvider', () => {
+  it('prend le thème de l\'utilisateur, puis revient au vert à la déconnexion', () => {
+    loginAs({ theme: 'red' });
+    render(<ThemeProvider><CurrentTheme /></ThemeProvider>);
+    expect(screen.getByText('red')).toBeInTheDocument();
+
+    act(() => useUserStore.getState().logout());
+    expect(screen.getByText('green')).toBeInTheDocument();
+  });
+});
 
 describe('Button', () => {
   it('appelle onPress au clic', async () => {

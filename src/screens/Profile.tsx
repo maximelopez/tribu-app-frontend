@@ -14,7 +14,7 @@ import BadgeCard from '../components/BadgeCard';
 import useFamilyBadges from '../hooks/useFamilyBadges';
 import Spinner from '../components/Spinner';
 import PlanCard from '../components/PlanCard';
-import ConfirmModal from '../components/ConfirmModal';
+import ConfirmModal, { DANGER_COLOR } from '../components/ConfirmModal';
 import { api, logoutSession } from '../api';
 import { CONTACT_EMAIL } from '../config';
 
@@ -316,6 +316,7 @@ export default function Profile() {
         title="Supprimer ton compte ?"
         message="Ton compte et tes données seront supprimés définitivement. Tes messages resteront dans le chat sous le nom « Compte supprimé »."
         confirmLabel="Supprimer mon compte"
+        confirmColor={DANGER_COLOR}
         loading={busy}
         onConfirm={deleteAccount}
         onCancel={() => setConfirm(null)}

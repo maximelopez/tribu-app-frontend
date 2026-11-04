@@ -27,7 +27,7 @@ describe('Accueil sans Tribu', () => {
     expect(screen.getByText('Ta demande est en cours de validation.')).toBeInTheDocument();
     await userEvent.click(screen.getByRole('button', { name: 'Annuler la demande' }));
     const dialog = screen.getByRole('dialog', { name: 'Annuler ta demande ?' });
-    await userEvent.click(within(dialog).getByRole('button', { name: 'Oui, annuler' }));
+    await userEvent.click(within(dialog).getByRole('button', { name: 'Oui, abandonner' }));
 
     await waitFor(() => expect(useFamilyStore.getState().pendingRequest).toBeNull());
     expect(calls.some(c => c.method === 'DELETE' && c.path === 'families/f1/join-requests')).toBe(true);

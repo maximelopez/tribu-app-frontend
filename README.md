@@ -135,7 +135,7 @@ e2e/                   Tests système (Playwright) : parcours complets avec le v
 | `MessageBubble` | Message du chat |
 | `ThemeSwitcher` | Choix du thème dans le Profil |
 | `ThemeProvider` | Fournit le thème à toute l'app (celui de l'utilisateur, ou vert par défaut) |
-| `ConfirmModal` | Popup de confirmation (bouton rouge pour une action destructive + bouton gris pour revenir) |
+| `ConfirmModal` | Popup de confirmation (bouton à la couleur du thème, rouge pour supprimer son compte, + bouton gris pour revenir) |
 | `Spinner` | Roue de chargement (boutons, listes) |
 | `Confetti` | Pluie de confettis aux couleurs du thème (écran Récompense) |
 | `ErrorBoundary` | Entoure toute l'app : si un écran plante, affiche un message avec « Recharger » |

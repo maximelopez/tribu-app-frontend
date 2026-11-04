@@ -73,8 +73,7 @@ export default function PendingRequestCard() {
         visible={showCancelModal}
         title="Annuler ta demande ?"
         message={`Ta demande pour rejoindre « ${pendingRequest.name} » sera supprimée.`}
-        confirmLabel="Oui, annuler"
-        cancelLabel="Garder ma demande"
+        confirmLabel="Oui, abandonner"
         loading={cancelling}
         onConfirm={cancelRequest}
         onCancel={() => setShowCancelModal(false)}

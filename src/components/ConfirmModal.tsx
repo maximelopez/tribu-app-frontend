@@ -1,9 +1,10 @@
 import { useEffect } from 'react';
 import { ChevronLeft, X } from 'lucide-react';
 import Button from './Button';
+import { useTheme } from '../context/ThemeContext';
 
-// Rouge des actions qui suppriment ou abandonnent quelque chose (Figma : btn-danger)
-const DANGER_COLOR = '#E5392A';
+// Rouge réservé aux actions définitives, comme supprimer son compte
+export const DANGER_COLOR = '#E5392A';
 
 interface ConfirmModalProps {
   visible: boolean;
@@ -11,7 +12,7 @@ interface ConfirmModalProps {
   message?: string;
   confirmLabel: string;
   cancelLabel?: string;
-  // Couleur du bouton de confirmation (par défaut : rouge, action destructive)
+  // Couleur du bouton de confirmation (par défaut : celle du thème, comme sur la maquette)
   confirmColor?: string;
   loading?: boolean;
   onConfirm: () => void;
@@ -25,11 +26,12 @@ export default function ConfirmModal({
   message,
   confirmLabel,
   cancelLabel = 'Retour',
-  confirmColor = DANGER_COLOR,
+  confirmColor,
   loading = false,
   onConfirm,
   onCancel,
 }: ConfirmModalProps) {
+  const { theme } = useTheme();
   // Échap ferme la popup (sauf pendant la requête)
   useEffect(() => {
     if (!visible) return;
@@ -45,7 +47,7 @@ export default function ConfirmModal({
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center"
-      style={{ backgroundColor: 'rgba(0, 0, 0, 0.4)', padding: 28 }}
+      style={{ backgroundColor: 'rgba(22, 22, 22, 0.35)', padding: 28 }}
       onClick={() => !loading && onCancel()}
     >
       <div
@@ -70,9 +72,10 @@ export default function ConfirmModal({
             title={confirmLabel}
             onPress={onConfirm}
             loading={loading}
-            color={confirmColor}
-            icon={<X size={18} color="#FFFFFF" strokeWidth={2.5} />}
+            color={confirmColor ?? theme.primary}
+            icon={<X size={20} color="#FFFFFF" strokeWidth={2} />}
             iconPosition="left"
+            shadow={false}
           />
           <Button
             title={cancelLabel}
@@ -80,8 +83,9 @@ export default function ConfirmModal({
             disabled={loading}
             color="#F3F3F8"
             textColor="#161616"
-            icon={<ChevronLeft size={18} color="#161616" strokeWidth={2.5} />}
+            icon={<ChevronLeft size={20} color="#161616" strokeWidth={2} />}
             iconPosition="left"
+            shadow={false}
           />
         </div>
       </div>

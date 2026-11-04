@@ -70,7 +70,7 @@ Quelques principes :
 
 ## 5. Scénarios testés
 
-**136 tests automatiques** au total : 33 tests unitaires, 94 tests d'intégration et 9 tests système.
+**137 tests automatiques** au total : 33 tests unitaires, 95 tests d'intégration et 9 tests système.
 
 ### Tests unitaires (33)
 
@@ -84,11 +84,11 @@ Quelques principes :
 | Objectif de la semaine | Début de semaine (lundi), activités comptées depuis lundi, textes selon le nombre restant | « Encore N activités », « Plus qu'une activité », « Objectif atteint » |
 | Appels au backend | Adresse, token, corps JSON, session expirée (401), mauvais mot de passe (401 sans être connecté) | Déconnexion et retour à la connexion seulement si la session a expiré |
 
-### Tests d'intégration (94)
+### Tests d'intégration (95)
 
 | Thème | Scénarios | Résultat attendu |
 |---|---|---|
-| Composants | Bouton (clic, désactivé, chargement), popup de confirmation (confirmer, retour, Échap), carte de badge (obtenu ou verrouillé) | Le bon affichage et les bonnes actions |
+| Composants | Bouton (clic, désactivé, chargement), popup de confirmation (confirmer, retour, Échap), carte de badge (obtenu ou verrouillé), thème (vert après la déconnexion) | Le bon affichage et les bonnes actions |
 | Connexion | Champs vides, mauvais mot de passe, connexion réussie, CGU pas encore acceptées | Message d'erreur, ou token et utilisateur enregistrés. Sans accord aux CGU, l'onboarding reprend |
 | Inscription | Mot de passe faible, inscription réussie, email déjà utilisé | Aucun appel au serveur tant que le formulaire n'est pas valide, puis l'onboarding commence |
 | Accès aux écrans | Écran protégé sans être connecté, onboarding pas terminé, pages légales | Inscription, onboarding, ou page légale accessible sans compte |
@@ -191,7 +191,7 @@ Depuis le dossier `frontend` :
 
 ```bash
 npm run lint             # vérifie la qualité du code (ESLint)
-npm test                 # lance les tests unitaires et d'intégration (127 tests)
+npm test                 # lance les tests unitaires et d'intégration (128 tests)
 npm run test:coverage    # lance les tests et affiche la couverture
 npm run test:e2e         # lance les tests système (8 tests)
 ```
