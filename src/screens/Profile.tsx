@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
-import { ChevronRight, LogOut, Pencil, X } from 'lucide-react';
+import { ChevronRight, LogOut, Pencil, Trash2, X } from 'lucide-react';
 import { useUserStore } from '../store/userStore';
 import { useFamilyStore, toCatalogActivity } from '../store/familyStore';
 import type { FamilyActivity } from '../store/familyStore';
@@ -13,7 +13,9 @@ import HeaderBell from '../components/HeaderBell';
 import BadgeCard from '../components/BadgeCard';
 import useFamilyBadges from '../hooks/useFamilyBadges';
 import Spinner from '../components/Spinner';
-import { api } from '../api';
+import PlanCard from '../components/PlanCard';
+import ConfirmModal from '../components/ConfirmModal';
+import { api, logoutSession } from '../api';
 import { CONTACT_EMAIL } from '../config';
 
 // Âge en années à partir de la date de naissance (ISO)
@@ -44,6 +46,10 @@ export default function Profile() {
   const [showModal, setShowModal] = useState(false);
   const [pendingAvatar, setPendingAvatar] = useState<number | null>(null);
   const [saving, setSaving] = useState(false);
+  // Popup ouverte : arrêter Premium ou supprimer le compte
+  const [confirm, setConfirm] = useState<'premium' | 'delete' | null>(null);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState('');
 
   if (!user) return null;
 
@@ -61,6 +67,40 @@ export default function Profile() {
   const logoutUser = () => {
     logout();
     clearFamily();
+  };
+
+  // Passer Premium ou revenir au plan gratuit (Premium simulé, sans paiement)
+  const changePremium = async (isPremium: boolean) => {
+    if (busy) return;
+    setBusy(true);
+    setError('');
+    try {
+      const response = await api(`users/${user.id}/premium`, { method: isPremium ? 'POST' : 'DELETE' });
+      if (!response.ok) throw new Error();
+      setUser(prev => (prev ? { ...prev, isPremium } : prev));
+      setConfirm(null);
+    } catch {
+      setError("Impossible de changer l'abonnement. Réessaie plus tard.");
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  // Suppression définitive du compte, puis retour à la connexion
+  const deleteAccount = async () => {
+    if (busy) return;
+    setBusy(true);
+    setError('');
+    try {
+      const response = await api(`users/${user.id}`, { method: 'DELETE' });
+      if (!response.ok) throw new Error();
+      logoutSession();
+      navigate('/connexion', { replace: true });
+    } catch {
+      setError('Impossible de supprimer le compte. Réessaie plus tard.');
+      setConfirm(null);
+      setBusy(false);
+    }
   };
 
   const openModal = () => {
@@ -146,6 +186,17 @@ export default function Profile() {
           </div>
         </div>
 
+        {/* Abonnement (Figma : statut-abonnement) */}
+        <PlanCard
+          isPremium={!!user.isPremium}
+          loading={busy && confirm === null}
+          onSubscribe={() => changePremium(true)}
+          onManage={() => setConfirm('premium')}
+        />
+        {error && (
+          <p role="alert" className="font-outfit m-0" style={{ fontSize: 14, color: '#E5392A' }}>{error}</p>
+        )}
+
         {/* Thème */}
         <ThemeSwitcher />
 
@@ -217,7 +268,7 @@ export default function Profile() {
             ))}
           </div>
           <p className="font-outfit m-0" style={{ fontSize: 14, lineHeight: 1.4, color: '#6B6B6B' }}>
-            Pour recevoir ou supprimer vos données, écrivez à{' '}
+            Pour recevoir une copie de vos données, écrivez à{' '}
             <a href={`mailto:${CONTACT_EMAIL}`} style={{ color: theme.primary }}>{CONTACT_EMAIL}</a>.
           </p>
         </div>
@@ -230,7 +281,45 @@ export default function Profile() {
           icon={<LogOut size={20} color="#FFFFFF" strokeWidth={2} />}
           iconPosition="left"
         />
+
+        {/* Suppression du compte (Figma : btn-supprimer-compte) */}
+        <button
+          onClick={() => setConfirm('delete')}
+          className="btn shrink-0 flex items-center justify-center font-outfit-bold text-base"
+          style={{
+            height: 51,
+            gap: 8,
+            marginTop: -10, // 8 px sous « Se déconnecter », comme sur la maquette
+            borderRadius: 15,
+            backgroundColor: '#FFFFFF',
+            border: '1.5px solid #D9DEDB',
+            color: '#E5392A',
+            ['--btn-pressed' as string]: '#F3F3F8',
+          }}
+        >
+          <Trash2 size={18} color="#E5392A" strokeWidth={2} />
+          Supprimer mon compte
+        </button>
       </div>
+
+      <ConfirmModal
+        visible={confirm === 'premium'}
+        title="Arrêter Premium ?"
+        message="Tu repasses au plan gratuit. Les activités Premium seront de nouveau verrouillées."
+        confirmLabel="Arrêter Premium"
+        loading={busy}
+        onConfirm={() => changePremium(false)}
+        onCancel={() => setConfirm(null)}
+      />
+      <ConfirmModal
+        visible={confirm === 'delete'}
+        title="Supprimer ton compte ?"
+        message="Ton compte et tes données seront supprimés définitivement. Tes messages resteront dans le chat sous le nom « Compte supprimé »."
+        confirmLabel="Supprimer mon compte"
+        loading={busy}
+        onConfirm={deleteAccount}
+        onCancel={() => setConfirm(null)}
+      />
 
       {/* Modale : choisir un avatar (Figma : profil-choix-avatar) */}
       {showModal && (

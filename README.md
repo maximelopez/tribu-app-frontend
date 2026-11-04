@@ -274,6 +274,12 @@ progression (`progress / goal`) et, une fois obtenu, sa date (`unlockedAt`).
   `assets/index.ts`) et les affiche en gris tant que le badge n'est pas obtenu. Pour changer l'image d'un
   badge, il suffit de remplacer son fichier en gardant le même nom (taille conseillée : 96 × 96).
 
+### Premium (simulé)
+
+- **Carte du plan** dans le Profil (`PlanCard`) : « Plan gratuit » avec « Passer Premium », ou « Membre Premium »
+  avec « Gérer mon abonnement » (popup pour revenir au gratuit). Pas de paiement : `POST` / `DELETE /users/:id/premium`.
+- **Activités Premium** : verrouillées (photo grise, cadenas) tant que l'utilisateur n'est pas Premium.
+
 ### Données personnelles (RGPD)
 
 - **Inscription** : seulement le prénom, l'email et le mot de passe.
@@ -285,7 +291,9 @@ progression (`progress / goal`) et, une fois obtenu, sa date (`unlockedAt`).
   l'onboarding. « Accepter et continuer » les envoie en une fois avec l'accord
   (`PATCH /users/:id/onboarding`). Un compte sans accord qui se reconnecte reprend l'onboarding.
 - **Profil** : section « Mes données » avec les liens vers les deux textes et l'adresse de contact pour
-  recevoir ou supprimer ses données (`CONTACT_EMAIL` dans `config.ts`).
+  recevoir une copie de ses données (`CONTACT_EMAIL` dans `config.ts`).
+- **Supprimer mon compte** (bas du Profil) : popup de confirmation, puis `DELETE /users/:id` et retour à la
+  connexion. Les messages restent dans le chat sous le nom « Compte supprimé ».
 - **Textes** : dans `src/legal.ts`, écrits simplement pour être compris aussi par les enfants.
 
 Le détail (registre des traitements, durées, mineurs, IA Act) est dans la documentation du backend :
@@ -391,5 +399,3 @@ Toutes les adresses sont redirigées vers `index.html` (`public/_redirects`), po
 
 - **Mot de passe oublié** (nécessite l'envoi d'emails côté backend).
 - **Notifications push** (Android ; iPhone seulement si l'app est installée).
-- **Supprimer mon compte** (Profil) : règles à définir côté backend (créateur de la Tribu, Tribu vide,
-  demandes en attente).

@@ -68,7 +68,7 @@ export const PRIVACY_POLICY: LegalText = {
     {
       title: 'Vos droits',
       paragraphs: [
-        "Vous pouvez demander à voir vos données, à les recevoir dans un fichier, à les corriger ou à les supprimer. Vous pouvez déjà modifier votre prénom, votre avatar, votre date de naissance et votre thème dans l'app.",
+        "Vous pouvez demander à voir vos données, à les recevoir dans un fichier, à les corriger ou à les supprimer. Vous pouvez déjà modifier votre prénom, votre avatar, votre date de naissance et votre thème dans l'app, et supprimer votre compte en bas du Profil.",
         `Pour le reste, écrivez à ${CONTACT_EMAIL} depuis l'adresse email de votre compte. Nous répondons en moins d'un mois.`,
         "Si vous pensez que vos droits ne sont pas respectés, vous pouvez contacter la CNIL (cnil.fr).",
       ],

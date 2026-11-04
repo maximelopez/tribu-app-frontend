@@ -73,5 +73,4 @@ Le détail des choix de sécurité est dans [infrastructure.md](infrastructure.m
 
 | Limite | Évolution prévue |
 |---|---|
-| Pas de bouton « Supprimer mon compte » : la demande se fait par email | Bouton dans le Profil, avec la route correspondante dans l'API |
 | Pas de bouton « Télécharger mes données » : la demande se fait par email | Export des données depuis le Profil |

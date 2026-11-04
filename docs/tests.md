@@ -70,7 +70,7 @@ Quelques principes :
 
 ## 5. Scénarios testés
 
-**131 tests automatiques** au total : 33 tests unitaires, 89 tests d'intégration et 9 tests système.
+**136 tests automatiques** au total : 33 tests unitaires, 94 tests d'intégration et 9 tests système.
 
 ### Tests unitaires (33)
 
@@ -84,7 +84,7 @@ Quelques principes :
 | Objectif de la semaine | Début de semaine (lundi), activités comptées depuis lundi, textes selon le nombre restant | « Encore N activités », « Plus qu'une activité », « Objectif atteint » |
 | Appels au backend | Adresse, token, corps JSON, session expirée (401), mauvais mot de passe (401 sans être connecté) | Déconnexion et retour à la connexion seulement si la session a expiré |
 
-### Tests d'intégration (89)
+### Tests d'intégration (94)
 
 | Thème | Scénarios | Résultat attendu |
 |---|---|---|
@@ -100,6 +100,7 @@ Quelques principes :
 | Catalogue | Ville de la Tribu, autre ville, catégorie, recherche, aucun résultat, « Tout voir » | Les bonnes activités |
 | Détail d'une activité | Infos (lieu, durée, participants, Tribus de la semaine), trop peu de participants, premium verrouillé ou débloqué, aucun participant, lancer, terminer, abandonner, lancée par un autre membre, déjà réalisée, sans Tribu, activité introuvable | Les bonnes actions selon l'état de l'activité, écran Récompense après « Terminer » |
 | Récompenses | Sans Tribu, collection, 3 derniers badges, prochain objectif, tous les badges, détail d'un badge, écran Récompense, historique | Les bons badges dans le bon ordre, points et niveau affichés |
+| Profil | Passer Premium, arrêter Premium (popup), échec du serveur, supprimer le compte, annuler la suppression | Carte du plan à jour, message d'erreur, ou compte supprimé puis retour à la connexion |
 | Chat | Sans Tribu, historique, messages lus, envoi, message reçu, message vide, message d'un compte supprimé | Messages affichés en direct, rien n'est envoyé si le message est vide |
 | Temps réel | Connexion du socket, chargement de la Tribu, messages non lus (chat ouvert ou non), notifications, Tribu renommée, activité lancée puis terminée, nouveau membre, membre parti (compte supprimé), demande acceptée ou refusée, token refusé | L'app se met à jour sans recharger la page |
 
@@ -190,7 +191,7 @@ Depuis le dossier `frontend` :
 
 ```bash
 npm run lint             # vérifie la qualité du code (ESLint)
-npm test                 # lance les tests unitaires et d'intégration (104 tests)
+npm test                 # lance les tests unitaires et d'intégration (127 tests)
 npm run test:coverage    # lance les tests et affiche la couverture
 npm run test:e2e         # lance les tests système (8 tests)
 ```

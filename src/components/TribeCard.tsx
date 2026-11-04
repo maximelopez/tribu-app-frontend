@@ -82,16 +82,14 @@ export default function TribeCard({ family, currentUserId, completedActivities }
         <span className="font-outfit" style={{ fontSize: 14, color: TEXT_GREY }}>{weeklyGoalText(doneThisWeek)}</span>
       </div>
 
-      {/* Membres, du plus actif au moins actif */}
-      <div
-        className="flex overflow-x-auto no-scrollbar"
-        style={{ gap: 12, justifyContent: ranked.length <= 5 ? 'space-between' : 'flex-start' }}
-      >
+      {/* Membres, du plus actif au moins actif : les uns à la suite des autres, puis défilement s'il y en a beaucoup */}
+      <div className="flex overflow-x-auto no-scrollbar" style={{ gap: 11 }}>
         {ranked.map(member => {
           const isMe = member.id === currentUserId;
           const total = counts[member.id] ?? 0;
           return (
-            <div key={member.id} className="flex flex-col items-center shrink-0" style={{ gap: 4, minWidth: 56, maxWidth: 64 }}>
+            // Largeur max 84 px : assez pour un prénom comme « Anastasiia »
+            <div key={member.id} className="flex flex-col items-center shrink-0" style={{ gap: 4, minWidth: 56, maxWidth: 84 }}>
               <span
                 className="flex items-center justify-center rounded-full"
                 style={{ width: 56, height: 56, border: isMe ? `2.5px solid ${theme.primary}` : 'none' }}
