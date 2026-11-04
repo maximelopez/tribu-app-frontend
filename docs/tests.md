@@ -70,7 +70,7 @@ Quelques principes :
 
 ## 5. Scénarios testés
 
-**137 tests automatiques** au total : 33 tests unitaires, 95 tests d'intégration et 9 tests système.
+**138 tests automatiques** au total : 33 tests unitaires, 96 tests d'intégration et 9 tests système.
 
 ### Tests unitaires (33)
 
@@ -84,7 +84,7 @@ Quelques principes :
 | Objectif de la semaine | Début de semaine (lundi), activités comptées depuis lundi, textes selon le nombre restant | « Encore N activités », « Plus qu'une activité », « Objectif atteint » |
 | Appels au backend | Adresse, token, corps JSON, session expirée (401), mauvais mot de passe (401 sans être connecté) | Déconnexion et retour à la connexion seulement si la session a expiré |
 
-### Tests d'intégration (95)
+### Tests d'intégration (96)
 
 | Thème | Scénarios | Résultat attendu |
 |---|---|---|
@@ -191,7 +191,7 @@ Depuis le dossier `frontend` :
 
 ```bash
 npm run lint             # vérifie la qualité du code (ESLint)
-npm test                 # lance les tests unitaires et d'intégration (128 tests)
+npm test                 # lance les tests unitaires et d'intégration (129 tests)
 npm run test:coverage    # lance les tests et affiche la couverture
 npm run test:e2e         # lance les tests système (8 tests)
 ```

@@ -63,6 +63,8 @@ export interface FamilyActivity {
     isPartner: boolean;
     offer?: string | null;
     points: number;
+    place?: string | null;     // lieu précis (ex : « Parc de l'Arboretum, Angers »)
+    duration?: number | null;  // durée en minutes
   };
   startedBy: string;
   participants: { id: string; name: string; avatar: number | null }[];

@@ -132,7 +132,7 @@ function RewardContent({ familyName, pointsEarned, familyPoints, previousLevel, 
               </span>
               {newBadges.map((badge, i) => (
                 <div key={badge.id} className="pop-in" style={{ '--pop-delay': `${0.9 + i * 0.15}s` } as CSSProperties}>
-                  <BadgeCard badge={badge} />
+                  <BadgeCard badge={badge} showDate={false} />
                 </div>
               ))}
             </div>

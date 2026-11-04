@@ -29,10 +29,12 @@ export function BadgeIllustration({ badge, size }: { badge: Badge; size: number 
 interface BadgeCardProps {
   badge: Badge;
   onPress?: () => void;
+  // Date d'obtention à droite (cachée sur l'écran Récompense, comme sur la maquette)
+  showDate?: boolean;
 }
 
 // Carte d'un badge (Figma : badge). Obtenu : date d'obtention. Pas encore obtenu : grisé, cadenas et progression (ex : 1 / 3)
-export default function BadgeCard({ badge, onPress }: BadgeCardProps) {
+export default function BadgeCard({ badge, onPress, showDate = true }: BadgeCardProps) {
   const { unlocked } = badge;
 
   return (
@@ -63,7 +65,7 @@ export default function BadgeCard({ badge, onPress }: BadgeCardProps) {
       </div>
 
       {unlocked ? (
-        badge.unlockedAt && (
+        showDate && badge.unlockedAt && (
           <span className="font-outfit shrink-0" style={{ fontSize: 14, color: '#9AA19D' }}>
             Obtenu le {formatUnlockedDate(badge.unlockedAt)}
           </span>

@@ -42,13 +42,12 @@ export default function AllBadges() {
           {data && BADGE_TIERS.map(tier => {
             const badges = data.badges.filter(b => b.tier === tier);
             if (badges.length === 0) return null;
-            const unlocked = badges.filter(b => b.unlocked).length;
             return (
               <div key={tier} className="flex flex-col shrink-0" style={{ gap: 12, marginTop: 8 }}>
-                <div className="flex items-center justify-between text-base">
-                  <span className="font-outfit-bold" style={{ color: '#161616' }}>{TIER_LABELS[tier]}</span>
-                  <span className="font-outfit" style={{ color: '#6B6B6B' }}>{unlocked} / {badges.length}</span>
-                </div>
+                {/* Titre du niveau avec son nombre de badges (Figma : « Bronze (12) ») */}
+                <span className="font-outfit-bold text-base" style={{ color: '#161616' }}>
+                  {TIER_LABELS[tier]} ({badges.length})
+                </span>
                 {badges.map(badge => (
                   <BadgeCard key={badge.id} badge={badge} onPress={() => navigate(`/recompenses/badges/${badge.id}`)} />
                 ))}

@@ -15,6 +15,8 @@ import { mascotteLunettes } from '../assets';
 
 // Nombre de derniers badges obtenus affichés
 const LAST_BADGES_COUNT = 3;
+// Hauteur de la barre du bas (TabBar : 18 px qui dépassent + 72 px + marge du bas)
+const NAV_HEIGHT = 'calc(90px + max(8px, env(safe-area-inset-bottom)))';
 
 export default function Rewards() {
   const { theme } = useTheme();
@@ -55,6 +57,7 @@ export default function Rewards() {
           <Spinner size={36} color={theme.primary} />
         </div>
       ) : data ? (
+        <>
         <div className="flex-1 overflow-y-auto no-scrollbar flex flex-col" style={{ padding: '8px 16px 24px', gap: 12 }}>
           {/* Ta collection */}
           <div className="flex flex-col shrink-0" style={{ gap: 10 }}>
@@ -86,16 +89,29 @@ export default function Rewards() {
             </div>
           )}
 
-          <div className="shrink-0" style={{ marginTop: 'auto', paddingTop: 24 }}>
-            <Button
-              title="Voir tous les badges"
-              onPress={() => navigate('/recompenses/badges')}
-              color={theme.primary}
-              icon={<Award size={20} color="#FFFFFF" strokeWidth={2} />}
-              iconPosition="left"
-            />
-          </div>
         </div>
+
+        {/* Bouton fixe sur un bandeau blanc qui passe sous la barre du bas (Figma : zone-actions fixe) */}
+        <div
+          className="shrink-0 bg-white"
+          style={{
+            padding: '16px 16px 0',
+            borderRadius: '24px 24px 0 0',
+            boxShadow: '0px -4px 16px rgba(0, 0, 0, 0.06)',
+            // Le bandeau descend sous la barre du bas (hauteur de la barre + 19 px d'écart)
+            marginBottom: `calc(-1 * ${NAV_HEIGHT})`,
+            paddingBottom: `calc(19px + ${NAV_HEIGHT})`,
+          }}
+        >
+          <Button
+            title="Voir tous les badges"
+            onPress={() => navigate('/recompenses/badges')}
+            color={theme.primary}
+            icon={<Award size={20} color="#FFFFFF" strokeWidth={2} />}
+            iconPosition="left"
+          />
+        </div>
+        </>
       ) : (
         <div className="flex-1 flex items-center justify-center" style={{ padding: '0 28px' }}>
           <p className="font-outfit text-base text-center m-0" style={{ color: '#6B6B6B' }}>

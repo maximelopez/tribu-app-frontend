@@ -64,13 +64,13 @@ describe('Tous les badges et détail d\'un badge', () => {
   ];
   const routes = { 'GET families/f1/badges': { body: { badges, unlockedCount: 1, total: 3, lastUnlocked: badges[0] } } };
 
-  it('classe les badges par niveau avec le nombre obtenu', async () => {
+  it('classe les badges par niveau avec leur nombre', async () => {
     loginAs({ familyId: 'f1' });
     mockApi(routes);
     renderScreen(<AllBadges />);
     expect(await screen.findByText('Premier pas')).toBeInTheDocument();
     expect(screen.getByText('Légende')).toBeInTheDocument();
-    expect(screen.getByText('1 / 2')).toBeInTheDocument(); // bronze : 1 obtenu sur 2
+    expect(screen.getByText('Bronze (2)')).toBeInTheDocument(); // 2 badges bronze
   });
 
   it('montre la date et le palier suivant d\'un badge obtenu', async () => {
@@ -105,6 +105,7 @@ describe('Écran Récompense', () => {
     expect(screen.getByText('Vous êtes Niveau 5 !')).toBeInTheDocument();
     expect(screen.getByText('Nouveau badge débloqué')).toBeInTheDocument();
     expect(screen.getByText('Premier pas')).toBeInTheDocument();
+    expect(screen.queryByText(/Obtenu le/)).not.toBeInTheDocument(); // pas de date sur cet écran
     expect(screen.getByText('Nature')).toBeInTheDocument();
     expect(screen.getByText('Terminée')).toBeInTheDocument();
     expect(screen.getByText('Niveau supérieur')).toBeInTheDocument();

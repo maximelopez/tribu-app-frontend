@@ -63,8 +63,21 @@ describe('Accueil avec une Tribu', () => {
 
     expect(screen.getByText('En cours')).toBeInTheDocument();
     expect(screen.getAllByText('Pique-nique')).toHaveLength(1); // seulement dans la carte « En cours »
+    expect(screen.getByText('Nature · Angers')).toBeInTheDocument(); // pas de lieu précis : la ville de la Tribu
     await screen.findByText('Où sortir avec ta Tribu ?');
     expect(screen.getAllByText('Pique-nique')).toHaveLength(1); // pas dans les idées : déjà en cours
+  });
+
+  it('affiche le lieu précis de l\'activité en cours, sans la ville', () => {
+    loginAs({ familyId: 'f1' });
+    useFamilyStore.getState().setFamily(family);
+    const ongoing = familyActivity(picnic);
+    ongoing.activity.place = "Parc de l'Arboretum, Angers";
+    useFamilyStore.getState().setCurrentActivity(ongoing);
+    mockApi(catalogRoute);
+    renderScreen(<Home />);
+
+    expect(screen.getByText("Nature · Parc de l'Arboretum")).toBeInTheDocument();
   });
 
   it('« Terminer l\'activité » ouvre le détail de l\'activité', async () => {

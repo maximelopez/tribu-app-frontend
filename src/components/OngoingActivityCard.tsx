@@ -16,7 +16,9 @@ interface OngoingActivityCardProps {
 export default function OngoingActivityCard({ activity, city, isStarter, onOpen }: OngoingActivityCardProps) {
   const { theme } = useTheme();
   const image = getActivityImage(activity.activity);
-  const subtitle = [CATEGORY_LABELS[activity.activity.category], city].filter(Boolean).join(' · ');
+  // Lieu sans la ville (« Parc de l'Arboretum, Angers » -> « Parc de l'Arboretum »), sinon la ville de la Tribu
+  const place = activity.activity.place?.split(',')[0].trim() || city;
+  const subtitle = [CATEGORY_LABELS[activity.activity.category], place].filter(Boolean).join(' · ');
 
   return (
     <div className="bg-white flex flex-col" style={{ padding: 16, gap: 16, borderRadius: 24, boxShadow: '0px 4px 16px rgba(0, 0, 0, 0.06)' }}>
