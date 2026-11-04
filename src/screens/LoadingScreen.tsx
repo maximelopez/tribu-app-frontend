@@ -4,9 +4,12 @@ import { useTheme } from '../context/ThemeContext';
 import { useUserStore } from '../store/userStore';
 import { onboardingPattern } from '../assets';
 import Spinner from '../components/Spinner';
+import useStatusBarColor from '../hooks/useStatusBarColor';
 
 export default function LoadingScreen() {
   const { theme } = useTheme();
+  // Barre du téléphone de la même couleur que le fond
+  useStatusBarColor(theme.primary);
   const setOnboardingCompleted = useUserStore(state => state.setOnboardingCompleted);
   const hasAccepted = useUserStore(state => !!state.user?.acceptedTermsAt);
 

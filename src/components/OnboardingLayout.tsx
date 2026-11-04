@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 import { ChevronLeft } from 'lucide-react';
 import { useNavigate } from 'react-router';
 import { logoTribu } from '../assets';
+import useStatusBarColor from '../hooks/useStatusBarColor';
 
 interface OnboardingLayoutProps {
   background: string;      // image de fond à motifs
@@ -13,6 +14,8 @@ interface OnboardingLayoutProps {
 // Fond à motifs + logo + "Avant de commencer ..." (écrans date, couleur, avatar)
 export default function OnboardingLayout({ background, backgroundColor, showBack = false, children }: OnboardingLayoutProps) {
   const navigate = useNavigate();
+  // Barre du téléphone de la même couleur que le fond
+  useStatusBarColor(backgroundColor);
 
   return (
     <div

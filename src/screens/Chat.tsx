@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useUserStore } from '../store/userStore';
 import { useFamilyStore } from '../store/familyStore';
 import useFamilyChat from '../hooks/useFamilyChat';
+import useStatusBarColor from '../hooks/useStatusBarColor';
 import { useTheme } from '../context/ThemeContext';
 import MessageBubble from '../components/MessageBubble';
 import NoFamilyState from '../components/NoFamilyState';
@@ -20,6 +21,9 @@ export default function Chat() {
   const { messages, sendMessage } = useFamilyChat();
   const user = useUserStore(state => state.user);
   const family = useFamilyStore(state => state.family);
+
+  // En-tête blanc : la barre du téléphone est blanche aussi
+  useStatusBarColor(user?.familyId ? '#FFFFFF' : null);
 
   const [text, setText] = useState('');
   const [showNotifications, setShowNotifications] = useState(false);

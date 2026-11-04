@@ -10,6 +10,7 @@ import LegalOverlay from '../components/LegalOverlay';
 import { PRIVACY_POLICY, TERMS } from '../legal';
 import type { LegalText } from '../legal';
 import { api } from '../api';
+import useStatusBarColor from '../hooks/useStatusBarColor';
 
 const TEXT_DARK = '#161616';
 const TEXT_GREY = '#5A635F';
@@ -43,6 +44,8 @@ const INFOS: { icon: ReactNode; title: string; text: string }[] = [
 export default function Consent() {
   const navigate = useNavigate();
   const { theme, themeColor } = useTheme();
+  // Barre du téléphone de la même couleur que le fond
+  useStatusBarColor(theme.primary);
   const user = useUserStore(state => state.user);
 
   const [accepted, setAccepted] = useState(false);
