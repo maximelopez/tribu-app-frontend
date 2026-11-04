@@ -1,3 +1,4 @@
+import { CheckCheck } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 import { getAvatar } from '../assets';
 
@@ -52,7 +53,11 @@ export default function MessageBubble({
         }}
       >
         <span className="font-outfit text-base text-white whitespace-pre-wrap break-words">{content}</span>
-        <span className="font-outfit text-xs" style={{ color: TIME_ME }}>{formatTime(createdAt)}</span>
+        {/* Heure + double coche « envoyé » (Figma : Check Read). L'app ne suit pas la lecture de chaque message */}
+        <span className="flex items-center font-outfit text-xs" style={{ gap: 8, color: TIME_ME }}>
+          {formatTime(createdAt)}
+          <CheckCheck size={14} color={TIME_ME} strokeWidth={2} aria-label="Envoyé" />
+        </span>
       </div>
     );
   }

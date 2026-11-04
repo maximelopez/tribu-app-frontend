@@ -129,7 +129,7 @@ export default function NotificationPanel({ onClose }: NotificationPanelProps) {
         }}
         onClick={e => e.stopPropagation()}
       >
-        <span className="font-outfit-bold shrink-0" style={{ fontSize: 17, lineHeight: 1.4, color: '#161616', paddingBottom: 8 }}>
+        <span className="font-outfit-bold shrink-0" style={{ fontSize: 20, lineHeight: 'normal', color: '#161616', paddingBottom: 8 }}>
           Notifications
         </span>
 
